@@ -1,0 +1,13 @@
+<ion-view>
+   <ion-content ng-controller="reportCtrl">
+   <ul class="list ">
+    <li class="item masterDelerList" ng-repeat=" report in reports" ng-click="repo(report)">
+     <i  class="icon arrow ion-chevron-right"></i>
+         <i class={{report.clss}}></i>
+
+      <p style="">{{report.name}}</p>
+    </li>
+    
+</ul>
+   </ion-content>
+  </ion-view>

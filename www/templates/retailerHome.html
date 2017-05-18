@@ -1,0 +1,14 @@
+<ion-view>
+   <ion-content ng-controller="retailerCtrl">
+   <ul class="list" >
+
+    <li class="item masterDelerList" ng-repeat="ret in retailer" ng-click="retlr(ret)">
+    <i  class="icon arrow ion-chevron-right"></i>
+<i  class={{ret.clas}}></i>	
+
+      <p style="">{{ret.name}}</p>
+ </li>
+   
+</ul>
+   </ion-content>
+  </ion-view>

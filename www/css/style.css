@@ -1,0 +1,68 @@
+#loginForm{
+   text-align:Left;
+   padding:2vh;
+   margin:5vmin;
+}
+.login{
+    margin:4vmax;
+    width:65vw;
+    border-style: ridge;
+    border-width:1vmin;
+    font-size:2vmax;
+}
+.login:hover{
+   border-color:orange;
+}
+.sButton{
+   font-size:2vmax;
+   background:grey !important;
+   color:white !important;
+   height:6vmax !important;
+   width:65vw !important;
+}
+.sButton:hover{
+  background:orange !important;  
+}
+.masterDelerList{
+  background: linear-gradient(white, rgba(182, 248, 255, 0.57), #add9e6);
+  height:15vmin;
+  padding-bottom:0 !important;
+  padding-Left:0 !important;
+  padding-right:0 !important;
+  border-color:grey;
+  padding-top:1vmin !important;
+}
+.masterDelerList:hover{
+ background-color:rgba(230, 173, 229, 0.62) !important;
+}
+.masterDelerList>p{
+    font-size:5.5vmin;
+    height:4vmax!important;
+    padding:0
+}
+.logintextArea{
+  width:65vw!important;;
+  height:20vmax !important;
+  border-style: ridge;
+  border-width:1vmin;
+}
+.logintextArea:hover{
+   border-color:orange ;
+}
+.arrow{
+  float:right;
+  font-size: 2vmax;
+  padding-right:2vmax;
+}
+.ionIcon{
+  float:left;
+  font-size: 4vmax;
+  padding-left:1vmax;
+  padding-right:1vmax;
+}
+.rechargeImg{
+  width:12vmin;
+  float:left;
+  padding:1vmin;
+  
+}

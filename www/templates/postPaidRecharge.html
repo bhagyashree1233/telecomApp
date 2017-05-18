@@ -1,0 +1,13 @@
+<ion-view>
+   <ion-content ng-controller="retailerHomeCtrl">
+   <ul class="list " >
+    <li class="item masterDelerList" ng-repeat="postPaid in postPaidRecharge" ng-click="mobilRecg()">
+     <img src={{postPaid.src}} class="rechargeImg"></img>
+     <i  class="icon arrow ion-chevron-right"></i>
+      <p style="">{{postPaid.name}}</p>
+    </li>
+   
+    
+</ul>
+   </ion-content>
+  </ion-view>
