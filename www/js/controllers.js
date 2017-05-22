@@ -1,18 +1,45 @@
 angular.module('starter.controllers', [])
-.controller('loginCtrl' ,function($scope,$state){
+.controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ){
+    var login={}
 $scope.login=function(){
-   console.log($scope.userName);
-   console.log($scope.password);
-   if($scope.userName==100637 && $scope.password==88848){
-       $state.go('retailerHome');
+    
+
+    login.Uname=$scope.userName;
+    login.Pwd=$scope.password;
+   
+  if($scope.userName==100637 && $scope.password==88848){
+       $state.go('masterDealerHome');
    }else if($scope.userName==2005 && $scope.password==88848){
        $state.go('delearHome');
    }else{
-       $state.go('masterDealerHome');
+       $state.go('retailerHome');
    }
 }
+	/* var promise = serviceDB.login(login, '/loginValidate');       
+       promise.then(function(res) {
+         console.log(res.data);
+				 
+		     if(res.data.done) {
+					
+				   if(login.Uname > 1000 && login.Uname <1000000) { 
+							 $location.path('/masterDealerHome');
+           } else if(login.Uname > 1000000 && login.Uname < 2000000) { 
+							 $location.path('/delearHome');
+           } else if(login.Uname > 2000000) { 
+							 $location.path('/retailerHome');
+           } else if(login.Uname == 123) {
+						   $location.path('/masterDealerHome');
+					 }
+		     } else {
+			       $scope.loginErrMsg = res.data.message;
+		     }
+	     }, function(res) {
+             console.log(res);
+		         $scope.loginErrMsg = "Unable to login";
+	     });
 
 
+}*/
 }) 
 .controller('masterDelearCtrl' ,function($scope,$state){
 $scope.masterDelear=[];
@@ -47,6 +74,26 @@ $scope.master=function(delear){
         $state.go('revertBalance')
     }
 }
+$scope.changePassword = function(newpwd) {
+	console.log('I am in master deler change password')
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+             $scope.pwdChangeMsg = "password does not match";
+			 return;
+		}
+		newpwd["Id"] = $scope.curMDealerId;
+		newpwd["tName"] = "MasterDealer";
+		var promise = serviceDB.toServer(newpwd, '/changePassword');       
+        promise.then(function(res) {
+		  if(res.data.done) {
+            $scope.pwd = {};
+		  }
+		  $scope.pwdChangeMsg = res.data.message; 	
+          console.log(res);
+	   }, function(res) {
+          console.log(res);
+	   });	
+	}
 
 })
 .controller('reportCtrl',function($scope,$state){
@@ -66,6 +113,7 @@ $scope.master=function(delear){
           $state.go('rechargeReport')
       }
     }
+
 })
 .controller('delearCtrl',function($scope,$state){
     $scope.delear=
@@ -100,8 +148,28 @@ $scope.delr=function(delear){
         $state.go('addRetailer')
     }
 }
+$scope.changePassword = function(newpwd) {
+	console.log('I am in deler change password')
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+             $scope.pwdChangeMsg = "password does not match";
+			 return;
+		}
+		newpwd["Id"] = $scope.curMDealerId;
+		newpwd["tName"] = "MasterDealer";
+		var promise = serviceDB.toServer(newpwd, '/changePassword');       
+        promise.then(function(res) {
+		  if(res.data.done) {
+            $scope.pwd = {};
+		  }
+		  $scope.pwdChangeMsg = res.data.message; 	
+          console.log(res);
+	   }, function(res) {
+          console.log(res);
+	   });	
+	}
 })
-.controller('retailerCtrl',function($scope,$state){
+.controller('retailerCtrl',function($scope,$state,serviceDB){
     $scope.retailer=
 [
 {name:"Mobile Recharge",clas:'icon ionIcon ion-android-phone-portrait'},
@@ -141,6 +209,26 @@ if(ret.name=='Mobile Recharge'){
         $state.go('report')
     }
 }
+$scope.changePassword = function(newpwd) {
+	console.log('I am in Retailer change password')
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+             $scope.pwdChangeMsg = "password does not match";
+			 return;
+		}
+		newpwd["Id"] = $scope.curMDealerId;
+		newpwd["tName"] = "MasterDealer";
+		var promise = serviceDB.toServer(newpwd, '/changePassword');       
+        promise.then(function(res) {
+		  if(res.data.done) {
+            $scope.pwd = {};
+		  }
+		  $scope.pwdChangeMsg = res.data.message; 	
+          console.log(res);
+	   }, function(res) {
+          console.log(res);
+	   });	
+	}
 })
 .controller('retailerHomeCtrl',function($scope,$state){
       $scope.mobileRecharge=
