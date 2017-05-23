@@ -1,12 +1,24 @@
 <ion-view>
-   <ion-content>
-   <ul class="list " >
+   <ion-content ng-controller="masterDelearCtrl" >
+  
+   <ul class="list "  >
     <li class="item masterDelerList" ng-click="master(delear)" ng-repeat="delear in masterDelear">
         <i  class={{delear.clas}}></i>
          <i  class="icon arrow ion-chevron-right"></i>
       <p style="">{{delear.name}}</p>
     </li>
+
+
     
 </ul>
+
+<!--<div ng-switch="pages">
+
+<span ng-if="pages=='changePassword'&&home==false" >
+
+    <div ng-include="'templates/changePassword.html'" ></div>
+   </div>
+  </span>
+   </div>-->
    </ion-content>
   </ion-view>

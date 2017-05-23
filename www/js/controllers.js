@@ -43,6 +43,9 @@ $scope.login=function(){
 }) 
 .controller('masterDelearCtrl' ,function($scope,$state){
 $scope.masterDelear=[];
+$scope.pages="";
+$scope.home=true;
+console.log('I am in master delear')
 
 $scope.masterDelear=
 [
@@ -56,15 +59,18 @@ $scope.masterDelear=
 
 ]
 $scope.master=function(delear){
+$scope.home=false;
     console.log(delear);
     if(delear.name=='Current Balance'){
+    	$scope.pages='currentBalance'
         $state.go('currentBalance')
     }else if(delear.name=='Complain'){
         $state.go('complain')
     }else if(delear.name=='Complain List'){
         $state.go('login')
     }else if(delear.name=='Change Password'){
-         $state.go('changePassword')
+    	$scope.pages='changePassword'
+    	$state.go('masterDealerHome/changePassword')
     }
     else if(delear.name=='Reports'){
         $state.go('report')
@@ -203,7 +209,7 @@ if(ret.name=='Mobile Recharge'){
     }else if(ret.name=='Complain List'){
         $state.go('login')
     }else if(ret.name=='Change Password'){
-         $state.go('changePassword')
+         $state.go('retailerHome/changePassword')
     }
     else if(ret.name=='Reports'){
         $state.go('report')
