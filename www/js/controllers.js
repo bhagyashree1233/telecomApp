@@ -1,52 +1,70 @@
+
 angular.module('starter.controllers', [])
 .controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ){
     var login={}
-$scope.login=function(){
-    
 
-    login.Uname=$scope.userName;
+    $rootScope.userNam='';
+    $scope.password='';
+
+$scope.login=function(usn){
+    login.Uname=$rootScope.userName=usn;
     login.Pwd=$scope.password;
-   
-  if($scope.userName==100637 && $scope.password==88848){
-       $state.go('masterDealerHome');
+   console.log($rootScope.userName);
+ /* if($scope.userName==100637 && $scope.password==88848){
+       $state.go('mDelear');
    }else if($scope.userName==2005 && $scope.password==88848){
-       $state.go('delearHome');
+       $state.go('delear');
    }else{
-       $state.go('retailerHome');
+       $state.go('retailer');
    }
-}
-	/* var promise = serviceDB.login(login, '/loginValidate');       
+}*/
+	 var promise = serviceDB.login(login, '/loginValidate');       
        promise.then(function(res) {
          console.log(res.data);
 				 
 		     if(res.data.done) {
 					
 				   if(login.Uname > 1000 && login.Uname <1000000) { 
-							 $location.path('/masterDealerHome');
+							 $location.path('/mDelear');
            } else if(login.Uname > 1000000 && login.Uname < 2000000) { 
-							 $location.path('/delearHome');
+							 $location.path('/delear');
            } else if(login.Uname > 2000000) { 
-							 $location.path('/retailerHome');
+							 $location.path('/retailer');
            } else if(login.Uname == 123) {
 						   $location.path('/masterDealerHome');
 					 }
 		     } else {
-			       $scope.loginErrMsg = res.data.message;
+
+			     //  $scope.loginErrMsg = res.data.message;
 		     }
 	     }, function(res) {
-             console.log(res);
-		         $scope.loginErrMsg = "Unable to login";
+            // console.log(res);
+
+		        //$scope.loginErrMsg = "Unable to login";
+		        $location.path('/retailer');
 	     });
 
 
-}*/
+}
 }) 
-.controller('masterDelearCtrl' ,function($scope,$state){
+.controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope){
 $scope.masterDelear=[];
-$scope.pages="";
+
 $scope.home=true;
 console.log('I am in master delear')
-
+var id = $rootScope.userName
+		var tName = "MasterDealer";
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+          console.log(res);
+		  $scope.balanceAmount = res.data.data[0].Balance;
+		  $scope.curUser = res.data.data[0];
+		  console.log($scope.balanceAmount);
+		  
+	   }, function(res) {
+          console.log(res);
+	   });	
 $scope.masterDelear=
 [
 {name:"Current Balance",clas:'icon ionIcon ion-cash'},
@@ -62,15 +80,15 @@ $scope.master=function(delear){
 $scope.home=false;
     console.log(delear);
     if(delear.name=='Current Balance'){
-    	$scope.pages='currentBalance'
-        $state.go('currentBalance')
+    	
+        $state.go('mcurrentBalance')
     }else if(delear.name=='Complain'){
-        $state.go('complain')
+        $state.go('mDelear.complain')
     }else if(delear.name=='Complain List'){
         $state.go('login')
     }else if(delear.name=='Change Password'){
     	$scope.pages='changePassword'
-    	$state.go('masterDealerHome/changePassword')
+    	$state.go('mchangePassword')
     }
     else if(delear.name=='Reports'){
         $state.go('report')
@@ -80,14 +98,20 @@ $scope.home=false;
         $state.go('revertBalance')
     }
 }
+
+
+		
+
+	
 $scope.changePassword = function(newpwd) {
+	console.log(newpwd)
 	console.log('I am in master deler change password')
 		if(newpwd.newpassword != newpwd.cnewpassword) {
 			 console.log("password does not match");
              $scope.pwdChangeMsg = "password does not match";
 			 return;
 		}
-		newpwd["Id"] = $scope.curMDealerId;
+		newpwd["Id"] =$rootScope.userName;
 		newpwd["tName"] = "MasterDealer";
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
@@ -121,7 +145,20 @@ $scope.changePassword = function(newpwd) {
     }
 
 })
-.controller('delearCtrl',function($scope,$state){
+.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB){
+	var id = $rootScope.userName
+		var tName = "Dealer";
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+          console.log(res);
+		  $scope.balanceAmount = res.data.data[0].Balance;
+		  $scope.curUser = res.data.data[0];
+		  console.log($scope.balanceAmount);
+		  
+	   }, function(res) {
+          console.log(res);
+	   });
     $scope.delear=
 [
 {name:"Current Balance",clas:'icon ionIcon ion-cash'},
@@ -136,13 +173,13 @@ $scope.changePassword = function(newpwd) {
 $scope.delr=function(delear){
     console.log(delear);
     if(delear.name=='Current Balance'){
-        $state.go('currentBalance')
+        $state.go('dCurrentBalance')
     }else if(delear.name=='Complain'){
         $state.go('complain')
     }else if(delear.name=='Complain List'){
         $state.go('login')
     }else if(delear.name=='Change Password'){
-         $state.go('changePassword')
+         $state.go('dChangePassword')
     }
     else if(delear.name=='Reports'){
         $state.go('report')
@@ -155,14 +192,15 @@ $scope.delr=function(delear){
     }
 }
 $scope.changePassword = function(newpwd) {
+	console.log(newpwd)
 	console.log('I am in deler change password')
 		if(newpwd.newpassword != newpwd.cnewpassword) {
 			 console.log("password does not match");
              $scope.pwdChangeMsg = "password does not match";
 			 return;
 		}
-		newpwd["Id"] = $scope.curMDealerId;
-		newpwd["tName"] = "MasterDealer";
+		newpwd["Id"] = $rootScope.userName;
+		newpwd["tName"] = "Dealer";
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
 		  if(res.data.done) {
@@ -175,7 +213,21 @@ $scope.changePassword = function(newpwd) {
 	   });	
 	}
 })
-.controller('retailerCtrl',function($scope,$state,serviceDB){
+.controller('retailerCtrl',function($scope,$state,serviceDB,$rootScope){
+	$rootScope.recharge={};
+		var id = $rootScope.userName
+		var tName = "Retailer";
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+          console.log(res);
+		  $scope.balanceAmount = res.data.data[0].Balance;
+		  $scope.curUser = res.data.data[0];
+		  console.log($scope.balanceAmount);
+		  
+	   }, function(res) {
+          console.log(res);
+	   });
     $scope.retailer=
 [
 {name:"Mobile Recharge",clas:'icon ionIcon ion-android-phone-portrait'},
@@ -203,13 +255,13 @@ if(ret.name=='Mobile Recharge'){
 }else if(ret.name=='Search Transaction'){
     $state.go('searchTransaction');
 } else if(ret.name=='Current Balance'){
-        $state.go('currentBalance')
+        $state.go('rCurrentBalance')
     }else if(ret.name=='Complain'){
         $state.go('complain')
     }else if(ret.name=='Complain List'){
         $state.go('login')
     }else if(ret.name=='Change Password'){
-         $state.go('retailerHome/changePassword')
+         $state.go('rChangePassword')
     }
     else if(ret.name=='Reports'){
         $state.go('report')
@@ -222,8 +274,8 @@ $scope.changePassword = function(newpwd) {
              $scope.pwdChangeMsg = "password does not match";
 			 return;
 		}
-		newpwd["Id"] = $scope.curMDealerId;
-		newpwd["tName"] = "MasterDealer";
+		newpwd["Id"] = $rootScope.userName;
+		newpwd["tName"] = "Retailer";
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
 		  if(res.data.done) {
@@ -236,7 +288,8 @@ $scope.changePassword = function(newpwd) {
 	   });	
 	}
 })
-.controller('retailerHomeCtrl',function($scope,$state){
+.controller('retailerHomeCtrl',function($scope,$state,$rootScope){
+
       $scope.mobileRecharge=
 [
 {name:"Airtel",src:'img/airtel.jpg'},
@@ -282,9 +335,16 @@ $scope.postPaidRecharge=[
 {name:'POSTPAID DOCOMO',src:'img/docomo.jpg'},
 {name:'POSTPAID RELICE CDMA/GSM',src:'img/relianc.jpg'}
 ]
-$scope.mobilRecg=function(){
+$scope.mobilRecg=function(rechargeType,mobilename){
+	console.log(rechargeType)
+	console.log(mobilename)
+	$rootScope.recharge.type=rechargeType;
+	$rootScope.recharge.name=mobilename;
     $state.go('recharge')
 
 
+}
+$scope.rechargeSubmit=function(recharge){
+	console.log(recharge)
 }
 })

@@ -3,12 +3,12 @@
 <div class="list list-inset">
 <h5 style="font-size:3vmax">Enter Number & Amount </h5>
   <label class="item login item-input">
-    <input type="text" placeholder="Enter Number">
+    <input type="text" placeholder="Enter Number" ng-model="recharge.number">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Amount">
+    <input type="text" placeholder="Enter Amount" ng-model="recharge.amount">
   </label>
-   <button class="button sButton button-block button-stable">
+   <button class="button sButton button-block button-stable" ng-click="rechargeSubmit(recharge)">
     Recharge
    </button>
 </div>

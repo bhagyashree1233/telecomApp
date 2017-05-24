@@ -1,7 +1,7 @@
 <ion-view>
    <ion-content ng-controller="retailerHomeCtrl">
    <ul class="list " >
-    <li class="item masterDelerList" ng-repeat="dth in dthRecharge" ng-click="mobilRecg()">
+    <li class="item masterDelerList" ng-repeat="dth in dthRecharge" ng-click="mobilRecg('DTH')">
     <img src={{dth.src}} class="rechargeImg"></img>
     <i  class="icon arrow ion-chevron-right"></i>
       <p style="">{{dth.name}}</p>
