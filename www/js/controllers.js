@@ -1,7 +1,10 @@
 
+
 angular.module('starter.controllers', [])
-.controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ){
+.controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ,$cordovaToast){
     var login={}
+     var options = { dimBackground: true };
+  SpinnerPlugin.activityStart("loading...", options);
 
     $rootScope.userNam='';
     $scope.password='';
@@ -10,6 +13,16 @@ $scope.login=function(usn){
     login.Uname=$rootScope.userName=usn;
     login.Pwd=$scope.password;
    console.log($rootScope.userName);
+   if($rootScope.userName==undefined||$rootScope.userName==""){
+   $cordovaToast.show('Failed to login', 'long', 'center')
+     return false;
+   }
+   if($scope.password==undefined||$scope.password==""){
+   	   $cordovaToast.show('Failed to login', 'long', 'center')
+     return false;
+   }
+ 
+
  /* if($scope.userName==100637 && $scope.password==88848){
        $state.go('mDelear');
    }else if($scope.userName==2005 && $scope.password==88848){
@@ -21,33 +34,36 @@ $scope.login=function(usn){
 	 var promise = serviceDB.login(login, '/loginValidate');       
        promise.then(function(res) {
          console.log(res.data);
-				 
+				SpinnerPlugin.activityStop();
+ 
 		     if(res.data.done) {
 					
 				   if(login.Uname > 1000 && login.Uname <1000000) { 
-							 $location.path('/mDelear');
+				 $scope.password = document.getElementById("pwd").value='';
+					 $location.path('/mDelear');
            } else if(login.Uname > 1000000 && login.Uname < 2000000) { 
+           $scope.password = document.getElementById("pwd").value='';
 							 $location.path('/delear');
            } else if(login.Uname > 2000000) { 
+           $scope.password = document.getElementById("pwd").value='';
 							 $location.path('/retailer');
-           } else if(login.Uname == 123) {
-						   $location.path('/masterDealerHome');
-					 }
+           
 		     } else {
-
+                  $cordovaToast.show('Failed to login', 'long', 'center')
+                  return false;
 			     //  $scope.loginErrMsg = res.data.message;
 		     }
-	     }, function(res) {
+	     }}, function(res) {
             // console.log(res);
-
-		        //$scope.loginErrMsg = "Unable to login";
-		        $location.path('/retailer');
+                 SpinnerPlugin.activityStop();
+		        $cordovaToast.show('Failed to login', 'long', 'center')
+                  return false; 
 	     });
 
 
 }
 }) 
-.controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope){
+.controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope,$cordovaToast){
 $scope.masterDelear=[];
 
 $scope.home=true;
@@ -81,7 +97,7 @@ $scope.home=false;
     console.log(delear);
     if(delear.name=='Current Balance'){
     	
-        $state.go('mcurrentBalance')
+        $state.go('mCurrentBalance')
     }else if(delear.name=='Complain'){
         $state.go('mDelear.complain')
     }else if(delear.name=='Complain List'){
@@ -106,22 +122,32 @@ $scope.home=false;
 $scope.changePassword = function(newpwd) {
 	console.log(newpwd)
 	console.log('I am in master deler change password')
+	if(newpwd==undefined||newpwd.newpassword==undefined || newpwd.newpassword==""){
+			 $cordovaToast.show('Enter New Password', 'long', 'center')
+         return false
+	}
+	if( newpwd==undefined||newpwd.cnewpassword==undefined || newpwd.cnewpassword==""){
+			 $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+			 return false
+	}
 		if(newpwd.newpassword != newpwd.cnewpassword) {
 			 console.log("password does not match");
-             $scope.pwdChangeMsg = "password does not match";
-			 return;
+			 $cordovaToast.show('New password does not match confirm password', 'long', 'center')
+			 return false;
 		}
 		newpwd["Id"] =$rootScope.userName;
 		newpwd["tName"] = "MasterDealer";
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
 		  if(res.data.done) {
-            $scope.pwd = {};
+            $scope.newpwd = {};
+            $cordovaToast.show('Changed Password Successfully', 'long', 'center')
+		  }else{
+		  	 $cordovaToast.show('invalid old password', 'long', 'center')
 		  }
-		  $scope.pwdChangeMsg = res.data.message; 	
           console.log(res);
 	   }, function(res) {
-          console.log(res);
+            $cordovaToast.show('Unable to change password', 'long', 'center')
 	   });	
 	}
 
@@ -145,7 +171,7 @@ $scope.changePassword = function(newpwd) {
     }
 
 })
-.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB){
+.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB,$cordovaToast){
 	var id = $rootScope.userName
 		var tName = "Dealer";
 		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
@@ -194,6 +220,19 @@ $scope.delr=function(delear){
 $scope.changePassword = function(newpwd) {
 	console.log(newpwd)
 	console.log('I am in deler change password')
+	if(newpwd==undefined||newpwd.newpassword==undefined || newpwd.newpassword==""){
+			 $cordovaToast.show('Enter New Password', 'long', 'center')
+         return false
+	}
+	if( newpwd==undefined||newpwd.cnewpassword==undefined || newpwd.cnewpassword==""){
+			 $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+			 return false
+	}
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+			 $cordovaToast.show('New password does not match confirm password', 'long', 'center')
+			 return false;
+		}
 		if(newpwd.newpassword != newpwd.cnewpassword) {
 			 console.log("password does not match");
              $scope.pwdChangeMsg = "password does not match";
@@ -204,16 +243,20 @@ $scope.changePassword = function(newpwd) {
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
 		  if(res.data.done) {
-            $scope.pwd = {};
+            $scope.newpwd = {};
+            $cordovaToast.show('Changed Password Successfully', 'long', 'center')
+		  }else{
+		  	 $cordovaToast.show('invalid old password', 'long', 'center')
+
 		  }
-		  $scope.pwdChangeMsg = res.data.message; 	
+		   	
           console.log(res);
 	   }, function(res) {
-          console.log(res);
+          $cordovaToast.show('Unable to change password', 'long', 'center')
 	   });	
 	}
 })
-.controller('retailerCtrl',function($scope,$state,serviceDB,$rootScope){
+.controller('retailerCtrl',function($scope,$state,serviceDB,$rootScope,$cordovaToast){
 	$rootScope.recharge={};
 		var id = $rootScope.userName
 		var tName = "Retailer";
@@ -269,6 +312,24 @@ if(ret.name=='Mobile Recharge'){
 }
 $scope.changePassword = function(newpwd) {
 	console.log('I am in Retailer change password')
+	if(newpwd==undefined||newpwd.newpassword==undefined || newpwd.newpassword==""){
+			 $cordovaToast.show('Enter New Password', 'long', 'center')
+         return false
+	}
+	if( newpwd==undefined||newpwd.cnewpassword==undefined || newpwd.cnewpassword==""){
+			 $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+			 return false
+	}
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+			 $cordovaToast.show('New password does not match confirm password', 'long', 'center')
+			 return false;
+		}
+		if(newpwd.newpassword != newpwd.cnewpassword) {
+			 console.log("password does not match");
+             $scope.pwdChangeMsg = "password does not match";
+			 return;
+		}
 		if(newpwd.newpassword != newpwd.cnewpassword) {
 			 console.log("password does not match");
              $scope.pwdChangeMsg = "password does not match";
@@ -279,12 +340,16 @@ $scope.changePassword = function(newpwd) {
 		var promise = serviceDB.toServer(newpwd, '/changePassword');       
         promise.then(function(res) {
 		  if(res.data.done) {
-            $scope.pwd = {};
+           $scope.newpwd = {};
+            $cordovaToast.show('Changed Password Successfully', 'long', 'center')
+		  }else{
+		   	 $cordovaToast.show('invalid old password', 'long', 'center')
+
 		  }
-		  $scope.pwdChangeMsg = res.data.message; 	
+		  
           console.log(res);
 	   }, function(res) {
-          console.log(res);
+         $cordovaToast.show('Unable to change password', 'long', 'center')
 	   });	
 	}
 })
@@ -341,10 +406,5 @@ $scope.mobilRecg=function(rechargeType,mobilename){
 	$rootScope.recharge.type=rechargeType;
 	$rootScope.recharge.name=mobilename;
     $state.go('recharge')
-
-
-}
-$scope.rechargeSubmit=function(recharge){
-	console.log(recharge)
 }
 })

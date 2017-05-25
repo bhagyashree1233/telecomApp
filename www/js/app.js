@@ -1,4 +1,5 @@
-var myapp=angular.module('starter', ['ionic','starter.controllers','starter.service','ngRoute'])
+var myapp=angular.module('starter', ['ionic','starter.controllers','starter.service','ngCordova'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -114,6 +115,7 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
                 controller: 'masterDelearCtrl'
             }
         }
+
     })
     .state('mDelear.complainList', {
         url: '/complainList',
