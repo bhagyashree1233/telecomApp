@@ -1,24 +1,30 @@
 
 
+
+
+
 angular.module('starter.controllers', [])
-.controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ,$cordovaToast){
+.controller('loginCtrl' ,function($scope,$state,serviceDB, $rootScope,$location ){
     var login={}
      var options = { dimBackground: true };
-  SpinnerPlugin.activityStart("loading...", options);
+  
 
     $rootScope.userNam='';
     $scope.password='';
 
 $scope.login=function(usn){
+	//$cordovaSpinnerDialog.show("Login","Loading", true);
+	$rootScope.showDbLoading();
     login.Uname=$rootScope.userName=usn;
     login.Pwd=$scope.password;
    console.log($rootScope.userName);
    if($rootScope.userName==undefined||$rootScope.userName==""){
-   $cordovaToast.show('Failed to login', 'long', 'center')
+   	$rootScope.ShowToast('Failed to login')
+   
      return false;
    }
    if($scope.password==undefined||$scope.password==""){
-   	   $cordovaToast.show('Failed to login', 'long', 'center')
+   	   $rootScope.ShowToast('Failed to login')
      return false;
    }
  
@@ -34,8 +40,8 @@ $scope.login=function(usn){
 	 var promise = serviceDB.login(login, '/loginValidate');       
        promise.then(function(res) {
          console.log(res.data);
-				SpinnerPlugin.activityStop();
- 
+				//$cordovaSpinnerDialog.hide();
+               $rootScope.hideDbLoading()
 		     if(res.data.done) {
 					
 				   if(login.Uname > 1000 && login.Uname <1000000) { 
@@ -43,32 +49,35 @@ $scope.login=function(usn){
 					 $location.path('/mDelear');
            } else if(login.Uname > 1000000 && login.Uname < 2000000) { 
            $scope.password = document.getElementById("pwd").value='';
+           $rootScope.getMasterIdByDId();
 							 $location.path('/delear');
            } else if(login.Uname > 2000000) { 
            $scope.password = document.getElementById("pwd").value='';
 							 $location.path('/retailer');
            
 		     } else {
-                  $cordovaToast.show('Failed to login', 'long', 'center')
+                  $rootScope.ShowToast('Failed to login')
                   return false;
 			     //  $scope.loginErrMsg = res.data.message;
 		     }
 	     }}, function(res) {
             // console.log(res);
-                 SpinnerPlugin.activityStop();
-		        $cordovaToast.show('Failed to login', 'long', 'center')
+              //   $cordovaSpinnerDialog.hide();
+              $rootScope.hideDbLoading();
+		       $rootScope.ShowToast('Failed to login')
                   return false; 
 	     });
 
 
 }
 }) 
-.controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope,$cordovaToast){
+.controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope,$interval,authentication){
 $scope.masterDelear=[];
 
 $scope.home=true;
 console.log('I am in master delear')
-var id = $rootScope.userName
+       //    
+var id =authentication.currentUser().userId;
 		var tName = "MasterDealer";
 		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
 		     
@@ -117,7 +126,11 @@ $scope.home=false;
 
 
 		
-
+$scope.start= function(){$interval(function() {
+  window.location.reload(true);
+          }, 5000);
+        
+}
 	
 $scope.changePassword = function(newpwd) {
 	console.log(newpwd)
@@ -171,20 +184,10 @@ $scope.changePassword = function(newpwd) {
     }
 
 })
-.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB,$cordovaToast){
+.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB,$cordovaToast,authentication){
 	var id = $rootScope.userName
 		var tName = "Dealer";
-		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
-		     
-        promise.then(function(res) {
-          console.log(res);
-		  $scope.balanceAmount = res.data.data[0].Balance;
-		  $scope.curUser = res.data.data[0];
-		  console.log($scope.balanceAmount);
-		  
-	   }, function(res) {
-          console.log(res);
-	   });
+		
     $scope.delear=
 [
 {name:"Current Balance",clas:'icon ionIcon ion-cash'},
@@ -210,13 +213,128 @@ $scope.delr=function(delear){
     else if(delear.name=='Reports'){
         $state.go('report')
     }else if(delear.name=='Add Balance'){
-        $state.go('addBalance')
+        $state.go('dAddRetailer')
     }else if(delear.name=='Revert Balance'){
         $state.go('revertBalance')
     }else if(delear.name=='Add Retailer'){
-        $state.go('addRetailer')
+        $state.go('dAddRetailer')
     }
 }
+
+$scope.addNewRetailer = function(retailer) {
+		//retailer["LoginStatus"] = "success";
+		console.log(authentication.currentUser().userId)
+		console.log(retailer)
+		console.log($scope.getMasterIdByDId());
+		retailer["LoginStatus"] = "success";
+		retailer["ParentDealerId"] =authentication.currentUser().userId;
+		retailer["ParentMasterDealerId"] = $rootScope. ParentMasterDealerId 
+		//retailer["parentDealerId"] = 1;
+		console.log(retailer);
+
+		if(retailer.Name == "" || retailer.Name == undefined) {
+            console.log('name required'); 
+			$scope.retailerAddErrMsg = 'name required';
+			return;
+		}
+		if(retailer.Address == "" || retailer.Address == undefined) {
+			console.log('address required'); 
+			$scope.retailerAddErrMsg = 'address required';
+			return;
+		}
+		
+		if(retailer.State == "" || retailer.State == undefined) {
+			console.log('select your state'); 
+			$scope.retailerAddErrMsg = 'select your state';
+			return;
+		}
+		if(retailer.Mobile == "" || retailer.Mobile == undefined) {
+			console.log('Mobile number required'); 
+			$scope.retailerAddErrMsg = 'Mobile number required';
+			return;
+		}else if
+		(Number.isNaN(retailer.Mobile) || retailer.Mobile.length < 10 || retailer.Mobile.length > 10) {
+			console.log('Enter valid mobile number'); 
+			$scope.retailerAddErrMsg = 'Enter valid mobile number';
+			return;
+		}
+		if(retailer.RetailerType == "" || retailer.RetailerType == undefined) {
+			console.log('select retailer type'); 
+			$scope.retailerAddErrMsg = 'select retailer type';
+			return;
+		}
+		if(retailer.PanNo == undefined) {
+			retailer.PanNo = "";
+		}
+		if(retailer.PinCode == "" || retailer.PinCode == undefined) {
+			console.log('Pin Code required'); 
+			$scope.retailerAddErrMsg = 'Pin Code required';
+			return;
+		}
+		
+		if(retailer.ParentDealerId == "" || retailer.ParentDealerId == undefined) {
+			console.log('select parent dealer'); 
+			$scope.retailerAddErrMsg = 'select parent dealer';
+			return;
+		}
+		if(Number.isNaN(retailer.PinCode)) {
+			console.log('Enter valid pin code'); 
+			$scope.retailerAddErrMsg = 'Enter valid pin code';
+			return;
+		}
+		if(retailer.City == "" || retailer.City == undefined) {
+			console.log('select city'); 
+			$scope.dealerAddErrMsg = 'selectc city';
+			return;
+		}
+		if(retailer.LandLine == undefined) {
+			retailer.LandLine = "";
+		}else
+		if(retailer.LandLine != "" && Number.isNaN(retailer.LandLine)) {
+			console.log('Enter valid landline number'); 
+			$scope.dealerAddErrMsg = 'Enter valid landline number';
+			return;
+		}
+		if(retailer.EmailId == "" || retailer.EmailId == undefined) {
+			console.log('email required'); 
+			$scope.retailerAddErrMsg = 'email required';
+			return;
+		}
+		if(retailer.ContactPerson == "" || retailer.ContactPerson == undefined) {
+			console.log('contact person required'); 
+			$scope.retailerAddErrMsg = 'contact person required';
+			return;
+		}
+		if(retailer.Scheme == "" || retailer.Scheme == undefined) {
+			console.log('select scheme'); 
+			$scope.dealerAddErrMsg = 'select scheme';
+			return;
+		}
+		
+		if(retailer.Balance == "" || retailer.Balance == undefined) {
+			retailer.Balance = 0;
+		}
+		if(retailer.Balance != 0 && Number.isNaN(retailer.Balance)) {
+			$scope.retailerAddErrMsg = 'Enter valid balance';
+			return;
+		}
+		
+
+        
+           //  var promise = serviceDB.toServer(retailer, 'http://telecom.azurewebsites.net/addRetailer');       
+	       var promise = serviceDB.toServer(retailer, '/addRetailer');       
+		
+
+          promise.then(function(res) {
+		  console.log("success");
+		  
+          console.log(res);
+	   }, function(res) {
+          console.log(res);
+		  
+	   });
+	   		
+	}
 $scope.changePassword = function(newpwd) {
 	console.log(newpwd)
 	console.log('I am in deler change password')

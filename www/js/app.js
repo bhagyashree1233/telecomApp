@@ -1,4 +1,4 @@
-var myapp=angular.module('starter', ['ionic','starter.controllers','starter.service','ngCordova'
+var myapp=angular.module('starter', ['ionic','starter.controllers','starter.service','ngCordova','starter.globalcontroller'
 ])
 
 .run(function($ionicPlatform) {
@@ -60,6 +60,11 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         controller:'delearCtrl',
         templateUrl: 'templates/changePassword.html'
 
+    })
+    .state('dAddRetailer',{
+       url: '/dAddRetailer',
+        controller:'delearCtrl',
+        templateUrl: 'templates/addRetailer.html' 
     })
     .state('retailer', {
         url: '/retailer',

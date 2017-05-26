@@ -3,16 +3,75 @@
 <div class="list list-inset">
 
   <label class="item login item-input">
-    <input type="text" placeholder="Enter Buisness Name">
+    <input type="text" placeholder="Enter  Name" ng-model="retailer.Name">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Mobile Number">
-  </label>
-  <label class="item  login item-input">
-    <input type="text" placeholder="Enter Email Address">
+    <textarea type="text" placeholder="Enter Postal Address" ng-model="retailer.Address"></textarea>
   </label>
   
-   <button class="button sButton button-block button-stable">
+    <select class="sel" ng-model="retailer.State" >
+      <option selected >Select State</option>
+      <option >Karnataka</option>
+      <option>Andra Pradesh</option>
+      <option>Kerala</option>
+      <option>TamilNadu</option>
+   </select>
+  
+
+  <label class="item  login item-input">
+    <input type="text" placeholder="Enter Mobile Number" ng-model="retailer.Mobile">
+  </label>
+  
+    <select  class="sel" ng-model="retailer.RetailerType">
+      <option selected>Select Retailer Type</option>
+      <option >Option 2</option>
+      <option>Option 3</option>
+   </select>
+  
+   <label class="item  login item-input">
+    <input type="text" placeholder="Enter Pan No" ng-model="retailer.PanNo">
+  </label>
+  <label class="item  login item-input">
+    <input type="text" placeholder="Enter Pin Code" ng-model="retailer.PinCode">
+  </label>
+  
+    <select class="sel" ng-model="retailer.City">
+      <option selected>Select City</option>
+      <option ></option>
+      <option></option>
+      <option></option>
+      <option></option>
+   </select>
+   
+   <label class="item  login item-input">
+    <input type="text" placeholder="Enter LandLine" ng-model="retailer.LandLine">
+  </label>
+  <label class="item  login item-input">
+    <input type="email" placeholder="Enter Email Address" ng-model="retailer.EmailId">
+  </label>
+  <label class="item  login item-input">
+    <input type="text" placeholder="Enter Contact Person" ng-model="retailer.ContactPerson">
+  </label>
+  
+    <select class="sel" ng-model="retailer.Scheme">
+      <option selected>Select Scheme</option>
+      <option >Option 2</option>
+      <option>Option 3</option>
+   </select>
+   
+   <label class="item  login item-input" >
+    <input type="text" placeholder="Amount" readonly>
+  </label>
+   <label class="item  login item-input">
+    <input type="text" placeholder="Opening Balance">
+  </label>
+   <label class="item  login item-input">
+    <input type="text" placeholder="Enter Password">
+  </label>
+  <label class="item  login item-input">
+    <input type="text" placeholder="Confirm Password">
+  </label>
+   <button class="button sButton button-block button-stable" ng-click="addNewRetailer(retailer)">
    Submit
    </button>
 </div>

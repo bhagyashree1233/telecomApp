@@ -14,11 +14,12 @@
    border-color:orange;
 }
 .sButton{
+  margin-left:2.5vh;
    font-size:2vmax;
    background:grey !important;
    color:white !important;
    height:6vmax !important;
-   width:65vw !important;
+   width:61vw !important;
 }
 .sButton:hover{
   background:orange !important;  
@@ -65,4 +66,12 @@
   float:left;
   padding:1vmin;
   
+}
+.sel{
+  
+    width:65vw;
+    border-style: ridge;
+    border-width:1vmin;
+    font-size:2vmax;
+    height:8vh;
 }
