@@ -9,7 +9,7 @@
     <textarea type="text" placeholder="Enter Postal Address" ng-model="retailer.Address"></textarea>
   </label>
   
-    <select class="sel" ng-model="retailer.State" >
+    <select class="sel" ng-model="retailer.State"  ng-change="loadCities(retailer.State)" >
       <option selected >Select State</option>
       <option >Karnataka</option>
       <option>Andra Pradesh</option>
@@ -22,10 +22,10 @@
     <input type="text" placeholder="Enter Mobile Number" ng-model="retailer.Mobile">
   </label>
   
-    <select  class="sel" ng-model="retailer.RetailerType">
+    <select  class="sel" ng-model="retailer.RetailerType" >
       <option selected>Select Retailer Type</option>
-      <option >Option 2</option>
-      <option>Option 3</option>
+      <option ng-repeat="ret in retailerTypeList" >{{ret.Name}}</option>
+      
    </select>
   
    <label class="item  login item-input">
@@ -35,12 +35,10 @@
     <input type="text" placeholder="Enter Pin Code" ng-model="retailer.PinCode">
   </label>
   
-    <select class="sel" ng-model="retailer.City">
+    <select class="sel" ng-model="retailer.City" >
       <option selected>Select City</option>
-      <option ></option>
-      <option></option>
-      <option></option>
-      <option></option>
+      <option ng-repeat="cit in cities">{{cit.city}}</option>
+     
    </select>
    
    <label class="item  login item-input">
@@ -53,10 +51,9 @@
     <input type="text" placeholder="Enter Contact Person" ng-model="retailer.ContactPerson">
   </label>
   
-    <select class="sel" ng-model="retailer.Scheme">
-      <option selected>Select Scheme</option>
-      <option >Option 2</option>
-      <option>Option 3</option>
+    <select class="sel" ng-model="retailer.Scheme" >
+      <option selected >Select Scheme</option>
+      <option ng-repeat="schem in schemeList" >{{schem.Name}}</option>
    </select>
    
    <label class="item  login item-input" >

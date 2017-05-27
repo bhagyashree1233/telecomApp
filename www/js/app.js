@@ -42,6 +42,13 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
        
         
     })
+    .state('mAddBalance', {
+        url: '/mchangePassword',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/addBalance.html'
+       
+        
+    })
  .state('delear', {
         url: '/delear',
         controller:'delearCtrl',

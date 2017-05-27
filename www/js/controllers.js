@@ -49,8 +49,7 @@ $scope.login=function(usn){
 					 $location.path('/mDelear');
            } else if(login.Uname > 1000000 && login.Uname < 2000000) { 
            $scope.password = document.getElementById("pwd").value='';
-           $rootScope.getMasterIdByDId();
-							 $location.path('/delear');
+						 $location.path('/delear');
            } else if(login.Uname > 2000000) { 
            $scope.password = document.getElementById("pwd").value='';
 							 $location.path('/retailer');
@@ -73,23 +72,60 @@ $scope.login=function(usn){
 }) 
 .controller('masterDelearCtrl' ,function($scope,$state,serviceDB,$rootScope,$interval,authentication){
 $scope.masterDelear=[];
-
+$scope.balanceAmount='';
 $scope.home=true;
+$scope.CurrenBalance=''
+//authentication.currentUser().userId;
+
 console.log('I am in master delear')
+
+
+$scope.getBalance=function(){
        //    
 var id =authentication.currentUser().userId;
-		var tName = "MasterDealer";
+		var tName ='MasterDealer';
 		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
 		     
         promise.then(function(res) {
-          console.log(res);
-		  $scope.balanceAmount = res.data.data[0].Balance;
-		  $scope.curUser = res.data.data[0];
-		  console.log($scope.balanceAmount);
-		  
+		 $scope.CurrenBalance=res.data.data[0].Balance
 	   }, function(res) {
-          console.log(res);
-	   });	
+        
+	   }
+	   );
+	   
+	   }
+
+$scope.getDelearBalance=function(userId,tName){
+       //    
+var id =userId;
+		var tName =tName;
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+		 $scope.CurrenDelBalance=res.data.data[0].Balance
+	   }, function(res) {
+       
+	   }
+	   );
+	   
+	   }
+ $scope.getRetailerBalance=function(userId,tName){
+       //    
+var id =authentication.currentUser().userId;
+		var tName ='MasterDealer';
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+		  $scope.RetailerBalance=res.data.data[0].Balance
+	   }, function(res) {
+        $scope.CurrenRetailerBalance=res.data.data[0].Balance
+	   }
+	   );
+	   
+	   }
+$scope.getBalance();
+	  
+
 $scope.masterDelear=
 [
 {name:"Current Balance",clas:'icon ionIcon ion-cash'},
@@ -118,7 +154,7 @@ $scope.home=false;
     else if(delear.name=='Reports'){
         $state.go('report')
     }else if(delear.name=='Add Balance'){
-        $state.go('addBalance')
+        $state.go('mAddBalance')
     }else if(delear.name=='Revert Balance'){
         $state.go('revertBalance')
     }
@@ -131,7 +167,43 @@ $scope.start= function(){$interval(function() {
           }, 5000);
         
 }
-	
+
+	$scope.transferMoney = function(transferDetails) {
+		$scope.transferDetails={};
+		$scope.getDelearBalance(transferDetails.userId,'Delear');
+        $scope.transferDetails["SenderId"] =transferDetails.userId;
+        //Current User ID
+        //Current user Id Balance
+        //Other person Balance
+  $scope.transferDetails.Amount=transferDetails.amount;
+		if(Number($scope.transferDetails.Amount) < 1 ) {
+            console.log('Enter valid amount to transfer');
+			$scope.transferMoneyErr = "Enter valid amount to transfer";
+			return;
+		}					               
+		if((Number( $scope.CurrenBalance) - Number($scope.transferDetails.Amount)) < 0)
+		{                                  
+			console.log('Insufficient balance');
+			$scope.transferMoneyErr = "Insufficient balance";
+			return;                         
+		}                                   
+      $scope.transferDetails.RecieverBalance=$scope.CurrenDelBalance;
+      console.log($scope.CurrenDelBalance);
+        console.log($scope.transferDetails.RecieverBalance+'Delear Balance');
+        var tempVar = Number($scope.transferDetails.RecieverBalance)+Number($scope.transferDetails.Amount);
+        var promise = serviceDB.toServer({"Id":$scope.transferDetails.RecieverId, "TName":$scope.transferDetails.RecieverTName, "Balance":tempVar}, '/updateBalanceAmount'); 	     
+        promise.then(function(res) {
+          console.log(res.message);
+		  $scope.balanceAmount = Number($scope.balanceAmount) - Number($scope.transferDetails.Amount);
+		  $scope.updateBalance($scope.balanceAmount); 
+          $scope.transferDetails["Balance"] = Number($scope.balanceAmount);
+		  updateMoneyTransfer($scope.transferDetails);
+	    }, function(res) {
+          console.log(res);
+	    });	 
+		                    
+	}
+
 $scope.changePassword = function(newpwd) {
 	console.log(newpwd)
 	console.log('I am in master deler change password')
@@ -184,10 +256,90 @@ $scope.changePassword = function(newpwd) {
     }
 
 })
-.controller('delearCtrl',function($scope,$state,$rootScope,serviceDB,$cordovaToast,authentication){
-	var id = $rootScope.userName
+.controller('delearCtrl',function($interval ,$scope,$state,$rootScope,serviceDB,$cordovaToast,authentication,$filter){
+
+	var id =authentication.currentUser().userId;
 		var tName = "Dealer";
-		
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+          console.log(res);
+		  $scope.balanceAmount = res.data.data[0].Balance;
+		  $scope.curUser = res.data.data[0];
+		  console.log($scope.balanceAmount);
+		  
+	   }, function(res) {
+          console.log(res);
+	   });
+
+		$scope.getMasterIdByDId = function() {
+		var did = authentication.currentUser().userId;
+	   var promise = serviceDB.toServer({"Dealerid":did}, '/getMIdByDId');        
+       promise.then(function(res) {
+	      //console.log("success");
+          console.log(res.data.data);
+		  if(res.data.data != "failure") {
+            $rootScope. ParentMasterDealerId = res.data.data[0].ParentMasterDealerId;
+		  }
+		 
+	   }, function(res) {
+          console.log(res);
+	   });
+	}
+
+	$scope.getListOfScheme = function(sType) {
+	   var promise = serviceDB.toServer({Type:sType}, '/getScheme');       
+       promise.then(function(res) {
+		  console.log("success");
+          console.log(res);
+		  $scope.schemeList = res.data.data;
+		  console.log($scope.schemeList)
+	   }, function(res) {
+          console.log(res);
+	   });
+	}
+	$scope.start= function(){$interval(function() {
+  window.location.reload(true);
+          }, 5000);
+        
+}
+$scope.getListOfRetailerType = function() {
+	   var promise = serviceDB.toServer({}, '/getRetailerType');       
+       promise.then(function(res) {
+		  console.log("success");
+          console.log(res);
+
+		  if(res.data.data != "failure") { 
+		    $scope.retailerTypeList = res.data.data;
+		  }
+	   }, function(res) {
+          console.log(res);
+	   });
+	}
+		$scope.getListOfRetailerType();
+		$scope.getListOfScheme('retailer');
+		$scope.getMasterIdByDId();
+		 $rootScope.statelist = ["Karnataka","Andra Pradesh","Kerala", "TamilNadu"];
+
+    var citylist = [
+        {"city":"Bangalore", "state": "Karnataka"},
+        {"city":"Mysore", "state": "Karnataka"},
+        {"city":"Raichur", "state": "Karnataka"},
+        {"city":"Tumkur", "state": "Karnataka"},
+        {"city":"Shivamoga", "state": "Karnataka"},
+        {"city":"Davanagere", "state": "Karnataka"},
+        {"city":"Belagavi", "state": "Karnataka"},
+        {"city":"Hyderabad", "state": "Andra Pradesh"},
+        {"city":"Tirupathi", "state": "Andra Pradesh"},
+        {"city":"Trivendrum", "state": "Kerala"},
+        {"city":"Kochi", "state": "Kerala"},
+        {"city":"Chennai", "state": "TamilNadu"}
+    ]; 
+ 
+     $rootScope.loadCities = function(selState) {
+         console.log(selState);
+        $rootScope.cities = ($filter('filter')(citylist, {state: selState}));  
+     }
     $scope.delear=
 [
 {name:"Current Balance",clas:'icon ionIcon ion-cash'},
@@ -374,7 +526,20 @@ $scope.changePassword = function(newpwd) {
 	   });	
 	}
 })
-.controller('retailerCtrl',function($scope,$state,serviceDB,$rootScope,$cordovaToast){
+.controller('retailerCtrl',function($scope,$state,serviceDB,$rootScope,$cordovaToast,authentication){
+	var id =authentication.currentUser().userId;
+		var tName = "Dealer";
+		var promise = serviceDB.toServer({"Id":id, "TName":tName}, '/getBalanceAmount'); 
+		     
+        promise.then(function(res) {
+          console.log(res);
+		  $scope.balanceAmount = res.data.data[0].Balance;
+		  $scope.curUser = res.data.data[0];
+		  console.log($scope.balanceAmount);
+		  
+	   }, function(res) {
+          console.log(res);
+	   });
 	$rootScope.recharge={};
 		var id = $rootScope.userName
 		var tName = "Retailer";

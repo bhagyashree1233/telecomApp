@@ -2,14 +2,23 @@
  <ion-content>
 <div class="list list-inset">
 <h5 style="font-size:3vmax">Add Balance</h5>
+<select ng-model="transferDetails.type">
+<option>Select Type</option>
+<option>Delear</option>
+<option>Retailer</option>
+
+</select>
+ 
+
   <label class="item login item-input">
-    <input type="text" placeholder="Enter UserId">
+
+    <input type="text" placeholder="Enter UserId" ng-model="transferDetails.userId">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Amount">
+    <input type="text" placeholder="Enter Amount" ng-model="transferDetails.amount">
   </label>
   
-   <button class="button sButton button-block button-stable">
+   <button class="button sButton button-block button-stable" ng-click="transferMoney(transferDetails)">
     Add Balance
    </button>
 </div>

@@ -50,23 +50,7 @@ angular.module('starter.globalcontroller', [])
         }
 
     }
-$rootScope.getMasterIdByDId = function() {
-		var did = authentication.currentUser().userId;
-      // var promise = serviceDB.toServer({"dealerid":did}, 'http://telecom.azurewebsites.net/getMIdByDId');      
-	   var promise = serviceDB.toServer({"Dealerid":did}, '/getMIdByDId');        
-       promise.then(function(res) {
-	      //console.log("success");
-          console.log(res.data.data);
-		  if(res.data.data != "failure") {
-            $rootScope. ParentMasterDealerId = res.data.data[0].ParentMasterDealerId;
-             
-               
-		  }
-		  console.log($scope.newRetailer);
-	   }, function(res) {
-          console.log(res);
-	   });
-	}
+
 	$rootScope.GetSchemebyType= function (req, res) {
   var type = req.body.Type;
 
