@@ -73,6 +73,13 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         controller:'delearCtrl',
         templateUrl: 'templates/addRetailer.html' 
     })
+    .state('dAddBalance', {
+        url: '/dchangePassword',
+          controller:'delearCtrl',
+        templateUrl: 'templates/addBalance.html'
+       
+        
+    })
     .state('retailer', {
         url: '/retailer',
         controller:'reportCtrl',
