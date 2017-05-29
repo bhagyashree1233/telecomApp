@@ -15,7 +15,9 @@ angular.module('starter.controllers', [])
    var promise = serviceDB.login($scope.login, '/loginValidate');
    promise.then(function(res) {
     console.log(res.data);
+
     $rootScope.hideDbLoading()
+
     if (res.data.done) {
      if ($scope.login.Uname > 1000 && $scope.login.Uname < 1000000) {
       $location.path('/mDelear');
@@ -151,12 +153,20 @@ angular.module('starter.controllers', [])
     console.log($scope.transferDetails.RecieverBalance + 'Delear Balance');
 
     var promise = serviceDB.toServer($scope.transferDetails, '/addMoneyTransferDetails');
+    $rootScope.showDbLoading();
     promise.then(function(res) {
+      $rootScope.hideDbLoading();
      console.log(res);
      $scope.transferDetails={}
     }, function(res) {
      console.log(res);
-     $scope.transferDetails={}
+     if(res.data.done){
+       $rootScope.hideDbLoading();
+       $scope.transferDetails={}
+       $rootScope.ShowToast('add balace success');
+     }
+      $rootScope.hideDbLoading();
+     
      $rootScope.ShowToast('Unable to add balace');
     });
     }else{
@@ -169,34 +179,37 @@ angular.module('starter.controllers', [])
    console.log($scope.newpwd)
    console.log('I am in master deler change password')
    if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
-    $cordovaToast.show('Enter New Password', 'long', 'center')
+    $rootScope.ShowToast('Enter New Password')
     return false
    }
    if ( $scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
-    $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+    $rootScope.ShowToast('Enter Confirm Password')
     return false
    }
    if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
+     $rootScope.ShowToast('New password does not match confirm password')
     console.log("password does not match");
-    $cordovaToast.show('New password does not match confirm password', 'long', 'center')
     return false;
    }
    $scope.newpwd["Id"] = id;
    $scope.newpwd["tName"] = "MasterDealer";
    var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
+   $rootScope.showDbLoading();
    promise.then(function(res) {
     if (res.data.done) {
-     $scope.newpwd = {};
-     $cordovaToast.show('Changed Password Successfully', 'long', 'center')
-    } else {
+      $rootScope.hideDbLoading();
+           $rootScope.ShowToast('Changed Password Successfully')
 
-     $cordovaToast.show('invalid old password', 'long', 'center')
      $scope.newpwd = {};
+    } else {
+ $rootScope.hideDbLoading();
+ $rootScope.ShowToast('invalid old password')
+    
     }
     console.log(res);
    }, function(res) {
-    $cordovaToast.show('Unable to change password', 'long', 'center')
-     $scope.newpwd = {};
+     $rootScope.ShowToast('Unable to change password')
+   
    });
   }
 
@@ -246,11 +259,12 @@ angular.module('starter.controllers', [])
    if(res.data.data[0]!=undefined){
   $scope.CurrenBalance = res.data.data[0].Balance;
    }else{
-   $cordovaToast.show('Unable to get balance', 'long', 'center')
+     $rootScope.ShowToast('Unable to get balance')
+   
    }
 
   }, function(res) {
-   $cordovaToast.show('Unable to get balance', 'long', 'center')
+    $rootScope.ShowToast('Unable to get balance')
   });
 
   $scope.getMasterIdByDId = function() {
@@ -263,7 +277,8 @@ angular.module('starter.controllers', [])
     if (res.data.data != "failure") {
      $scope.ParentMasterDealerId = res.data.data[0].ParentMasterDealerId;
     }else{
-         $cordovaToast.show('Unable to get Master Id', 'long', 'center')
+      $rootScope.ShowToast('Unable to get Master Id')
+       
 
     }
 
@@ -281,11 +296,11 @@ angular.module('starter.controllers', [])
     $scope.schemeList = res.data.data;
     console.log($scope.schemeList)
     }else{
-        $cordovaToast.show('Unable to Scheme List', 'long', 'center')
+      $rootScope.ShowToast('Unable to Scheme List')
 
     }
    }, function(res) {
-         $cordovaToast.show('Unable to Scheme List', 'long', 'center')
+     $rootScope.ShowToast('Unable to Scheme List')
    });
   }
   $scope.start = function() {
@@ -303,10 +318,12 @@ angular.module('starter.controllers', [])
     if (res.data.data != "failure") {
      $scope.retailerTypeList = res.data.data;
     }else{
-        $cordovaToast.show('Unable to get Retailer type', 'long', 'center')
+      $rootScope.ShowToast('Unable to get Retailer type')
+       
     }
    }, function(res) {
-        $cordovaToast.show('Unable to get Retailer type', 'long', 'center')
+     $rootScope.ShowToast('Unable to get Retailer type')
+      
    });
   }
   $scope.getListOfRetailerType();
@@ -408,6 +425,8 @@ angular.module('starter.controllers', [])
    $scope.retailer["LoginStatus"] = "success";
    $scope.retailer["ParentDealerId"] = id;
    $scope.retailer["ParentMasterDealerId"] = $scope.ParentMasterDealerId;
+   $scope.retailer["SenderId"]=id;
+   $scope.retailer["CurSenderBalance"]=$scope.CurrenBalance;
    if ($scope.retailer.Name == "" || $scope.retailer.Name == undefined) {
     $rootScope.ShowToast('name required');
     return;
@@ -492,10 +511,19 @@ angular.module('starter.controllers', [])
 
    //  var promise = serviceDB.toServer(retailer, 'http://telecom.azurewebsites.net/addRetailer');       
    var promise = serviceDB.toServer($scope.retailer, '/addRetailer');
-
+$rootScope.showDbLoading();
 
    promise.then(function(res) {
-    console.log("success");
+     $rootScope.hideDbLoading()
+     if(res.data.done){
+        $rootScope.ShowToast('Added Successfully');
+        $scope.retailer={};
+
+     }else{
+               $rootScope.ShowToast('Unable to add Retailer');
+
+     }
+   
 
     console.log(res);
    }, function(res) {
@@ -536,12 +564,20 @@ angular.module('starter.controllers', [])
     console.log($scope.transferDetails.RecieverBalance + 'Delear Balance');
 
     var promise = serviceDB.toServer($scope.transferDetails, '/addMoneyTransferDetails');
+    $rootScope.showDbLoading();
     promise.then(function(res) {
-     console.log(res);
+      if(res.data.done){
+        $rootScope.hideDbLoading()
+        console.log(res);
      $scope.transferDetails={}
+      }else{
+        $rootScope.ShowToast('Unable to add balace');
+      }
+      
+     
     }, function(res) {
+      $rootScope.hideDbLoading()
      console.log(res);
-     $scope.transferDetails={}
      $rootScope.ShowToast('Unable to add balace');
     });
     }else{
@@ -554,41 +590,49 @@ angular.module('starter.controllers', [])
    console.log($scope.newpwd)
    console.log('I am in master deler change password')
    if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
-    $cordovaToast.show('Enter New Password', 'long', 'center')
+     $rootScope.ShowToast('Enter New Password')
+   
     return false
    }
    if ( $scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
-    $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+     $rootScope.ShowToast('Enter Confirm Password')
+    
     return false
    }
    if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
     console.log("password does not match");
-    $cordovaToast.show('New password does not match confirm password', 'long', 'center')
+    $rootScope.ShowToast('New password does not match confirm password')
+   
     return false;
    }
    $scope.newpwd["Id"] = id;
    $scope.newpwd["tName"] = "Dealer";
    var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
+    $rootScope.showDbLoading();
    promise.then(function(res) {
+     $rootScope.hideDbLoading()
     if (res.data.done) {
-     $scope.newpwd = {};
-     $cordovaToast.show('Changed Password Successfully', 'long', 'center')
-    } else {
 
-     $cordovaToast.show('invalid old password', 'long', 'center')
      $scope.newpwd = {};
+     $rootScope.ShowToast('Changed Password Successfully')
+     
+    } else {
+    $rootScope.ShowToast('invalid old password')
+     
+    
     }
     console.log(res);
    }, function(res) {
-    $cordovaToast.show('Unable to change password', 'long', 'center')
-     $scope.newpwd = {};
+     $rootScope.hideDbLoading()
+     $rootScope.ShowToast('Unable to change password')
+     
    });
   }
  })
- .controller('retailerCtrl', function($scope, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
+ .controller('retailerCtrl', function($scope,$interval, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
  var id='';
  var tName='';
- $rootScope.recharge = {};
+ 
  $scope.newpwd={};
    id = authentication.currentUser().userId;
    tName = "Retailer";
@@ -605,7 +649,8 @@ angular.module('starter.controllers', [])
    
    }
   }, function(res) {
-     $cordovaToast.show('Unable to get balence', 'long', 'center')
+    $rootScope.ShowToast('Unable to get balence')
+     
   });
   
  
@@ -665,61 +710,96 @@ angular.module('starter.controllers', [])
     $state.go('report')
    }
   }
+ $scope.start = function() {
+   $interval(function() {
+    window.location.reload(true);
+   }, 5000);
 
+  }
   $scope.changePassword = function() {
    console.log($scope.newpwd)
    console.log('I am in master deler change password')
    if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
-    $cordovaToast.show('Enter New Password', 'long', 'center')
+      $rootScope.ShowToast('Enter New Password')
+    
     return false
    }
    if ( $scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
-    $cordovaToast.show('Enter Confirm Password', 'long', 'center')
+     $rootScope.ShowToast('Enter Confirm Password')
+   
     return false
    }
    if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
     console.log("password does not match");
-    $cordovaToast.show('New password does not match confirm password', 'long', 'center')
+    $rootScope.ShowToast('New password does not match confirm password')
+    
     return false;
    }
    $scope.newpwd["Id"] = id;
    $scope.newpwd["tName"] = "Retailer";
    var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
+   $rootScope.showDbLoading();
    promise.then(function(res) {
+     $rootScope.hideDbLoading()
     if (res.data.done) {
      $scope.newpwd = {};
-     $cordovaToast.show('Changed Password Successfully', 'long', 'center')
+      $rootScope.ShowToast('Changed Password Successfully')
+     
     } else {
-
-     $cordovaToast.show('invalid old password', 'long', 'center')
-     $scope.newpwd = {};
+     $rootScope.ShowToast('invalid old password')
     }
     console.log(res);
    }, function(res) {
-    $cordovaToast.show('Unable to change password', 'long', 'center')
-     $scope.newpwd = {};
+     $rootScope.hideDbLoading()
+      $rootScope.ShowToast('Unable to change password')
    });
   }
  })
  .controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB) {
+var id='';
+var tName=''
+id = authentication.currentUser().userId;
+tName='Retailer';
+$scope.recharge = {};
 
+$scope.rechargeDetails = {};
+$scope.CurrenBalance = '';
+  var promise = serviceDB.toServer({
+   "Id": id,
+   "TName": tName
+  }, '/getBalanceAmount');
+
+  promise.then(function(res) {
+   console.log(res);
+   if(res.data.data!=undefined){
+  $scope.CurrenBalance = res.data.data[0].Balance;
+   
+   }
+  }, function(res) {
+     $cordovaToast.show('Unable to get balence', 'long', 'center')
+  });
   $scope.mobileRecharge = [{
-    id: "AIR",
+    id: "A",
     name: "Airtel",
     src: 'img/airtel.jpg'
    }, {
+     id:"V",
     name: "Vodafone",
     src: 'img/vodafone.jpg'
    }, {
+     id:"AIR",
     name: "Aircel",
     src: 'img/aircel.jpg'
    }, {
+     id:"BT",
     name: "BSNL-TOPUP",
     src: 'img/bsnl.jpg'
    }, {
+
     name: "VIRGIN-GSM",
     src: 'img/docomo.jpg'
    }, {
+     id:"D",
     name: "DOCOMO",
     src: 'img/docomo.jpg'
    }, {
@@ -729,48 +809,60 @@ angular.module('starter.controllers', [])
     name: "RECHARGE VIDEOCON-SPL",
     src: 'img/videocon.jpg'
    }, {
+     id:"RG",
     name: "RELIANCE-GSM",
     src: 'img/relianc.jpg'
    }, {
+     id:"RC",
     name: "RELIANCE-CDMA",
     src: 'img/relianc.jpg'
    }, {
+     id:"I",
     name: "Idea",
     src: 'img/idea.jpg'
    }, {
     name: "VIRGIN-CDMA",
     src: 'img/docomo.jpg'
    }, {
+     id:"TI",
     name: "TATA INDICOM",
     src: 'img/tataInd.jpg'
    }, {
+     id:"M",
     name: "MTS",
     src: 'img/mts.jpg'
    }, {
+     id:"JO",
     name: "JIO",
     src: 'img/jio.jpg'
    }, {
+     id:"U",
     name: "UNINOR",
     src: 'img/uninor.jpg'
    }, {
+     id:"US",
     name: "UNINOR-SPL",
     src: 'img/uninor.jpg'
    }, {
     name: "BSNL-3G",
     src: 'img/bsnl.jpg'
    }, {
+     id:"BS", 
     name: "BSNL-STV",
     src: 'img/bsnl.jpg'
    }, {
+     id:"DS",
     name: "DOCOME-SPECIAL",
     src: 'img/docomo.jpg'
    }, {
     name: "LOOP MOBILE",
     src: 'img/loop.jpg'
    }, {
+     id:"TB",
     name: "BSNL Recharge",
     src: 'img/bsnl.jpg'
    }, {
+
     name: "MTNL-Recharge",
     src: 'img/img.jpg'
    }, {
@@ -783,70 +875,104 @@ angular.module('starter.controllers', [])
 
   ]
   $scope.dthRecharge = [{
+    id:"DTV",
    name: 'Dish TV DTH',
    src: 'img/dish.png'
   }, {
+    id:"TTV",
    name: 'Tata Sky DTH',
    src: 'img/sky.png'
   }, {
+    id:"BTV",
    name: 'Big TV DTH',
    src: 'img/bigTV.jpg'
   }, {
+    id:"VTV",
    name: 'Videocon DTH',
    src: 'img/videcon.png'
   }, {
+    id:"STV",
    name: 'Sun DTH',
    src: 'img/sun.png'
   }, {
+    id:"ATV",
    name: 'Airtel DTH',
    src: 'img/airtelDTH.png'
   }]
   $scope.postPaidRecharge = [{
+    id:"PA", 
    name: 'POSTPAID AIRTEL',
    src: 'img/airtel.jpg'
   }, {
+    id:"PI", 
    name: 'POSTPAID IDEA',
    src: 'img/idea.jpg'
   }, {
+    id:"PV", 
    name: 'POSTPAID VODAFONE',
    src: 'img/vodafone.jpg'
   }, {
+    id:"PB", 
    name: 'POSTPAID BSN',
    src: 'img/bsnl.jpg'
   }, {
+    id:"PD", 
    name: 'POSTPAID DOCOMO',
    src: 'img/docomo.jpg'
   }, {
+    id:"PR",
    name: 'POSTPAID RELICE CDMA/GSM',
    src: 'img/relianc.jpg'
   }]
   $scope.mobilRecg = function(rechargeType, mobilename, id) {
-   console.log(rechargeType)
-   console.log(mobilename)
-   $rootScope.recharge.type = rechargeType;
-   $rootScope.recharge.name = mobilename;
-   $rootScope.recharge.id = id;
+    $rootScope.mobile={};
+   $rootScope.mobile.type =rechargeType;
+  $rootScope.mobile['name']= mobilename ;
+ $rootScope.mobile['id']=id;
    $state.go('recharge')
   }
   $scope.rechargeSubmit = function(recharge) {
-   $scope.rechargeDetails = {};
-   console.log(recharge.number);
-   console.log(recharge.amount);
    $scope.rechargeDetails['RetailerId'] = authentication.currentUser().userId;
-   $scope.rechargeDetails['RechargeType'] = $rootScope.recharge.type;
-   $scope.rechargeDetails['Company'] = $rootScope.recharge.name;
-   $scope.rechargeDetails['OperatorCode'] = $rootScope.recharge.id;
-   $scope.rechargeDetails['RechargeAmount'] = recharge.amount;
-   $scope.rechargeDetails['CustomerName'] = recharge.Cusname;
-   $scope.rechargeDetails['MobileNo'] = recharge.number;
-   var promise = serviceDB.toServer($scope.rechargeDetails, "/recharge");
-   promise.then(function(res) {
-    console.log('recharge entered')
-    console.log(res);
+   $scope.rechargeDetails['RechargeType'] = $rootScope.mobile.type;
+   $scope.rechargeDetails['Company'] =  $rootScope.mobile.name;
+   $scope.rechargeDetails['OperatorCode'] =$rootScope.mobile.id;
+   $scope.rechargeDetails['RechargeAmount'] = $scope.recharge.amount;
+   $scope.rechargeDetails['CustomerName'] = $scope.recharge.Cusname;
+   $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
+   if(isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length != 10) {
+            console.log("Enter valid mobile number");
+			$scope.rechargeError = "Enter valid mobile number";
+			return;
+		}
+		if(isNaN($scope.rechargeDetails.RechargeAmount)) {
+		    $rootScope.ShowToast('Amount should be a number')
+             
 
+			return;
+		}
+		if(Number($scope.rechargeDetails.RechargeAmount) > Number($scope.CurrenBalance)) {
+		   $rootScope.ShowToast('Insufficient Blanace ')
+           
+
+			return;
+		} 
+   var promise = serviceDB.toServer($scope.rechargeDetails, "/recharge");
+   $rootScope.showDbLoading();
+   promise.then(function(res) {
+     if(res.data.done){
+     $rootScope.hideDbLoading();
+    $rootScope.ShowToast('Successfully recharged')
+    console.log(res);
+   $scope.recharge={}
+}else{
+  $rootScope.ShowToast('Unable to recharged')
+}
     //	var promise = serviceDB.toServer(details, "/recharge");
    }, function(res) {
-    console.log(res);
+    
+     $rootScope.hideDbLoading();
+     $rootScope.ShowToast('Unable to recharge')
+ $scope.rechargeDetails={}
    })
 
   }

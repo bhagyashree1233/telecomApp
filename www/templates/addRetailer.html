@@ -57,16 +57,16 @@
    </select>
    
    <label class="item  login item-input" >
-    <input type="text" placeholder="Amount" readonly>
+    <input type="text" placeholder="retailer.EmailId" readonly>
   </label>
    <label class="item  login item-input">
-    <input type="text" placeholder="Opening Balance">
+    <input type="text" placeholder="Opening Balance" ng-model="retailer.Balance" >
   </label>
    <label class="item  login item-input">
-    <input type="text" placeholder="Enter Password">
+    <input type="text" placeholder="Enter Password" ng-model="retailer.Password">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Confirm Password">
+    <input type="text" placeholder="Confirm Password" ng-model="retailer.Cpassword">
   </label>
    <button class="button sButton button-block button-stable" ng-click="addNewRetailer(retailer)">
    Submit
