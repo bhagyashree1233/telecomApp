@@ -1,10 +1,17 @@
 <ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
    <ion-content ng-controller="retailerHomeCtrl">
    <ul class="list " >
     <li class="item masterDelerList" ng-repeat="postPaid in postPaidRecharge" ng-click="mobilRecg('Postpaid',postPaid.name,postPaid.id)">
-     <img src={{postPaid.src}} class="rechargeImg"></img>
+             <img style=""src={{postPaid.src}} class="rechargeImg"></img>
      <i  class="icon arrow ion-chevron-right"></i>
-      <p style="">{{postPaid.name}}</p>
+      <p style="margin-left:10%;heigth:10vh ! important">{{postPaid.name}}
+      </p>
+
     </li>
    
     

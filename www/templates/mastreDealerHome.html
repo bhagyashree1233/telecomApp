@@ -1,6 +1,12 @@
-<ion-view>
+<ion-view title="Uttam Telecom">
+    <ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+
    <ion-content ng-controller="masterDelearCtrl">
-  
+   
    <ul class="list "  >
     <li class="item masterDelerList" ng-click="master(delear)" ng-repeat="delear in masterDelear">
         <i  class={{delear.clas}}></i>

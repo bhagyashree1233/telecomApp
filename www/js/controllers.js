@@ -1,5 +1,5 @@
 angular.module('starter.controllers', [])
- .controller('loginCtrl', function($scope, $state, serviceDB, $rootScope, $location) {
+ .controller('loginCtrl', function($scope, $state, serviceDB, $rootScope, $location,$ionicHistory) {
   $scope.login = {}
   $scope.loginSub = function(usn) {
   	console.log($scope.login.Uname);
@@ -18,7 +18,7 @@ angular.module('starter.controllers', [])
 
     $rootScope.hideDbLoading()
 
-    if (res.data.done) {
+    if (res.data.done==true) {
      if ($scope.login.Uname > 1000 && $scope.login.Uname < 1000000) {
       $location.path('/mDelear');
      } else if ($scope.login.Uname > 1000000 && $scope.login.Uname < 2000000) {
@@ -29,6 +29,7 @@ angular.module('starter.controllers', [])
       $location.path('/retailer');
 
      } else {
+       console.log('Hello');
       $rootScope.ShowToast('Failed to login')
       return false;
      }
@@ -40,6 +41,9 @@ angular.module('starter.controllers', [])
    });
 
 
+  }
+  $scope.goBack=function(){
+    $ionicHistory.goBack(); 
   }
  })
  .controller('masterDelearCtrl', function($scope, $state, serviceDB, $rootScope, $interval, authentication) {
@@ -172,6 +176,7 @@ angular.module('starter.controllers', [])
     }else{
        $rootScope.ShowToast('Invalid id');
     }
+
    });
   }
 
@@ -212,7 +217,10 @@ angular.module('starter.controllers', [])
    
    });
   }
-
+$scope.goBack=function(){
+  console.log('Hai');
+   window.history.back();
+  }
  })
  .controller('reportCtrl', function($scope, $state) {
   $scope.reports = [];
@@ -240,7 +248,9 @@ angular.module('starter.controllers', [])
     $state.go('rechargeReport')
    }
   }
-
+$scope.goBack=function(){
+    $ionicHistory.goBack(); 
+  }
  })
  .controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter) {
    var id='';
@@ -628,6 +638,9 @@ $rootScope.showDbLoading();
      
    });
   }
+  $scope.goBack=function(){
+   window.history.back();
+  }
  })
  .controller('retailerCtrl', function($scope,$interval, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
  var id='';
@@ -754,6 +767,9 @@ $rootScope.showDbLoading();
       $rootScope.ShowToast('Unable to change password')
    });
   }
+  $scope.goBack=function(){
+   window.history.back();
+  }
  })
  .controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB) {
 var id='';
@@ -795,19 +811,9 @@ $scope.CurrenBalance = '';
     name: "BSNL-TOPUP",
     src: 'img/bsnl.jpg'
    }, {
-
-    name: "VIRGIN-GSM",
-    src: 'img/docomo.jpg'
-   }, {
      id:"D",
     name: "DOCOMO",
     src: 'img/docomo.jpg'
-   }, {
-    name: "RECHARGE VIDEOCON",
-    src: 'img/videocon.jpg'
-   }, {
-    name: "RECHARGE VIDEOCON-SPL",
-    src: 'img/videocon.jpg'
    }, {
      id:"RG",
     name: "RELIANCE-GSM",
@@ -820,9 +826,6 @@ $scope.CurrenBalance = '';
      id:"I",
     name: "Idea",
     src: 'img/idea.jpg'
-   }, {
-    name: "VIRGIN-CDMA",
-    src: 'img/docomo.jpg'
    }, {
      id:"TI",
     name: "TATA INDICOM",
@@ -844,9 +847,6 @@ $scope.CurrenBalance = '';
     name: "UNINOR-SPL",
     src: 'img/uninor.jpg'
    }, {
-    name: "BSNL-3G",
-    src: 'img/bsnl.jpg'
-   }, {
      id:"BS", 
     name: "BSNL-STV",
     src: 'img/bsnl.jpg'
@@ -855,23 +855,10 @@ $scope.CurrenBalance = '';
     name: "DOCOME-SPECIAL",
     src: 'img/docomo.jpg'
    }, {
-    name: "LOOP MOBILE",
-    src: 'img/loop.jpg'
-   }, {
      id:"TB",
     name: "BSNL Recharge",
     src: 'img/bsnl.jpg'
-   }, {
-
-    name: "MTNL-Recharge",
-    src: 'img/img.jpg'
-   }, {
-    name: "MTNL-TOPUP",
-    src: 'img/img.jpg'
-   }, {
-    name: "Tata Walky",
-    src: 'img/tataWalky.jpg'
-   },
+   }, 
 
   ]
   $scope.dthRecharge = [{
@@ -919,11 +906,9 @@ $scope.CurrenBalance = '';
     id:"PD", 
    name: 'POSTPAID DOCOMO',
    src: 'img/docomo.jpg'
-  }, {
-    id:"PR",
-   name: 'POSTPAID RELICE CDMA/GSM',
-   src: 'img/relianc.jpg'
-  }]
+  },{id:"PR", name:"Postpaid Reliance CDMA",src: 'img/relianc.jpg'},
+		{id:"PR", name:"Postpaid Reliance GSM",src: 'img/relianc.jpg'}
+   ]
   $scope.mobilRecg = function(rechargeType, mobilename, id) {
     $rootScope.mobile={};
    $rootScope.mobile.type =rechargeType;
@@ -975,5 +960,8 @@ $scope.CurrenBalance = '';
  $scope.rechargeDetails={}
    })
 
+  }
+  $scope.goBack=function(){
+   window.history.back();
   }
  })

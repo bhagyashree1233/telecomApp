@@ -1,10 +1,20 @@
 <ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
    <ion-content ng-controller="retailerHomeCtrl">
    <ul class="list " >
     <li class="item masterDelerList" ng-repeat="mobile in mobileRecharge" ng-click="mobilRecg('mobile',mobile.name,mobile.id)">
+
     <img src={{mobile.src}} class="rechargeImg"></img>
+    
     <i  class="icon arrow ion-chevron-right"></i>
-      <p style="">{{mobile.name}}</p>
+    
+      <p >{{mobile.name}}
+   
+      </p>
     </li>
     
 </ul>

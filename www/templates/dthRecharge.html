@@ -1,10 +1,17 @@
 <ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
    <ion-content ng-controller="retailerHomeCtrl">
    <ul class="list " >
     <li class="item masterDelerList" ng-repeat="dth in dthRecharge" ng-click="mobilRecg('DTH',dth.name,dth.id)">
     <img src={{dth.src}} class="rechargeImg"></img>
     <i  class="icon arrow ion-chevron-right"></i>
-      <p style="">{{dth.name}}</p>
+      <p style="">{{dth.name}}
+
+      </p>
     </li>
     
 </ul>

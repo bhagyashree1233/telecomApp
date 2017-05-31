@@ -5,7 +5,10 @@ angular.module('starter.globalcontroller', [])
     console.log('Hello hai');
 
 
+ $rootScope.closeView = function() {
 
+        $ionicHistory.goBack(-1);
+    }
 
     $rootScope.showDbLoading = function() {
         console.log("ShowDBloading");
