@@ -45,12 +45,14 @@
     height:100%!important;
     padding:1vh;
     margin-left:25%;
+
 }
 .logintextArea{
-  width:65vw!important;
+  width:72vw!important;
   height:20vmax !important;
   border-style: ridge;
   border-width:1vmin;
+  margin-left:15% !important;
 }
 .logintextArea:hover{
    border-color:orange ;
@@ -81,4 +83,15 @@
     border-width:1vmin;
     font-size:2vmax;
     height:8vh;
+}
+.datedisplayfont{
+  font-size:2.5vh !important;
+  font-weight:bold;
+  padding:0.9vh;
+  background:rgba(17, 193, 243, 0.1);
+  margin:0 !important;
+}
+.datedisplayinnerfont{
+  font-weight:normal;
+  font-size: 15px;
 }

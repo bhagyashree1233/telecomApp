@@ -6,12 +6,17 @@
     </ion-nav-bar>
  <ion-content>
 <div class="list list-inset">
-<h5 style="font-size:3vmax">Date:</h5>
+<h5 style="font-size:25px">From Date:</h5>
   <label class="item  login item-input">
   
-    <input type="date" placeholder="Select Date">
+    <input type="date" placeholder="Select From Date">
   </label>
-   <button class="button sButton button-block button-stable">
+  <h5 style="font-size:25px">To Date:</h5>
+  <label class="item  login item-input">
+  
+    <input type="date" placeholder="Select To Date">
+  </label>
+   <button class="button sButton button-block button-stable"  ng-click="rechargeReport()">
     Send
    </button>
 </div>

@@ -14,7 +14,6 @@ angular.module('starter.globalcontroller', [])
         console.log("ShowDBloading");
         $ionicLoading.show({
             template: '<ion-spinner icon="bubbles"></ion-spinner><p>LOADING...</p>',
-            duration: 3000,
             showDelay: 0
         }).then(function() {
             console.log("The loading indicator is now displayed");
@@ -53,6 +52,7 @@ angular.module('starter.globalcontroller', [])
         }
 
     }
+  
 
 	$rootScope.GetSchemebyType= function (req, res) {
   var type = req.body.Type;

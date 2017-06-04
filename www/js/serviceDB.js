@@ -153,5 +153,6 @@ angular.module('starter.service', [])
       isLoggedIn : isLoggedIn,
       currentUser : currentUser
     };
+    
   
 })

@@ -49,6 +49,39 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
        
         
     })
+    .state('mReports', {
+        url: '/mReports',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/reports.html'
+       
+    })
+    .state('mAccrechargeReport', {
+        url: '/mAccrechargeReport',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/accountReport.html'
+       
+    })
+    .state('mRfdrechargeReport', {
+        url: '/mRfdrechargeReport',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/refundReport.html'
+       
+    })
+.state('mRecrechargeReport', {
+        url: '/mRecrechargeReport',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/rechargeReport.html'
+    })
+    .state('mComplain', {
+        url: '/mComplain',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/complain.html'
+    })
+    .state('mComplainList', {
+        url: '/mComplainList',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/complainList.html'
+    })
  .state('delear', {
         url: '/delear',
         controller:'delearCtrl',
@@ -79,6 +112,29 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         templateUrl: 'templates/addBalance.html'
        
         
+    })
+    .state('dReports', {
+        url: '/dReports',
+          controller:'delearCtrl',
+        templateUrl: 'templates/reports.html'
+       
+    })
+    .state('dAccrechargeReport', {
+        url: '/dAccrechargeReport',
+          controller:'delearCtrl',
+        templateUrl: 'templates/accountReport.html'
+       
+    })
+    .state('dRfdrechargeReport', {
+        url: '/dRfdrechargeReport',
+          controller:'delearCtrl',
+        templateUrl: 'templates/refundReport.html'
+       
+    })
+.state('dRecrechargeReport', {
+        url: '/dRecrechargeReport',
+          controller:'delearCtrl',
+        templateUrl: 'templates/rechargeReport.html'
     })
     .state('retailer', {
         url: '/retailer',
