@@ -1,0 +1,37 @@
+<ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+ <ion-content ng-init="complainList()">
+ <ion-list ng-repeat="complain in complainList">
+ <ion-item class="item-text-wrap">
+ <p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{complain.Company}}</span></p>
+ 
+  <p class="datedisplayfont">ComplainId:<span class="datedisplayinnerfont">{{complain.ComplainId}}</span></p>
+ 
+  <p class="datedisplayfont">Message:<span class="datedisplayinnerfont" >{{complain.Message}}</span></p>
+ 
+  <p class="datedisplayfont">Number:<span class="datedisplayinnerfont">{{complain.Number}}</span></p>
+ 
+  <p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{complain.OrderId}}</span></p>
+ 
+  <p class="datedisplayfont">RechargeAmount:<span class="datedisplayinnerfont">{{complain.RechargeAmount}}</span></p>
+ 
+  <p class="datedisplayfont">RechargeDate:<span class="datedisplayinnerfont">{{complain.RechargeDate}}</span></p>
+ 
+  <p class="datedisplayfont">RechargeStatus:<span class="datedisplayinnerfont">{{complain.RechargeStatus}}</span></p>
+ 
+ <p class="datedisplayfont">RechargeType:<span class="datedisplayinnerfont">{{complain.RechargeType}}</span></p>
+ 
+ <p class="datedisplayfont">ResponseMessage:<span class="datedisplayinnerfont">{{complain.ResponseMessage}}</span></p>
+ 
+ <p class="datedisplayfont">SolveDate:<span class="datedisplayinnerfont">{{complain.SolveDate}}</span></p>
+ 
+ <p class="datedisplayfont">Status:<span class="datedisplayinnerfont">{{complain.Status}}</span></p>
+ 
+ </ion-item>
+ <ion-list>
+ </ion-content>
+ </ion-view>

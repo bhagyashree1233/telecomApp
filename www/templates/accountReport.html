@@ -1,0 +1,68 @@
+<ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+ <ion-content>
+<div class="list list-inset">
+<h5 style="font-size:20px">From Date:</h5>
+  <label class="item  login item-input">
+  
+    <input type="date" placeholder="Select From Date" ng-model="accouReport.From">
+  </label>
+  <h5 style="font-size:20px">To Date:</h5>
+  <label class="item  login item-input">
+  
+    <input type="date" placeholder="Select To Date" ng-model="accouReport.To">
+  </label>
+   <button class="button sButton button-block button-stable" ng-click="accountReport(accouReport)">
+    Send
+   </button>
+</div>
+<ion-list ng-repeat="account in accountReportList" style="margin:5vh">
+<ion-item style="padding:0vh">
+
+<p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
+
+
+<p class="datedisplayfont">Date & Time:<span class="datedisplayinnerfont">{{account.TransferDate}}</span></p>
+
+
+<p class="datedisplayfont">Payment From:<span class="datedisplayinnerfont">{{account.SenderId}}</span></p>
+
+
+
+<p class="datedisplayfont">Payment To:<span class="datedisplayinnerfont">{{account.RecieverId}}</span></p>
+
+
+<p class="datedisplayfont">Mobile:
+<span class="datedisplayinnerfont" ng-if="curid==account.SenderId">{{account.RecieverMobileNo}}</span>
+<span class="datedisplayinnerfont" ng-if="curid==account.RecieverId">{{account.SenderMobileNo}}</span>
+</p>
+
+
+<p class="datedisplayfont">Transfer Id:<span class="datedisplayinnerfont">{{account.TransferId}}</span></p>
+
+
+<p class="datedisplayfont">Amount:<span class="datedisplayinnerfont">{{account.TransferAmount}}</span></p>
+
+
+<p class="datedisplayfont">Type:
+<span ng-if="curid==account.SenderId" class="datedisplayinnerfont">Debit</span>
+<span ng-if="curid==account.RecieverId" class="datedisplayinnerfont">Credit</span>
+</p>
+
+
+<p class="datedisplayfont">Balance:
+<span ng-if="curid==account.SenderId" class="datedisplayinnerfont">{{account.SenderBalance}}</span>
+<span ng-if="curid==account.RecieverId" class="datedisplayinnerfont">{{account.RecieverBalance}}</span>
+</p>
+  
+
+
+</ion-item>
+<ion-list>
+
+ </ion-content>
+  </ion-view>
