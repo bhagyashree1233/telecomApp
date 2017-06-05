@@ -7,17 +7,18 @@
  <ion-content>
 <div class="list list-inset">
 <h5 style="font-size:25px;text-align:center">Complain</h5>
+<label class="item login item-input">
+    <input type="text" placeholder="Enter Order Id" ng-model="complain.orderId">
+  </label>
   <label class="item login item-input">
-    <input type="text" placeholder="Enter Mobile Number">
+    <input type="text" placeholder="Enter Mobile Number" ng-model="complain.mobileNumbr">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Amount">
+    <input type="text" placeholder="Enter Amount" ng-model="complain.amount">
   </label>
-  <label class="item  login item-input">
-    <input type="date" placeholder="SelectDate">
-  </label>
+ 
   <label class="item  logintextArea item-input">
-    <textarea placeholder="Enter Message" ></textarea>
+    <textarea placeholder="Enter Message" ng-model="complain.Message" ></textarea>
   </label>
    <button class="button sButton button-block button-stable" ng-click="complaint()">
     Send

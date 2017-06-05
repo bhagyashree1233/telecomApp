@@ -14,10 +14,10 @@ angular.module('starter.controllers', [])
             $rootScope.showDbLoading();
             var promise = serviceDB.login($scope.login, '/loginValidate');
             promise.then(function(res) {
-              $rootScope.hideDbLoading()
+                $rootScope.hideDbLoading()
                 console.log(res.data);
 
-                
+
 
                 if (res.data.done == true) {
                     if ($scope.login.Uname > 1000 && $scope.login.Uname < 5000000) {
@@ -30,13 +30,13 @@ angular.module('starter.controllers', [])
                         $location.path('/retailer');
 
                     } else {
-                      $rootScope.hideDbLoading()
+                        $rootScope.hideDbLoading()
                         console.log('Hello');
                         $rootScope.ShowToast('Failed to login')
                         return false;
                     }
                 } else {
-                  $rootScope.hideDbLoading()
+                    $rootScope.hideDbLoading()
                     $rootScope.ShowToast('unable to login')
                 }
             }, function(res) {
@@ -58,8 +58,8 @@ angular.module('starter.controllers', [])
         $scope.transferDetails = {};
         $scope.curreBalMode = false;
         $scope.reports = [];
-        $scope.compalin={};
-        $scope.complainList=[];
+        $scope.complain = {};
+        $scope.complainList = [];
         var cancel = ''
         $scope.curid = authentication.currentUser().userId;
         var type = '';
@@ -72,7 +72,7 @@ angular.module('starter.controllers', [])
             }, '/getBalanceAmount');
             promise.then(function(res) {
                 console.log(res.data.data.length);
-                if (res.data.data.length > 0) {
+                if (res.data.data.length > 0 && res.data.done==true) {
                     $scope.CurrenBalance = res.data.data[0].Balance
                 } else {
                     $rootScope.ShowToast('No Balance Found');
@@ -113,7 +113,6 @@ angular.module('starter.controllers', [])
             $scope.home = false;
             console.log(delear);
             if (delear.name == 'Current Balance') {
-
                 $state.go('mCurrentBalance')
             } else if (delear.name == 'Complain') {
                 $state.go('mComplain')
@@ -133,13 +132,236 @@ angular.module('starter.controllers', [])
 
         $scope.start = function() {
             $interval(function() {
-                // window.location.reload();
                 $scope.getBalance();
             }, 5000);
 
         }
+        $scope.complaint = function() {
+          $scope.complain.Id=$scope.curid;
+          if($scope.complain.orderId==undefined||$scope.complain.orderId==""){
+               $rootScope.ShowToast('Enter Order Id ');
+                 return false;
+          }
+          if($scope.complain.Message==undefined||$scope.complain.Message==""){
+               $rootScope.ShowToast('Enter Message ');
+                 return false;    
+          }
+          var promise=serviceDB.toServer($scope.complain,'/sendComplain');
+          $rootScope.showDbLoading();
+         promise.then(function(res){
+                 $rootScope.hideDbLoading();
+        if(res.data.done){
+           $scope.complain={}
+          $rootScope.ShowToast('Complain added success');
+             
+        }else{
+        $rootScope.ShowToast('Failed to add complain');
+        return false;
+        }
+         },function(error){
+                 $rootScope.hideDbLoading();
+      $rootScope.ShowToast('Failed to add complain');
+        return false;
+         })
+                }
+        $scope.complainList = function() {
+                $scope.complain.Id=$scope.curid;
+            var promise = serviceDB.toServer($scope.complain, '/getComplains');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                    $rootScope.hideDbLoading();
+               if(res.data.done==true &&res.data.data.length>0){
+                $scope.complainList = res.data.data;
+                }else{
+                  $rootScope.ShowToast('No Complain List Found')      
+                }
+            }, function(error) {
+                    $rootScope.hideDbLoading();
+                  $rootScope.ShowToast('Unable to get complain List') 
+                  return false;       
+            })
+        }
+         $scope.changePassword = function() {
+            console.log($scope.newpwd)
+            console.log('I am in master deler change password')
+            if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
+                $rootScope.ShowToast('Enter New Password')
+                return false
+            }
+            if ($scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
+                $rootScope.ShowToast('Enter Confirm Password')
+                return false
+            }
+            if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
+                $rootScope.ShowToast('New password does not match confirm password')
+                console.log("password does not match");
+                return false;
+            }
+            $scope.newpwd["Id"] = $scope.curid;
+            $scope.newpwd["tName"] = "MasterDealer";
+            var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                    $rootScope.hideDbLoading();
+                if (res.data.done) {
+                    
+                    $rootScope.ShowToast('Changed Password Successfully')
 
-        $scope.transferMoney = function() {
+                    $scope.newpwd = {};
+                } else {
+                   
+                    $rootScope.ShowToast('invalid old password')
+
+                }
+                console.log(res);
+            }, function(res) {
+                $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to change password')
+
+            });
+        }
+        
+        $scope.reports = [{
+            name: 'Account Report',
+            clss: 'icon ionIcon ion-document-text'
+        }]
+        $scope.repo = function(report) {
+            if (report.name == 'Account Report') {
+                $state.go('mAccrechargeReport')
+            }
+        }
+        var oneDay =  24 * 60 * 60 * 1000;
+        $scope.accountReport = function(accouReport) {
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d hh:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
+
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            var promise = serviceDB.toServer(tempReport, '/getAccountReports');
+            $rootScope.showDbLoading();
+             
+            promise.then(function(res) {
+                    $rootScope.hideDbLoading();
+                   if(res.data.done==true&&res.data.data.length>0){
+                console.log(res);
+                $scope.accountReportList = res.data.data;
+                }else{
+               $rootScope.ShowToast(' Account Report not found');
+                  
+                }
+            }, function(res) {
+              $rootScope.hideDbLoading();
+               $rootScope.ShowToast('Unable to get Account Report');
+            });
+
+        }
+
+        $scope.refundReport = function(accouReport) {
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d hh:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
+
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            var promise = serviceDB.toServer(tempReport, '/getRefundReports');
+             $rootScope.showDbLoading();
+            promise.then(function(res) {
+                     $rootScope.hideDbLoading();
+               if(res.data.done==true&&res.data.data.length>0){
+                $scope.accountReportList = res.data.data;
+               }else{
+
+                $rootScope.ShowToast(' Refund Report not found');       
+               }
+            }, function(res) {
+                     $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to get Refund Report'); 
+            });
+        }
+
+         $scope.rechargeReport = function(accouReport) {
+         
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d hh:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
+
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            tempReport.CompanyCode="all";
+            tempReport.Status="all";
+            tempReport.Number=0;
+            var promise = serviceDB.toServer(tempReport, '/getAllReports');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                     $rootScope.hideDbLoading();
+             if(res.data.done==true &&re.data.data.length>0){
+                $scope.accountReportList = res.data.data;
+             }else{
+               $rootScope.ShowToast('No  Refund Report Found'); 
+                     
+             }
+            }, function(error) {
+                     $rootScope.hideDbLoading();
+               $rootScope.ShowToast('Unable to get Refund Report');  
+            });
+        }
+        
+         $scope.transferMoney = function() {
 
             $scope.transferDetails["SenderId"] = $scope.curid;
             $scope.transferDetails["CurSenderBalance"] = $scope.CurrenBalance;
@@ -176,13 +398,18 @@ angular.module('starter.controllers', [])
                     $rootScope.showDbLoading();
                     promise.then(function(res) {
                         $rootScope.hideDbLoading();
-                        console.log(res);
-                        $scope.transferDetails = {}
+                        
+                        
+                        if(res.data.done){
                         $rootScope.ShowToast('add balace success');
-                    }, function(res) {
-                        console.log(res);
-                        $rootScope.hideDbLoading();
                         $scope.transferDetails = {}
+                        }else{
+                           $rootScope.ShowToast('Failed to add Balance');     
+                        }
+                    }, function(res) {
+                       
+                        $rootScope.hideDbLoading();
+                        
                         $rootScope.ShowToast('Unable to add balace');
                     });
                 } else {
@@ -198,118 +425,9 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Unable to get balace');
             });
         }
-        $scope.complaint=function(){
-                
-        }
-        var oneMonth=12*24*60*60*1000;
-        $scope.accountReport = function(accouReport) {
-            $scope.transferDetails["SenderId"] = $scope.curid;
-            var tempReport = accouReport;
-            tempReport["Id"] = $scope.curid;
-            tempReport.From=new Date(tempReport.From);
-            tempReport.From.setHours(0);
-            tempReport.From.setMinutes(0);
-            tempReport.From.setSeconds(0);
-            tempReport.From.setMilliseconds(0);
-            tempReport.From.setDate(tempReport.From.getDate());
-            tempReport.FromDate = $filter('date')(tempReport.From,
-             "y-MM-d hh:mm:ss")
-            tempReport.To = new Date(tempReport.To);
-            tempReport.To.setHours(23);
-            tempReport.To.setMinutes(59);
-            tempReport.To.setSeconds(59);
-            tempReport.To.setMilliseconds(999);
-          tempReport.To.setDate(tempReport.To.getDate());
-            
-         var diffDays = Math.round(Math.abs((tempReport.To.getTime() -tempReport.From.getTime() )/(oneMonth)));
-            console.log(diffDays);
-            if(diffDays>30){
-                $rootScope.ShowToast('Plse select within 30 days ');
-             return false     
-          }
-          tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
-			var promise = serviceDB.toServer(tempReport, '/getAccountReports'); 
-        promise.then(function(res) {
-          console.log(res);
-		  $scope.accountReportList = res.data.data;
-    }, function(res) {
-          console.log(res);
-	    });
-		 
-	
-        }
+        
 
-        $scope.refundReport=function(){
-               
-        }
-         
-         $scope.complainList=function(){
-           var promise= serviceDB.toServer($scope.curid,'/getComplains');
-            promise.then(function(res){
-                    console.log(res)
-                   $scope.complainList= res.data.data;
-            },function(error){}
-            )
-     }
-
-        $scope.reports = [{
-            name: 'Recharge Report',
-            clss: 'icon ionIcon ion-document-text'
-        }, {
-            name: 'Refund Report',
-            clss: 'icon ionIcon ion-document-text'
-        }, {
-            name: 'Account Report',
-            clss: 'icon ionIcon ion-document-text'
-        }]
-        $scope.repo = function(report) {
-            if (report.name == 'Recharge Report') {
-                $state.go('mRecrechargeReport')
-            } else if (report.name == 'Refund Report') {
-                $state.go('mRfdrechargeReport')
-            } else if (report.name == 'Account Report') {
-                $state.go('mAccrechargeReport')
-            }
-        }
-
-        $scope.changePassword = function() {
-            console.log($scope.newpwd)
-            console.log('I am in master deler change password')
-            if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
-                $rootScope.ShowToast('Enter New Password')
-                return false
-            }
-            if ($scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
-                $rootScope.ShowToast('Enter Confirm Password')
-                return false
-            }
-            if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
-                $rootScope.ShowToast('New password does not match confirm password')
-                console.log("password does not match");
-                return false;
-            }
-            $scope.newpwd["Id"] = $scope.curid;
-            $scope.newpwd["tName"] = "MasterDealer";
-            var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
-            $rootScope.showDbLoading();
-            promise.then(function(res) {
-                if (res.data.done) {
-                    $rootScope.hideDbLoading();
-                    $rootScope.ShowToast('Changed Password Successfully')
-
-                    $scope.newpwd = {};
-                } else {
-                    $rootScope.hideDbLoading();
-                    $rootScope.ShowToast('invalid old password')
-
-                }
-                console.log(res);
-            }, function(res) {
-                $rootScope.hideDbLoading();
-                $rootScope.ShowToast('Unable to change password')
-
-            });
-        }
+       
         $scope.goBack = function() {
             console.log('Hai');
             window.history.back();
@@ -324,12 +442,13 @@ angular.module('starter.controllers', [])
     })
     .controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter) {
         var id = '';
-        id = authentication.currentUser().userId;
+        	 id= authentication.currentUser().userId;
         var tName = "Dealer";
         $scope.CurrenBalance = '';
         $scope.retailer = {};
         $scope.newpwd = {};
         $scope.transferDetails = {};
+        $scope.complain={};
         var promise = serviceDB.toServer({
             "Id": id,
             "TName": tName
@@ -483,13 +602,13 @@ angular.module('starter.controllers', [])
             if (delear.name == 'Current Balance') {
                 $state.go('dCurrentBalance')
             } else if (delear.name == 'Complain') {
-                $state.go('complain')
+                $state.go('dComplain')
             } else if (delear.name == 'Complain List') {
-                $state.go('mComplainList')
+                $state.go('dComplainList')
             } else if (delear.name == 'Change Password') {
                 $state.go('dChangePassword')
             } else if (delear.name == 'Reports') {
-                $state.go('report')
+                $state.go('dReports')
             } else if (delear.name == 'Add Balance') {
                 $state.go('dAddBalance')
             } else if (delear.name == 'Revert Balance') {
@@ -498,9 +617,8 @@ angular.module('starter.controllers', [])
                 $state.go('dAddRetailer')
             }
         }
-     
-        $scope.addNewRetailer = function() {
 
+        $scope.addNewRetailer = function() {
             console.log($scope.retailer)
             console.log($scope.getMasterIdByDId());
             $scope.retailer["LoginStatus"] = "success";
@@ -613,7 +731,54 @@ angular.module('starter.controllers', [])
             });
 
         }
-
+       
+         $scope.complaint = function() {
+          $scope.complain.Id=id;
+          if($scope.complain.orderId==undefined||$scope.complain.orderId==""){
+               $rootScope.ShowToast('Enter Order Id ');
+                 return false;
+          }
+          if($scope.complain.Message==undefined||$scope.complain.Message==""){
+               $rootScope.ShowToast('Enter Message ');
+                 return false;    
+          }
+          var promise=serviceDB.toServer($scope.complain,'/sendComplain');
+          $rootScope.showDbLoading();
+         promise.then(function(res){
+                 $rootScope.hideDbLoading();
+        if(res.data.done){
+           $scope.complain={}
+          $rootScope.ShowToast('Complain added success');
+             
+        }else{
+        $rootScope.ShowToast('Failed to add complain');
+        return false;
+        }
+         },function(error){
+                 $rootScope.hideDbLoading();
+      $rootScope.ShowToast('Failed to add complain');
+        return false;
+         })
+                }
+        $scope.complainList = function() {
+                $scope.complain.Id=id;
+                console.log($scope.complain.Id);
+            var promise = serviceDB.toServer($scope.complain, '/getComplains');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                    $rootScope.hideDbLoading();
+               if(res.data.done==true &&res.data.data.length>0){
+                $scope.complainList = res.data.data;
+                }else{
+                  $rootScope.ShowToast('No Complain List Found')      
+                }
+            }, function(error) {
+                    $rootScope.hideDbLoading();
+                  $rootScope.ShowToast('Unable to get complain List') 
+                  return false;       
+            })
+        }
+        
         $scope.transferMoney = function() {
 
             $scope.transferDetails["SenderId"] = id;
@@ -667,40 +832,60 @@ angular.module('starter.controllers', [])
                 }
             });
         }
-        $scope.accountReport = function(accouReport) {
-            $scope.transferDetails["SenderId"] = id;
-            var tempReport = accouReport;
-            tempReport["Id"] = id;
-            console.log()
-            tempReport.FromDate=new Date();
-            tempReport.FromDate.setHours(0);
-            tempReport.FromDate.setMinutes(0);
-            tempReport.FromDate.setSeconds(0);
-            tempReport.FromDate.setMilliseconds(0);
-            tempReport.FromDate = $filter('date')(tempReport.FromDate,
-             "y-MM-d hh:mm:ss")
-            
-
-            tempReport.ToDate = new Date();
-            tempReport.ToDate.setHours(23);
-            tempReport.ToDate.setMinutes(59);
-            tempReport.ToDate.setSeconds(59);
-            tempReport.ToDate.setMilliseconds(999);
-          tempReport.ToDate.setDate(tempReport.ToDate.getDate());
-		tempReport.ToDate = $filter('date')(tempReport.ToDate, "y-MM-d hh:mm:ss");
-		
-		
-			var promise = serviceDB.toServer(tempReport, '/getAccountReports'); 
-        promise.then(function(res) {
-          console.log(res);
-		  $scope.accountReportList = res.data.data;
-		  
-	    }, function(res) {
-          console.log(res);
-	    });
-		 
-	
+         $scope.reports = [{
+            name: 'Account Report',
+            clss: 'icon ionIcon ion-document-text'
+        }]
+        $scope.repo = function(report) {
+           if (report.name == 'Account Report') {
+                $state.go('dAccrechargeReport')
+            }
         }
+        var oneDay =  24 * 60 * 60 * 1000;
+        $scope.accountReport = function(accouReport) {
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d hh:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
+
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            var promise = serviceDB.toServer(tempReport, '/getAccountReports');
+            $rootScope.showDbLoading();
+             
+            promise.then(function(res) {
+                    $rootScope.hideDbLoading();
+                   if(res.data.done==true&&res.data.data.length>0){
+                console.log(res);
+                $scope.accountReportList = res.data.data;
+                }else{
+               $rootScope.ShowToast(' Account Report not found');
+                  
+                }
+            }, function(res) {
+              $rootScope.hideDbLoading();
+               $rootScope.ShowToast('Unable to get Account Report');
+            });
+
+        }
+          
         $scope.changePassword = function() {
             console.log('Hai');
             console.log($scope.newpwd)
@@ -818,9 +1003,9 @@ angular.module('starter.controllers', [])
             } else if (ret.name == 'Current Balance') {
                 $state.go('rCurrentBalance')
             } else if (ret.name == 'Complain') {
-                $state.go('complain')
+                $state.go('rComplain')
             } else if (ret.name == 'Complain List') {
-                $state.go('login')
+                $state.go('rComplainList')
             } else if (ret.name == 'Change Password') {
                 $state.go('rChangePassword')
             } else if (ret.name == 'Reports') {
@@ -838,34 +1023,34 @@ angular.module('starter.controllers', [])
             var tempReport = accouReport;
             tempReport["Id"] = id;
             console.log()
-            tempReport.FromDate=new Date();
+            tempReport.FromDate = new Date();
             tempReport.FromDate.setHours(0);
             tempReport.FromDate.setMinutes(0);
             tempReport.FromDate.setSeconds(0);
             tempReport.FromDate.setMilliseconds(0);
             tempReport.FromDate = $filter('date')(tempReport.FromDate,
-             "y-MM-d hh:mm:ss")
-            
+                "y-MM-d hh:mm:ss")
+
 
             tempReport.ToDate = new Date();
             tempReport.ToDate.setHours(23);
             tempReport.ToDate.setMinutes(59);
             tempReport.ToDate.setSeconds(59);
             tempReport.ToDate.setMilliseconds(999);
-          tempReport.ToDate.setDate(tempReport.ToDate.getDate());
-		tempReport.ToDate = $filter('date')(tempReport.ToDate, "y-MM-d hh:mm:ss");
-		
-		
-			var promise = serviceDB.toServer(tempReport, '/getAccountReports'); 
-        promise.then(function(res) {
-          console.log(res);
-		  $scope.accountReportList = res.data.data;
-		  
-	    }, function(res) {
-          console.log(res);
-	    });
-		 
-	
+            tempReport.ToDate.setDate(tempReport.ToDate.getDate());
+            tempReport.ToDate = $filter('date')(tempReport.ToDate, "y-MM-d hh:mm:ss");
+
+
+            var promise = serviceDB.toServer(tempReport, '/getAccountReports');
+            promise.then(function(res) {
+                console.log(res);
+                $scope.accountReportList = res.data.data;
+
+            }, function(res) {
+                console.log(res);
+            });
+
+
         }
         $scope.changePassword = function() {
             console.log($scope.newpwd)

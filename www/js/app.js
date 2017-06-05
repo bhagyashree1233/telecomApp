@@ -95,6 +95,7 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
        
         
     })
+
      .state('dChangePassword', {
         url: '/dChangePassword',
         controller:'delearCtrl',
@@ -125,17 +126,18 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         templateUrl: 'templates/accountReport.html'
        
     })
-    .state('dRfdrechargeReport', {
-        url: '/dRfdrechargeReport',
+    
+    .state('dComplain', {
+        url: '/dComplain',
           controller:'delearCtrl',
-        templateUrl: 'templates/refundReport.html'
-       
+        templateUrl: 'templates/complain.html'
     })
-.state('dRecrechargeReport', {
-        url: '/dRecrechargeReport',
+    .state('dComplainList', {
+        url: '/dComplainList',
           controller:'delearCtrl',
-        templateUrl: 'templates/rechargeReport.html'
+        templateUrl: 'templates/complainList.html'
     })
+   
     .state('retailer', {
         url: '/retailer',
         controller:'reportCtrl',
@@ -174,6 +176,16 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
       controller:'retailerCtrl',
         templateUrl: 'templates/changePassword.html'
    })
+    .state('rComplain', {
+        url: '/rComplain',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/complain.html'
+    })
+    .state('rComplainList', {
+        url: '/rComplainList',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/complainList.html'
+    })
     $urlRouterProvider.otherwise('/login');
   // if none of the above states are matched, use this as the fallback
 

@@ -9,14 +9,15 @@
 <h5 style="font-size:25px">From Date:</h5>
   <label class="item  login item-input">
   
-    <input type="date" placeholder="Select From Date">
+    <input type="date" placeholder="Select From Date" ng-model="accouReport.From">
   </label>
   <h5 style="font-size:25px">To Date:</h5>
   <label class="item  login item-input">
   
-    <input type="date" placeholder="Select To Date">
+    <input type="date" placeholder="Select To Date" ng-model="accouReport.To">
   </label>
-   <button class="button sButton button-block button-stable"  ng-click="refundReport()">
+   <button class="button sButton button-block button-stable"  
+   ng-click="refundReport(accouReport)">
     Send
    </button>
 </div>
