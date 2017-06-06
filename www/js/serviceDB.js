@@ -3,8 +3,8 @@ angular.module('starter.service', [])
 .factory('serviceDB', function($http, $q, authentication) {
    
   function toServer(doc2send, Url) {
-    Url = "http://telecom.azurewebsites.net"+Url;
-   // Url="http://localhost:8080/"+Url;
+   Url = "http://telecom.azurewebsites.net"+Url;
+   //Url="http://localhost:80"+Url;
     console.log(doc2send);
     console.log(Url);
 
@@ -26,8 +26,8 @@ angular.module('starter.service', [])
      $http(req).then(function(res) {
        console.log(res.data);
        deferred.resolve(res); 
-     },function(res) { 
-       console.log('error ');
+     },function(res) {
+       console.log(res) 
        deferred.reject(res);
     });
 
@@ -36,7 +36,7 @@ angular.module('starter.service', [])
 
   function login(doc2send, Url) {
   Url = "http://telecom.azurewebsites.net"+Url;
-   //Url="http://localhost:8080/"+Url;
+  //Url="http://localhost:80"+Url;
     console.log(Url);
    console.log('entered login service func....');
     var deferred = $q.defer();  
@@ -58,7 +58,8 @@ angular.module('starter.service', [])
        }
        deferred.resolve(res); 
      },function(res) { 
-       console.log('error ');
+     
+       console.log(res);
        deferred.reject(res);
     });
 

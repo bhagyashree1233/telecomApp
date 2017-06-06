@@ -186,6 +186,39 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
           controller:'retailerCtrl',
         templateUrl: 'templates/complainList.html'
     })
+     .state('rAccrechargeReport', {
+        url: '/rAccrechargeReport',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/accountReport.html'
+       
+    })
+        .state('rRfdrechargeReport', {
+        url: '/rRfdrechargeReport',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/refundReport.html'
+       
+    })
+.state('rRecrechargeReport', {
+        url: '/rRecrechargeReport',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/rechargeReport.html'
+    })
+    .state('rRecrechargeTransaction', {
+        url: '/rRecrechargeTransaction',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/rechargeReport.html'
+    })
+    .state('rSearchTransaction', {
+        url: '/rSearchTransaction',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/searchTransaction.html'
+    })
+     .state('rReports', {
+        url: '/rReports',
+          controller:'retailerCtrl',
+        templateUrl: 'templates/reports.html'
+       
+    })
     $urlRouterProvider.otherwise('/login');
   // if none of the above states are matched, use this as the fallback
 

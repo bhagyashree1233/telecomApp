@@ -2,23 +2,20 @@ angular.module('starter.controllers', [])
     .controller('loginCtrl', function($scope, $state, serviceDB, $rootScope, $location, $ionicHistory) {
         $scope.login = {}
         $scope.loginSub = function(usn) {
-            console.log($scope.login.Uname);
             if ($scope.login.Uname == undefined || $scope.login.Uname == "") {
-                $rootScope.ShowToast('Failed to login')
+                $rootScope.ShowToast('Enter Username')
                 return false;
             }
             if ($scope.login.Pwd == undefined || $scope.login.Pwd == "") {
-                $rootScope.ShowToast('Failed to login')
+                $rootScope.ShowToast('Enter Password')
                 return false;
             }
+            console.log($scope.login);
             $rootScope.showDbLoading();
             var promise = serviceDB.login($scope.login, '/loginValidate');
             promise.then(function(res) {
                 $rootScope.hideDbLoading()
                 console.log(res.data);
-
-
-
                 if (res.data.done == true) {
                     if ($scope.login.Uname > 1000 && $scope.login.Uname < 5000000) {
                         $location.path('/mDelear');
@@ -31,20 +28,19 @@ angular.module('starter.controllers', [])
 
                     } else {
                         $rootScope.hideDbLoading()
-                        console.log('Hello');
-                        $rootScope.ShowToast('Failed to login')
-                        return false;
+                        $rootScope.ShowToast(res.data.message)
+                        
                     }
                 } else {
                     $rootScope.hideDbLoading()
-                    $rootScope.ShowToast('unable to login')
+                     $rootScope.ShowToast(res.data.message)
                 }
             }, function(res) {
+                 res.data="check internet connected"
                 $rootScope.hideDbLoading();
-                $rootScope.ShowToast('Failed to login')
+                $rootScope.ShowToast(res.data);
                 return false;
             });
-
 
         }
         $scope.goBack = function() {
@@ -129,13 +125,17 @@ angular.module('starter.controllers', [])
                 $state.go('revertBalance')
             }
         }
-
+    var stop;
         $scope.start = function() {
-            $interval(function() {
+          stop=  $interval(function() {
                 $scope.getBalance();
-            }, 5000);
+            }, 3000);
 
         }
+       $scope.$on('$destroy', function() {
+               console.log('Hai')
+            $interval.cancel(stop);
+          });
         $scope.complaint = function() {
           $scope.complain.Id=$scope.curid;
           if($scope.complain.orderId==undefined||$scope.complain.orderId==""){
@@ -241,7 +241,7 @@ angular.module('starter.controllers', [])
             tempReport.From.setMilliseconds(0);
             tempReport.From.setDate(tempReport.From.getDate());
             tempReport.FromDate = $filter('date')(tempReport.From,
-                "y-MM-d hh:mm:ss")
+                "y-MM-d HH:mm:ss")
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
@@ -255,7 +255,7 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
-            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
             $rootScope.showDbLoading();
              
@@ -285,7 +285,7 @@ angular.module('starter.controllers', [])
             tempReport.From.setMilliseconds(0);
             tempReport.From.setDate(tempReport.From.getDate());
             tempReport.FromDate = $filter('date')(tempReport.From,
-                "y-MM-d hh:mm:ss")
+                "y-MM-d HH:mm:ss")
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
@@ -299,7 +299,7 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
-            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
             var promise = serviceDB.toServer(tempReport, '/getRefundReports');
              $rootScope.showDbLoading();
             promise.then(function(res) {
@@ -327,7 +327,7 @@ angular.module('starter.controllers', [])
             tempReport.From.setMilliseconds(0);
             tempReport.From.setDate(tempReport.From.getDate());
             tempReport.FromDate = $filter('date')(tempReport.From,
-                "y-MM-d hh:mm:ss")
+                "y-MM-d HH:mm:ss")
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
@@ -341,7 +341,7 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
-            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
             tempReport.CompanyCode="all";
             tempReport.Status="all";
             tempReport.Number=0;
@@ -502,12 +502,17 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Unable to get  Scheme List')
             });
         }
+        var stop;
         $scope.start = function() {
-            $interval(function() {
+           stop= $interval(function() {
                 window.location.reload(true);
-            }, 5000);
+            }, 3000);
 
         }
+        $scope.$on('$destroy', function() {
+               console.log('Hai')
+            $interval.cancel(stop);
+          });
         $scope.getListOfRetailerType = function() {
             var promise = serviceDB.toServer({}, '/getRetailerType');
             promise.then(function(res) {
@@ -852,7 +857,7 @@ angular.module('starter.controllers', [])
             tempReport.From.setMilliseconds(0);
             tempReport.From.setDate(tempReport.From.getDate());
             tempReport.FromDate = $filter('date')(tempReport.From,
-                "y-MM-d hh:mm:ss")
+                "y-MM-d HH:mm:ss")
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
@@ -866,7 +871,7 @@ angular.module('starter.controllers', [])
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
-            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d hh:mm:ss");
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
             $rootScope.showDbLoading();
              
@@ -933,10 +938,10 @@ angular.module('starter.controllers', [])
             window.history.back();
         }
     })
-    .controller('retailerCtrl', function($scope, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
+    .controller('retailerCtrl', function($scope, $filter,$interval, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
         var id = '';
         var tName = '';
-
+         $scope.searchRecharge={};  
         $scope.newpwd = {};
         id = authentication.currentUser().userId;
         tName = "Retailer";
@@ -957,7 +962,27 @@ angular.module('starter.controllers', [])
 
         });
 
-
+ $scope.reports = [{
+            name: 'Account Report',
+            clss: 'icon ionIcon ion-document-text'
+        },{
+            name: 'Recharge Report',
+            clss: 'icon ionIcon ion-document-text'
+        },{
+            name: 'Refund Report',
+            clss: 'icon ionIcon ion-document-text'
+        }
+        
+        ]
+        $scope.repo = function(report) {
+           if (report.name == 'Account Report') {
+                $state.go('rAccrechargeReport')
+            }else if(report.name == 'Recharge Report'){
+               $state.go('rRfdrechargeReport')
+            }else if(report.name == 'Refund Report'){
+              $state.go('rRecrechargeReport')      
+            }
+        }
         $scope.retailer = [{
             name: "Mobile Recharge",
             clas: 'icon ionIcon ion-android-phone-portrait'
@@ -997,9 +1022,9 @@ angular.module('starter.controllers', [])
             } else if (ret.name == 'Postpaid Recharge') {
                 $state.go('postPaidRecharge')
             } else if (ret.name == 'Recharge Transaction') {
-                $state.go('login');
+                $state.go('rRecrechargeTransaction');
             } else if (ret.name == 'Search Transaction') {
-                $state.go('searchTransaction');
+                $state.go('rSearchTransaction');
             } else if (ret.name == 'Current Balance') {
                 $state.go('rCurrentBalance')
             } else if (ret.name == 'Complain') {
@@ -1009,36 +1034,41 @@ angular.module('starter.controllers', [])
             } else if (ret.name == 'Change Password') {
                 $state.go('rChangePassword')
             } else if (ret.name == 'Reports') {
-                $state.go('report')
+                $state.go('rReports')
             }
         }
+        var stop;
         $scope.start = function() {
             $interval(function() {
-                window.location.reload(true);
-            }, 5000);
+             stop=   $scope.getBalance();
+            }, 3000);
 
         }
+
+        $scope.$on('$destroy', function() {
+               console.log('Hai')
+            $interval.cancel(stop);
+          });
+                var oneDay =  24 * 60 * 60 * 1000;
+
         $scope.accountReport = function(accouReport) {
-            $scope.transferDetails["SenderId"] = id;
             var tempReport = accouReport;
             tempReport["Id"] = id;
-            console.log()
-            tempReport.FromDate = new Date();
-            tempReport.FromDate.setHours(0);
-            tempReport.FromDate.setMinutes(0);
-            tempReport.FromDate.setSeconds(0);
-            tempReport.FromDate.setMilliseconds(0);
-            tempReport.FromDate = $filter('date')(tempReport.FromDate,
-                "y-MM-d hh:mm:ss")
-
-
-            tempReport.ToDate = new Date();
-            tempReport.ToDate.setHours(23);
-            tempReport.ToDate.setMinutes(59);
-            tempReport.ToDate.setSeconds(59);
-            tempReport.ToDate.setMilliseconds(999);
-            tempReport.ToDate.setDate(tempReport.ToDate.getDate());
-            tempReport.ToDate = $filter('date')(tempReport.ToDate, "y-MM-d hh:mm:ss");
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            console.log(tempReport.From.getTime())
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d HH:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            console.log(tempReport.To.getTime());
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
 
 
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
@@ -1049,8 +1079,92 @@ angular.module('starter.controllers', [])
             }, function(res) {
                 console.log(res);
             });
+        }
 
+        $scope.refundReport = function(accouReport) {
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d HH:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
 
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
+            var promise = serviceDB.toServer(tempReport, '/getRefundReports');
+             $rootScope.showDbLoading();
+            promise.then(function(res) {
+                     $rootScope.hideDbLoading();
+               if(res.data.done==true&&res.data.data.length>0){
+                $scope.accountReportList = res.data.data;
+               }else{
+
+                $rootScope.ShowToast(' Refund Report not found');       
+               }
+            }, function(res) {
+                     $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to get Refund Report'); 
+            });
+        }
+
+         $scope.rechargeReport = function(accouReport) {
+         
+            var tempReport = accouReport;
+            tempReport["Id"] = $scope.curid;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            tempReport.From.setDate(tempReport.From.getDate());
+            tempReport.FromDate = $filter('date')(tempReport.From,
+                "y-MM-d HH:mm:ss")
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            tempReport.To.setDate(tempReport.To.getDate());
+
+            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport.ToDate = $filter('date')(tempReport.To, "y-MM-d HH:mm:ss");
+            tempReport.CompanyCode="all";
+            tempReport.Status="all";
+            tempReport.Number=0;
+            var promise = serviceDB.toServer(tempReport, '/getAllReports');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                     $rootScope.hideDbLoading();
+             if(res.data.done==true &&re.data.data.length>0){
+                $scope.accountReportList = res.data.data;
+             }else{
+               $rootScope.ShowToast('No  Refund Report Found'); 
+                     
+             }
+            }, function(error) {
+                     $rootScope.hideDbLoading();
+               $rootScope.ShowToast('Unable to get Refund Report');  
+            });
         }
         $scope.changePassword = function() {
             console.log($scope.newpwd)
@@ -1089,6 +1203,49 @@ angular.module('starter.controllers', [])
                 $rootScope.hideDbLoading()
                 $rootScope.ShowToast('Unable to change password')
             });
+        }
+        $scope.searchTransaction=function(){
+                
+         $scope.searchRecharge["Id"] = id;
+          $scope.searchRecharge.From = new Date($scope.searchRecharge.From);
+            $scope.searchRecharge.From.setHours(0);
+            $scope.searchRecharge.From.setMinutes(0);
+            $scope.searchRecharge.From.setSeconds(0);
+            $scope.searchRecharge.From.setMilliseconds(0);
+            $scope.searchRecharge.From.setDate($scope.searchRecharge.From.getDate());
+            $scope.searchRecharge.FromDate = $filter('date')($scope.searchRecharge.From,
+                "y-MM-d HH:mm:ss")
+            $scope.searchRecharge.To = new Date( $scope.searchRecharge.To);
+            $scope.searchRecharge.To.setHours(23);
+            $scope.searchRecharge.To.setMinutes(59);
+            $scope.searchRecharge.To.setSeconds(59);
+            $scope.searchRecharge.To.setMilliseconds(999);
+            $scope.searchRecharge.To.setDate($scope.searchRecharge.To.getDate());
+      
+            $scope.searchRecharge.ToDate = $filter('date')($scope.searchRecharge.To, 
+            "y-MM-d HH:mm:ss");
+               if($scope.searchRecharge.Number==undefined||$scope.searchRecharge.Number==""){
+                      $rootScope.ShowToast('Enter Mobile Number');
+                       return false
+                }
+                $scope.searchRecharge.CompanyCode="all";
+                $scope.searchRecharge.Status="all";
+                var promise = serviceDB.toServer($scope.searchRecharge, '/getAllReports');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                $rootScope.hideDbLoading()
+                if (res.data.done==true&&res.data.data.length>0) {
+                  console.log(res.data.data)
+                $scope.searchRecharge.searchReport= res.data.data;
+                } else {
+                    $rootScope.ShowToast('invalid old password')
+                }
+                console.log(res);
+            }, function(res) {
+                $rootScope.hideDbLoading()
+                $rootScope.ShowToast('Unable to change password')
+            });
+
         }
         $scope.goBack = function() {
             window.history.back();
