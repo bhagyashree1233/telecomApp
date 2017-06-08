@@ -20,5 +20,30 @@
     Send
    </button>
 </div>
+  <ion-list ng-repeat="searcReport in accountReportList" style="margin:5vh">
+<ion-item style="padding:0vh">
+
+<p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
+
+
+<p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{searcReport.Company}}</span></p>
+
+
+<p class="datedisplayfont">Mobile Number:<span class="datedisplayinnerfont">{{searcReport.MobileNo}}</span></p>
+
+
+
+<p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
+
+<p class="datedisplayfont">Status:<span class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
+
+
+<p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>
+<p class="datedisplayfont">TransactionId:<span class="datedisplayinnerfont" >{{searcReport.TransactionId}}</span></p>
+
+
+
+</ion-item>
+<ion-list>
  </ion-content>
   </ion-view>

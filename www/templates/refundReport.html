@@ -20,6 +20,33 @@
    ng-click="refundReport(accouReport)">
     Send
    </button>
+     <ion-list ng-repeat="searcReport in accountReportList" style="margin:5vh">
+<ion-item style="padding:0vh">
+
+<p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
+
+
+<p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{searcReport.Company}}</span></p>
+
+
+<p class="datedisplayfont">Mobile Number:<span class="datedisplayinnerfont">{{searcReport.MobileNo}}</span></p>
+
+
+
+<p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
+<p class="datedisplayfont">Recharge Date:<span class="datedisplayinnerfont">{{searcReport.RechargeDate}}</span></p>
+<p class="datedisplayfont">Refund Amount:<span class="datedisplayinnerfont">{{searcReport.RefundAmount}}</span></p>
+
+<p class="datedisplayfont">Balance:<span class="datedisplayinnerfont">{{searcReport.Balance}}</span></p>
+
+
+<p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>
+<p class="datedisplayfont">TransactionId:<span class="datedisplayinnerfont" >{{searcReport.TransactionId}}</span></p>
+
+
+
+</ion-item>
+<ion-list>
 </div>
  </ion-content>
   </ion-view>
