@@ -6,12 +6,12 @@
     </ion-nav-bar>
  <ion-content>
 <div class="list list-inset">
-<h5 style="font-size:25px">From Date:</h5>
+<h5 style="font-size:15px">From Date:</h5>
   <label class="item  login item-input">
   
     <input type="date" placeholder="Select From Date" ng-model="accouReport.From">
   </label>
-  <h5 style="font-size:25px">To Date:</h5>
+  <h5 style="font-size:15px">To Date:</h5>
   <label class="item  login item-input">
   
     <input type="date" placeholder="Select To Date"  ng-model="accouReport.To">
@@ -35,7 +35,7 @@
 
 <p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
 
-<p class="datedisplayfont">Status:<span class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
+<p class="datedisplayfont">Status:<span ng-style="searcReport.Status === 'sucess' ? { color:'green' } : { color:'red' }" class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
 
 
 <p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>

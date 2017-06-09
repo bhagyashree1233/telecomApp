@@ -9,14 +9,14 @@
 
   
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Mobile Number" ng-model="searchRecharge.Number">
+    <input type="tel" placeholder="Enter Mobile Number" ng-model="searchRecharge.Number">
   </label>
-  <h5 style="font-size:20px">From Date:</h5>
+  <h5 style="font-size:15px">From Date:</h5>
   <label class="item  login item-input">
   
     <input type="date" placeholder="Select From Date" ng-model="searchRecharge.From">
   </label>
-  <h5 style="font-size:20px">To Date:</h5>
+  <h5 style="font-size:15px">To Date:</h5>
   <label class="item  login item-input">
   
     <input type="date" placeholder="Select To Date" ng-model="searchRecharge.To">
@@ -39,7 +39,7 @@
 
 <p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
 
-<p class="datedisplayfont">Status:<span class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
+<p class="datedisplayfont">Status:<span ng-style="searcReport.Status === 'sucess' ? { color:'green' } : { color:'red' }" class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
 
 
 <p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>

@@ -56,9 +56,11 @@ angular.module('starter.controllers', [])
         $scope.reports = [];
         $scope.complain = {};
         $scope.complainList = [];
+          var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
         var cancel = ''
         $scope.curid = authentication.currentUser().userId;
         var type = '';
+        var oneDay = 24 * 60 * 60 * 1000;
         console.log('I am in master delear')
         $scope.getBalance = function() {
             var tName = 'MasterDealer';
@@ -74,7 +76,7 @@ angular.module('starter.controllers', [])
                     $rootScope.ShowToast('No Balance Found');
                 }
             }, function(res) {
-                $rootScope.ShowToast('Failed to get Balance')
+               // $rootScope.ShowToast('Failed to get Balance')
 
             });
         }
@@ -142,9 +144,31 @@ angular.module('starter.controllers', [])
             if ($scope.complain.orderId == undefined || $scope.complain.orderId == "") {
                 $rootScope.ShowToast('Enter Order Id ');
                 return false;
+            }else if($scope.complain.orderId.length>10){
+                   $rootScope.ShowToast(' Order length less then 10');
+                return false; 
             }
             if ($scope.complain.Message == undefined || $scope.complain.Message == "") {
                 $rootScope.ShowToast('Enter Message ');
+                return false;
+            }else if($scope.complain.Message.length>250){
+                   $rootScope.ShowToast('Message length less then 250');
+                return false; 
+            }
+            if ($scope.complain.mobileNumbr != undefined && $scope.complain.mobileNumbr.length>13) {
+                $rootScope.ShowToast(' Number should not be greater then 13');
+                return false;
+            }
+            if ($scope.complain.amount != undefined && $scope.complain.amount.length>10) {
+                  $rootScope.ShowToast('Amount length within 10');
+                return false;
+            }else if($scope.complain.amount != undefined &&!pattern.test($scope.complain.amount)){
+                   
+                  $rootScope.ShowToast('Invalid Amount');
+                return false;   
+            }
+            if ($scope.complain.Message != undefined && $scope.complain.Message.length>250) {
+                $rootScope.ShowToast('Message should be less then 250 ');
                 return false;
             }
             var promise = serviceDB.toServer($scope.complain, '/sendComplain');
@@ -173,7 +197,10 @@ angular.module('starter.controllers', [])
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
                     $scope.complainList = res.data.data;
-                } else {
+                } else if(res.data.data.length==0){
+                    $rootScope.ShowToast('No Complain List Found');     
+                }
+                else {
                     $rootScope.ShowToast(res.data.message);
                 }
             }, function(error) {
@@ -185,13 +212,25 @@ angular.module('starter.controllers', [])
         $scope.changePassword = function() {
             console.log($scope.newpwd)
             console.log('I am in master deler change password')
+            if ($scope.newpwd.oldpassword == undefined || $scope.newpwd.oldpassword == "") {
+                $rootScope.ShowToast('Enter Old Password')
+                return false
+            }else if($scope.newpwd.oldpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
+            }
             if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
                 $rootScope.ShowToast('Enter New Password')
                 return false
+            }else if($scope.newpwd.newpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
             }
             if ($scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
                 $rootScope.ShowToast('Enter Confirm Password')
                 return false
+            }else if($scope.newpwd.cnewpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')     
             }
             if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
                 $rootScope.ShowToast('New password does not match confirm password')
@@ -231,9 +270,10 @@ angular.module('starter.controllers', [])
                 $state.go('mAccrechargeReport')
             }
         }
-        var oneDay = 24 * 60 * 60 * 1000;
+        
         $scope.accountReport = function(accouReport) {
             var tempReport = accouReport;
+            $scope.accountReportList={};
                     if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -243,6 +283,17 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
          return false;
 
 }
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+         
             tempReport["Id"] = $scope.curid;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -258,13 +309,9 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             tempReport.To.setSeconds(59);
             tempReport.To.setMilliseconds(999);
             tempReport.To.setDate(tempReport.To.getDate());
-
-            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
-            console.log(diffDays);
-            if (diffDays > 30) {
-                $rootScope.ShowToast('Plse select within 30 days ');
-                return false
-            }
+          var toD = new Date(1496946599999)
+            console.log(toD)
+            
             tempReport.ToDate =tempReport.To.getTime();
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
             $rootScope.showDbLoading();
@@ -274,9 +321,11 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 if (res.data.done == true && res.data.data.length > 0) {
                     console.log(res);
                     $scope.accountReportList = res.data.data;
-                } else {
-                    $rootScope.ShowToast(' Account Report not found');
+                  } else if(res.data.data.length ==0) {
 
+                    $rootScope.ShowToast('No Records Found');
+                }else{
+                     $rootScope.ShowToast('Unable to fetch Records Found');    
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();
@@ -373,16 +422,26 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
 
             $scope.transferDetails["SenderId"] = $scope.curid;
             $scope.transferDetails["CurSenderBalance"] = $scope.CurrenBalance;
-
-            if (Number($scope.transferDetails.Amount < 1)) {
+             
+            if (Number($scope.transferDetails.Amount.length < 1)) {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
+            }else if(!pattern.test($scope.transferDetails.Amount)){
+                $rootScope.ShowToast('Invalid Amount');
+                return;    
+            }else if($scope.transferDetails.length>10){
+                $rootScope.ShowToast('Check Transfer Amount length');
+                return;         
             }
             if ((Number($scope.CurrenBalance) - Number($scope.transferDetails.Amount)) < 0) {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
             }
-            if ($scope.transferDetails.RecieverId > 5000000 && $scope.transferDetails.RecieverId < 10000000) {
+            if($scope.transferDetails.RecieverId==undefined||$scope.transferDetails.RecieverId==""){
+                   $rootScope.ShowToast('Enter RecieverId');
+                return; 
+            }else if
+             ($scope.transferDetails.RecieverId > 5000000 && $scope.transferDetails.RecieverId < 10000000) {
                 type = 'Dealer';
             } else if ($scope.transferDetails.RecieverId > 10000000) {
                 type = 'Retailer';
@@ -457,6 +516,8 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         $scope.newpwd = {};
         $scope.transferDetails = {};
         $scope.complain = {};
+        var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
+        var oneDay = 24 * 60 * 60 * 1000;
         $scope.getBalance = function() {
             var tName = 'MasterDealer';
             var promise = serviceDB.toServer({
@@ -471,7 +532,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                     $rootScope.ShowToast(res.data.message);
                 }
             }, function(res) {
-                $rootScope.ShowToast('Failed to get Balance')
+                //$rootScope.ShowToast('Failed to get Balance')
 
             });
         }
@@ -754,12 +815,34 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
 
         $scope.complaint = function() {
             $scope.complain.Id = id;
-            if ($scope.complain.orderId == undefined || $scope.complain.orderId == "") {
+           if ($scope.complain.orderId == undefined || $scope.complain.orderId == "") {
                 $rootScope.ShowToast('Enter Order Id ');
                 return false;
+            }else if($scope.complain.orderId.length>10){
+                   $rootScope.ShowToast(' Order length less then 10');
+                return false; 
             }
             if ($scope.complain.Message == undefined || $scope.complain.Message == "") {
                 $rootScope.ShowToast('Enter Message ');
+                return false;
+            }else if($scope.complain.Message.length>250){
+                   $rootScope.ShowToast('Message length less then 250');
+                return false; 
+            }
+           if ($scope.complain.mobileNumbr != undefined && $scope.complain.mobileNumbr.length>13) {
+                $rootScope.ShowToast(' Number should not be greater then 13');
+                return false;
+            }
+            if ($scope.complain.amount != undefined && $scope.complain.amount.length>10) {
+                  $rootScope.ShowToast('Amount length within 10');
+                return false;
+            }else if($scope.complain.amount != undefined &&!pattern.test($scope.complain.amount)){
+                   
+                  $rootScope.ShowToast('Invalid Amount');
+                return false;   
+            }
+            if ($scope.complain.Message != undefined && $scope.complain.Message.length>250) {
+                $rootScope.ShowToast('Message should be less then 250 ');
                 return false;
             }
             var promise = serviceDB.toServer($scope.complain, '/sendComplain');
@@ -789,7 +872,9 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
                     $scope.complainList = res.data.data;
-                } else {
+                } else if(res.data.data.length==0){
+                    $rootScope.ShowToast('No Complain List Found');     
+                }else {
                     $rootScope.ShowToast(res.data.message)
                 }
             }, function(error) {
@@ -803,16 +888,31 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
 
             $scope.transferDetails["SenderId"] = id;
             $scope.transferDetails["CurSenderBalance"] = $scope.CurrenBalance;
-
-            if (Number($scope.transferDetails.Amount < 1)) {
+ 
+            if ($scope.transferDetails.Amount==undefined||$scope.transferDetails.Amount=="")) {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
+            }else if(!pattern.test($scope.transferDetails.Amount)){
+                $rootScope.ShowToast('Invalid Amount');
+                return;    
+            }else if($scope.transferDetails.length>10){
+                $rootScope.ShowToast('Check Transfer Amount length');
+                return;         
+            }else if($scope.transferDetails.Amount<1){
+                  $rootScope.ShowToast('Invalid Amount');
+                  return;  
             }
             if ((Number($scope.CurrenBalance) - Number($scope.transferDetails.Amount)) < 0) {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
             }
-            if ($scope.transferDetails.RecieverId > 2000000) {
+            if($scope.transferDetails.RecieverId==undefined||$scope.transferDetails.RecieverId==""){
+                   $rootScope.ShowToast('Enter RecieverId');
+                return; 
+            }else if
+             ($scope.transferDetails.RecieverId > 5000000 && $scope.transferDetails.RecieverId < 10000000) {
+                type = 'Dealer';
+            } else if ($scope.transferDetails.RecieverId > 10000000) {
                 type = 'Retailer';
             } else {
                 $rootScope.ShowToast('Invalid id');
@@ -861,7 +961,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 $state.go('dAccrechargeReport')
             }
         }
-        var oneDay = 24 * 60 * 60 * 1000;
+        
         $scope.accountReport = function(accouReport) {
             var tempReport = accouReport;
               if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
@@ -873,6 +973,16 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
          return false;
 
 }
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
             tempReport["Id"] = id;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -888,9 +998,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             tempReport.To.setMilliseconds(999);
             tempReport.To.setDate(tempReport.To.getDate());
 
-            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
-            console.log(diffDays);
-            if (diffDays > 30) {
+          if ($rootScope.diffDays > 30) {
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
@@ -903,9 +1011,11 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 if (res.data.done == true && res.data.data.length > 0) {
                     console.log(res);
                     $scope.accountReportList = res.data.data;
-                } else {
-                    $rootScope.ShowToast(' Account Report not found');
+                 } else if(res.data.data.length ==0) {
 
+                    $rootScope.ShowToast('No Records Found');
+                }else{
+                     $rootScope.ShowToast('Unable to fetch Records Found');    
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();
@@ -918,20 +1028,29 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             console.log('Hai');
             console.log($scope.newpwd)
             console.log('I am in master deler change password')
+            if ($scope.newpwd.oldpassword == undefined || $scope.newpwd.oldpassword == "") {
+                $rootScope.ShowToast('Enter Old Password')
+                return false
+            }else if($scope.newpwd.oldpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
+            }
             if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
                 $rootScope.ShowToast('Enter New Password')
-
                 return false
+            }else if($scope.newpwd.newpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
             }
             if ($scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
                 $rootScope.ShowToast('Enter Confirm Password')
-
                 return false
+            }else if($scope.newpwd.cnewpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')     
             }
             if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
-                console.log("password does not match");
                 $rootScope.ShowToast('New password does not match confirm password')
-
+                console.log("password does not match");
                 return false;
             }
             $scope.newpwd["Id"] = id;
@@ -969,6 +1088,9 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         id = authentication.currentUser().userId;
         tName = "Retailer";
         $scope.CurrenBalance = '';
+        $scope.complain = {};
+        var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
+        var oneDay = 24 * 60 * 60 * 1000;
        $scope.getBalance=function(){
         var promise = serviceDB.toServer({
             "Id": id,
@@ -982,7 +1104,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
 
             }
         }, function(res) {
-            $rootScope.ShowToast('Unable to get balence')
+            //$rootScope.ShowToast('Unable to get balence')
 
         });
        }
@@ -1065,8 +1187,8 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         }
         var stop;
         $scope.start = function() {
-            $interval(function() {
-                stop = $scope.getBalance();
+          stop =   $interval(function() {
+                $scope.getBalance();
             }, 3000);
 
         }
@@ -1075,10 +1197,11 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             console.log('Hai')
             $interval.cancel(stop);
         });
-        var oneDay = 24 * 60 * 60 * 1000;
+        
 
         $scope.accountReport = function(accouReport) {
             var tempReport = accouReport;
+            $scope.accountReportList=[];
             if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1088,6 +1211,16 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
          return false;
 
 }
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
             tempReport["Id"] = id;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -1110,8 +1243,11 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 if(res.data.done==true&&res.data.data.length>0){
                 $scope.accountReportList = res.data.data;
                 
+                  } else if(res.data.data.length ==0) {
+
+                    $rootScope.ShowToast('No Records Found');
                 }else{
-                $rootScope.ShowToast(res.data.message);
+                     $rootScope.ShowToast('Unable to fetch Records Found');    
                 }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Report');
@@ -1121,6 +1257,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         $scope.refundReport = function(accouReport) {
 
             var tempReport = accouReport;
+            $scope.accountReportList=[];
 if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1130,6 +1267,18 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
          return false;
 
 }
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+
+var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
             tempReport["Id"] = id;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -1145,12 +1294,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             tempReport.To.setMilliseconds(999);
             tempReport.To.setDate(tempReport.To.getDate());
 
-            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
-            console.log(diffDays);
-            if (diffDays > 30) {
-                $rootScope.ShowToast('Plse select within 30 days ');
-                return false
-            }
+           
             tempReport.ToDate = tempReport.To.getTime();
             var promise = serviceDB.toServer(tempReport, '/getRefundReports');
             $rootScope.showDbLoading();
@@ -1158,9 +1302,11 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
                     $scope.accountReportList = res.data.data;
-                } else {
+                } else if(res.data.data.length ==0) {
 
-                    $rootScope.ShowToast(res.data.message);
+                    $rootScope.ShowToast('No Records Found');
+                }else{
+                     $rootScope.ShowToast('Unable to fetch Records Found');    
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();
@@ -1169,7 +1315,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         }
 
         $scope.rechargeReport = function(accouReport) {
-
+$scope.accountReportList=[];
             var tempReport = accouReport;
             if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
@@ -1180,6 +1326,16 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
          return false;
 
 }
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+     var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
             tempReport["Id"] = id;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -1195,12 +1351,8 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
             tempReport.To.setMilliseconds(999);
             tempReport.To.setDate(tempReport.To.getDate());
 
-            var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
-            console.log(diffDays);
-            if (diffDays > 30) {
-                $rootScope.ShowToast('Plse select within 30 days ');
-                return false
-            }
+          
+    
             tempReport.ToDate =tempReport.To.getTime();
             tempReport.CompanyCode = "all";
             tempReport.Status = "all";
@@ -1211,32 +1363,115 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
                     $scope.accountReportList = res.data.data;
-                } else {
-                    $rootScope.ShowToast(res.data.message);
+                } else if(res.data.data.length==0) {
+                    $rootScope.ShowToast('No Records Found');
 
+                }else{
+                     $rootScope.ShowToast('Unable Records Found');   
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
                 $rootScope.ShowToast('Unable to get Refund Report');
             });
         }
+           $scope.complaint = function() {
+            $scope.complain.Id = id
+            if ($scope.complain.orderId == undefined || $scope.complain.orderId == "") {
+                $rootScope.ShowToast('Enter Order Id ');
+                return false;
+            }else if($scope.complain.orderId.length>10){
+                   $rootScope.ShowToast(' Order length less then 10');
+                return false; 
+            }
+            if ($scope.complain.Message == undefined || $scope.complain.Message == "") {
+                $rootScope.ShowToast('Enter Message ');
+                return false;
+            }else if($scope.complain.Message.length>250){
+                   $rootScope.ShowToast('Message length less then 250');
+                return false; 
+            }
+            if ($scope.complain.mobileNumbr != undefined && $scope.complain.mobileNumbr.length>13) {
+                $rootScope.ShowToast(' Number should not be greater then 13');
+                return false;
+            }
+            if ($scope.complain.amount != undefined && $scope.complain.amount.length>10) {
+                  $rootScope.ShowToast('Amount length within 10');
+                return false;
+            }else if($scope.complain.amount != undefined &&!pattern.test($scope.complain.amount)){
+                   
+                  $rootScope.ShowToast('Invalid Amount');
+                return false;   
+            }
+            if ($scope.complain.Message != undefined && $scope.complain.Message.length>250) {
+                $rootScope.ShowToast('Message should be less then 250 ');
+                return false;
+            }
+
+            var promise = serviceDB.toServer($scope.complain, '/sendComplain');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                $rootScope.hideDbLoading();
+                if (res.data.done) {
+                    $scope.complain = {}
+                    $rootScope.ShowToast('Complain added success');
+
+                } else {
+                    $rootScope.ShowToast(res.data.message);
+                    return false;
+                }
+            }, function(error) {
+                $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Failed to add complain');
+                return false;
+            })
+        }
+        $scope.complainList = function() {
+            $scope.complain.Id = id;
+            var promise = serviceDB.toServer($scope.complain, '/getComplains');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                $rootScope.hideDbLoading();
+                if (res.data.done == true && res.data.data.length > 0) {
+                    $scope.complainList = res.data.data;
+                } else if(res.data.data.length==0){
+                    $rootScope.ShowToast('No Complain List Found');     
+                }
+                else {
+                    $rootScope.ShowToast(res.data.message);
+                }
+            }, function(error) {
+                $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to get complain List')
+                return false;
+            })
+        }
         $scope.changePassword = function() {
             console.log($scope.newpwd)
             console.log('I am in master deler change password')
+            
+            if ($scope.newpwd.oldpassword == undefined || $scope.newpwd.oldpassword == "") {
+                $rootScope.ShowToast('Enter Old Password')
+                return false
+            }else if($scope.newpwd.oldpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
+            }
             if ($scope.newpwd.newpassword == undefined || $scope.newpwd.newpassword == "") {
                 $rootScope.ShowToast('Enter New Password')
-
                 return false
+            }else if($scope.newpwd.newpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')
+                return false     
             }
             if ($scope.newpwd.cnewpassword == undefined || $scope.newpwd.cnewpassword == "") {
                 $rootScope.ShowToast('Enter Confirm Password')
-
                 return false
+            }else if($scope.newpwd.cnewpassword.length>25){
+               $rootScope.ShowToast(' Password length should be less 25')     
             }
             if ($scope.newpwd.newpassword != $scope.newpwd.cnewpassword) {
-                console.log("password does not match");
                 $rootScope.ShowToast('New password does not match confirm password')
-
+                console.log("password does not match");
                 return false;
             }
             $scope.newpwd["Id"] = id;
@@ -1261,6 +1496,7 @@ if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
         $scope.searchTransaction = function() {
 
             $scope.searchRecharge["Id"] = id;
+          $scope.searchRecharge.searchReport=[];
             if($scope.searchRecharge==undefined||$scope.searchRecharge.From==undefined||$scope.searchRecharge.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1270,6 +1506,25 @@ if($scope.searchRecharge==undefined||$scope.searchRecharge.To==undefined||$scope
          return false;
 
 }
+if($scope.searchRecharge==undefined||$scope.searchRecharge.Number==undefined||$scope.searchRecharge.Number==""){
+         $rootScope.ShowToast('Enter Mobile Number');
+         return false;
+
+}else if($scope.searchRecharge.Number.length>13){
+      $rootScope.ShowToast('Enter Valid Ph Number'); 
+      return false; 
+}
+
+if($scope.searchRecharge.From>$scope.searchRecharge.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+     var diffDays = Math.round(Math.abs(($scope.searchRecharge.To.getTime() - $scope.searchRecharge.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
             $scope.searchRecharge.From = new Date($scope.searchRecharge.From);
             $scope.searchRecharge.From.setHours(0);
             $scope.searchRecharge.From.setMinutes(0);
@@ -1298,8 +1553,11 @@ if($scope.searchRecharge==undefined||$scope.searchRecharge.To==undefined||$scope
                 if (res.data.done == true && res.data.data.length > 0) {
                     console.log(res.data.data)
                     $scope.searchRecharge.searchReport = res.data.data;
-                } else {
-                    $rootScope.ShowToast(res.data.message);
+                  } else if(res.data.data.length ==0) {
+
+                    $rootScope.ShowToast('No Records Found');
+                }else{
+                     $rootScope.ShowToast('Unable to fetch Records Found');    
                 }
                 console.log(res);
             }, function(res) {
@@ -1321,6 +1579,7 @@ if($scope.searchRecharge==undefined||$scope.searchRecharge.To==undefined||$scope
 
         $scope.rechargeDetails = {};
         $scope.CurrenBalance = '';
+
         var promise = serviceDB.toServer({
             "Id": id,
             "TName": tName
