@@ -20,10 +20,10 @@ angular.module('starter.controllers', [])
                     if ($scope.login.Uname > 1000 && $scope.login.Uname < 5000000) {
                         $location.path('/mDelear');
                     } else if ($scope.login.Uname > 5000000 && $scope.login.Uname < 10000000) {
-                        $scope.password = document.getElementById("pwd").value = '';
+                        $scope.login.Pwd = document.getElementById("pwd").value = '';
                         $location.path('/delear');
                     } else if ($scope.login.Uname > 10000000) {
-                        $scope.password = document.getElementById("pwd").value = '';
+                        $scope.login.Pwd = document.getElementById("pwd").value = '';
                         $location.path('/retailer');
 
                     } else {
@@ -889,7 +889,7 @@ if(tempReport.From>tempReport.To){
             $scope.transferDetails["SenderId"] = id;
             $scope.transferDetails["CurSenderBalance"] = $scope.CurrenBalance;
  
-            if ($scope.transferDetails.Amount==undefined||$scope.transferDetails.Amount=="")) {
+            if ($scope.transferDetails.Amount==undefined||$scope.transferDetails.Amount=="") {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
             }else if(!pattern.test($scope.transferDetails.Amount)){
@@ -945,7 +945,7 @@ if(tempReport.From>tempReport.To){
                     }, function(res) {
                         $rootScope.hideDbLoading()
                         console.log(res);
-                        $rootScope.ShowToast('Unable to add balace');
+                        -$rootScope.ShowToast('Unable to add balace');
                     });
                 } else {
                     $rootScope.ShowToast(res.data.message);
@@ -1595,7 +1595,7 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
    
             }
         }, function(res) {
-            $rootScope.ShowToast('Unable to get balance')
+           // $rootScope.ShowToast('Unable to get balance')
         });
         $scope.mobileRecharge = [{
                 id: "A",
@@ -1737,7 +1737,8 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
             $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
             if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length != 10) {
                 console.log("Enter valid mobile number");
-                $scope.rechargeError = "Enter valid mobile number";
+                
+                 $rootScope.ShowToast('Enter valid mobile number')
                 return;
             }
             if (isNaN($scope.rechargeDetails.RechargeAmount)) {
