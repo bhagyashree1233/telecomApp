@@ -14,6 +14,23 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
     }
   });
 })
+.directive('whenScrolled', function() {
+    return function(scope, elm, attr) {
+
+        var raw = elm[0];
+        console.log('Hai')
+        console.log(raw )
+        elm.bind('scroll', function() {
+            console.log(raw.scrollTop)
+            console.log(raw.offsetHeight)
+            console.log(raw.scrollHeight)
+            if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+               console.log('raw.scrollHeight') ;
+                scope.$apply(attr.whenScrolled);
+            }
+        });
+    };
+})
 .config(function($stateProvider,$urlRouterProvider) {
     $stateProvider.state('login', {
         url: '/login',
@@ -136,6 +153,11 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         url: '/dComplainList',
           controller:'delearCtrl',
         templateUrl: 'templates/complainList.html'
+    })
+    .state('dTopUpReport', {
+        url: '/dTopUpReport',
+          controller:'delearCtrl',
+        templateUrl: 'templates/topupReport.html'
     })
    
     .state('retailer', {

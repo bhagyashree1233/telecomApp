@@ -16,17 +16,18 @@
  
     <input type="date" placeholder="Select To Date" ng-model="accouReport.To">
   </label>
-   <button class="button sButton button-block button-stable" ng-click="accountReport(accouReport)">
+   <button class="button sButton button-block button-stable" ng-click="dateChanged();accountReport(accouReport)">
     Send
    </button>
 </div>
-<ion-list ng-repeat="account in accountReportList" style="margin:5vh">
+<div style="height:50vh;overflow:scroll;" when-scrolled="accountReport()">
+<ion-list ng-repeat="account in accountReportList" style="margin:5vh;"  >
 <ion-item style="padding:0vh">
 
 <p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
 
 
-<p class="datedisplayfont">Date & Time:<span class="datedisplayinnerfont">{{account.TransferDate}}</span></p>
+<p class="datedisplayfont">Date & Time:<span class="datedisplayinnerfont">{{account.TransferDate| date:'dd-MM-yyyy HH:mm:ss'}}</span></p>
 
 
 <p class="datedisplayfont">Payment From:<span class="datedisplayinnerfont">{{account.SenderId}}</span></p>
@@ -62,7 +63,12 @@
 
 
 </ion-item>
-<ion-list>
 
+<ion-list>
+</div>
+ 
+ 
+      
  </ion-content>
   </ion-view>
+  

@@ -21,9 +21,11 @@
   
     <input type="date" placeholder="Select To Date" ng-model="searchRecharge.To">
   </label>
-   <button class="button sButton button-block button-stable" ng-click="searchTransaction()">
+   <button class="button sButton button-block button-stable" ng-click="searchdateChanged();searchTransaction()">
     Search
    </button>
+   <div style="height:50vh;overflow:scroll;" when-scrolled="searchTransaction()">
+
    <ion-list ng-repeat="searcReport in searchRecharge.searchReport" style="margin:5vh">
 <ion-item style="padding:0vh">
 
@@ -39,7 +41,7 @@
 
 <p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
 
-<p class="datedisplayfont">Status:<span ng-style="searcReport.Status === 'sucess' ? { color:'green' } : { color:'red' }" class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
+<p class="datedisplayfont">Status:<span ng-style="searcReport.Status === 'Success' ? { color:'green' } : { color:'red' }" class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
 
 
 <p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>
@@ -49,6 +51,7 @@
 
 </ion-item>
 <ion-list>
+</div>
 </div>
  </ion-content>
   </ion-view>

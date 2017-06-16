@@ -1,0 +1,29 @@
+{
+  "name": "angular-scroll-complete",
+  "main": "angular-scroll-complete.js",
+  "version": "0.0.3",
+  "homepage": "https://github.com/tushariscoolster/angular-scroll-complete",
+  "authors": [
+    "Tushar Borole <tushariscoolster@gmail.com>"
+  ],
+  "description": "Fire event on scroll",
+  "keywords": [
+    "whenScrolled",
+    "infineScroll",
+    "angularScroll",
+    "Scroll",
+    "Angular",
+    "angular-scroll-complete"
+  ],
+  "license": "MIT",
+  "_release": "0.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.3",
+    "commit": "5c92f75b7ad01b1b43dbc5fb69c230d9cb1f719c"
+  },
+  "_source": "https://github.com/tushariscoolster/angular-scroll-complete.git",
+  "_target": "^0.0.3",
+  "_originalSource": "angular-scroll-complete",
+  "_direct": true
+}

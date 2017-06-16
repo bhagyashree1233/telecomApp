@@ -4,8 +4,11 @@
             <i class="icon ion-ios-arrow-back"></i>Back
         </ion-nav-back-button>
     </ion-nav-bar>
+
  <ion-content ng-init="complainList()">
- <ion-list ng-repeat="complain in complainList">
+ <div style="height:100vh;overflow:scroll;" when-scrolled="complainList()">
+
+ <ion-list ng-repeat="complain in complaiList">
  <ion-item class="item-text-wrap">
  <p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{complain.Company}}</span></p>
  
@@ -33,5 +36,6 @@
  
  </ion-item>
  <ion-list>
+ </div>
  </ion-content>
  </ion-view>

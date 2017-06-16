@@ -20,6 +20,7 @@
    ng-click="refundReport(accouReport)">
     Send
    </button>
+   <div style="height:50vh;overflow:scroll;" when-scrolled="refundReport()">
      <ion-list ng-repeat="searcReport in accountReportList" style="margin:5vh">
 <ion-item style="padding:0vh">
 
@@ -46,7 +47,8 @@
 
 
 </ion-item>
-<ion-list>
+</ion-list>
+</div>
 </div>
  </ion-content>
   </ion-view>

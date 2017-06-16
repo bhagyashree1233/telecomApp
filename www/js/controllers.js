@@ -36,8 +36,9 @@ angular.module('starter.controllers', [])
                     $rootScope.ShowToast(res.data.message)
                 }
             }, function(res) {
+                $rootScope.hideDbLoading();    
                 res.data = "Unable to Login";
-                $rootScope.hideDbLoading();
+                
                 $rootScope.ShowToast(res.data);
                 return false;
             });
@@ -55,7 +56,11 @@ angular.module('starter.controllers', [])
         $scope.curreBalMode = false;
         $scope.reports = [];
         $scope.complain = {};
-        $scope.complainList = [];
+        $scope.complaiList = [];
+        var accRepCount = 0;
+      var tempReport={};
+       $scope.accouReport={};
+      $scope.accountReportList=[];
           var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
         var cancel = ''
         $scope.curid = authentication.currentUser().userId;
@@ -102,10 +107,7 @@ angular.module('starter.controllers', [])
             }, {
                 name: "Add Balance",
                 clas: 'icon ionIcon ion-plus-circled'
-            }, {
-                name: "Revert Balance",
-                clas: 'icon ionIcon ion-minus-circled'
-            },
+            }, 
 
         ]
         $scope.master = function(delear) {
@@ -124,8 +126,6 @@ angular.module('starter.controllers', [])
                 $state.go('mReports')
             } else if (delear.name == 'Add Balance') {
                 $state.go('mAddBalance')
-            } else if (delear.name == 'Revert Balance') {
-                $state.go('revertBalance')
             }
         }
         var stop;
@@ -191,13 +191,16 @@ angular.module('starter.controllers', [])
         }
         $scope.complainList = function() {
             $scope.complain.Id = $scope.curid;
+            $scope.complain["Count"]=accRepCount;
             var promise = serviceDB.toServer($scope.complain, '/getComplains');
             $rootScope.showDbLoading();
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.complainList = res.data.data;
-                } else if(res.data.data.length==0){
+               $scope.complaiList = $scope.complaiList.concat(res.data.data);
+			  
+			  accRepCount = accRepCount + res.data.data.length;
+                } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
                 }
                 else {
@@ -270,11 +273,16 @@ angular.module('starter.controllers', [])
                 $state.go('mAccrechargeReport')
             }
         }
-        
-        $scope.accountReport = function(accouReport) {
-            var tempReport = accouReport;
-            $scope.accountReportList={};
-                    if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
+        $scope.dateChanged=function(){
+        $scope.accountReportList=[];
+        accRepCount=0
+}
+        $scope.accountReport = function() {
+            console.log('account Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
+            if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
 }
@@ -287,55 +295,52 @@ if(tempReport.From>tempReport.To){
         $rootScope.ShowToast('From Date should be less then or equal to Date');
         return false;
 }
- var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
             console.log(diffDays);
             if (diffDays > 30) {
                 $rootScope.ShowToast('Plse select within 30 days ');
                 return false
             }
-         
-            tempReport["Id"] = $scope.curid;
+            tempReport["Id"] = $scope.curid ;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
             tempReport.From.setMinutes(0);
             tempReport.From.setSeconds(0);
             tempReport.From.setMilliseconds(0);
-            tempReport.From.setDate(tempReport.From.getDate());
-            tempReport.FromDate=tempReport.From.getTime();
-            console.log(tempReport.FromDate)
+            console.log(tempReport.From.getTime())
+            tempReport.FromDate = tempReport.From.getTime();
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
             tempReport.To.setSeconds(59);
             tempReport.To.setMilliseconds(999);
-            tempReport.To.setDate(tempReport.To.getDate());
-          var toD = new Date(1496946599999)
-            console.log(toD)
-            
-            tempReport.ToDate =tempReport.To.getTime();
+            console.log(tempReport.To.getTime());
+            tempReport.ToDate = tempReport.To.getTime();
+             console.log(tempReport);
+           $rootScope.showDbLoading();
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
-            $rootScope.showDbLoading();
-
             promise.then(function(res) {
-                $rootScope.hideDbLoading();
-                if (res.data.done == true && res.data.data.length > 0) {
-                    console.log(res);
-                    $scope.accountReportList = res.data.data;
-                  } else if(res.data.data.length ==0) {
-
+             $rootScope.hideDbLoading();       
+                if(res.data.done==true&&res.data.data.length>0){
+                $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                  } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
                 }else{
-                     $rootScope.ShowToast('Unable to fetch Records Found');    
-                }
+                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }
             }, function(res) {
-                $rootScope.hideDbLoading();
-                $rootScope.ShowToast('Unable to get Account Report');
+                $rootScope.ShowToast('Unable to get Report');
             });
 
         }
 
         $scope.refundReport = function(accouReport) {
-            var tempReport = accouReport;
+            console.log('refund Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
             tempReport["Id"] = $scope.curid;
             tempReport.From = new Date(tempReport.From);
             tempReport.From.setHours(0);
@@ -363,8 +368,12 @@ if(tempReport.From>tempReport.To){
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.accountReportList = res.data.data;
-                } else {
+                     $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                }  else if(res.data.done==true&&res.data.data.length ==0) {
+                    $rootScope.ShowToast('No Records Found');
+                }else {
 
                     $rootScope.ShowToast(' Refund Report not found');
                 }
@@ -407,7 +416,12 @@ if(tempReport.From>tempReport.To){
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && re.data.data.length > 0) {
-                    $scope.accountReportList = res.data.data;
+                    
+                    $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                } else if(res.data.done==true&&res.data.data.length ==0) {
+                    $rootScope.ShowToast('No Records Found');
                 } else {
                     $rootScope.ShowToast('No  Refund Report Found');
 
@@ -423,7 +437,7 @@ if(tempReport.From>tempReport.To){
             $scope.transferDetails["SenderId"] = $scope.curid;
             $scope.transferDetails["CurSenderBalance"] = $scope.CurrenBalance;
              
-            if (Number($scope.transferDetails.Amount.length < 1)) {
+           if ($scope.transferDetails.Amount==undefined||$scope.transferDetails.Amount=="") {
                 $rootScope.ShowToast('Invalid Amount');
                 return;
             }else if(!pattern.test($scope.transferDetails.Amount)){
@@ -432,6 +446,9 @@ if(tempReport.From>tempReport.To){
             }else if($scope.transferDetails.length>10){
                 $rootScope.ShowToast('Check Transfer Amount length');
                 return;         
+            }else if($scope.transferDetails.Amount<1){
+                  $rootScope.ShowToast('Invalid Amount');
+                  return;  
             }
             if ((Number($scope.CurrenBalance) - Number($scope.transferDetails.Amount)) < 0) {
                 $rootScope.ShowToast('Invalid Amount');
@@ -516,6 +533,11 @@ if(tempReport.From>tempReport.To){
         $scope.newpwd = {};
         $scope.transferDetails = {};
         $scope.complain = {};
+            var accRepCount = 0;
+      var tempReport={};
+       $scope.accouReport={};
+      $scope.accountReportList=[];
+      $scope.complaiList=[];
         var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
         var oneDay = 24 * 60 * 60 * 1000;
         $scope.getBalance = function() {
@@ -672,9 +694,6 @@ if(tempReport.From>tempReport.To){
             name: "Add Balance",
            clas:'icon  ionIcon ion-plus-circled'
         }, {
-            name: "Revert Balance",
-            clas:'icon ionIcon ion-minus-circled'
-        }, {
             name: "Add Retailer",
             clas:'icon ionIcon ion-android-person-add'
         }]
@@ -692,8 +711,6 @@ if(tempReport.From>tempReport.To){
                 $state.go('dReports')
             } else if (delear.name == 'Add Balance') {
                 $state.go('dAddBalance')
-            } else if (delear.name == 'Revert Balance') {
-                $state.go('revertBalance')
             } else if (delear.name == 'Add Retailer') {
                 $state.go('dAddRetailer')
             }
@@ -863,16 +880,19 @@ if(tempReport.From>tempReport.To){
                 return false;
             })
         }
+      
         $scope.complainList = function() {
             $scope.complain.Id = id;
+             $scope.complain["Count"] = accRepCount;
             console.log($scope.complain.Id);
             var promise = serviceDB.toServer($scope.complain, '/getComplains');
             $rootScope.showDbLoading();
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.complainList = res.data.data;
-                } else if(res.data.data.length==0){
+                    $scope.complaiList = $scope.complaiList.concat(res.data.data);
+        			 accRepCount = accRepCount + res.data.data.length;
+                } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
                 }else {
                     $rootScope.ShowToast(res.data.message)
@@ -955,16 +975,27 @@ if(tempReport.From>tempReport.To){
         $scope.reports = [{
             name: 'Account Report',
             clss: 'icon ionIcon ion-document-text'
+        },{
+            name: 'Top Up Report',
+            clss: 'icon ionIcon ion-document-text'
         }]
         $scope.repo = function(report) {
             if (report.name == 'Account Report') {
                 $state.go('dAccrechargeReport')
+            }else if(report.name =='Top Up Report' ){
+                 $state.go('dTopUpReport')   
             }
         }
-        
-        $scope.accountReport = function(accouReport) {
-            var tempReport = accouReport;
-              if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
+        $scope.dateChanged=function(){
+        $scope.accountReportList=[];
+        accRepCount=0
+}
+        $scope.accountReport = function() {
+            console.log('account Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
+            if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
 }
@@ -989,40 +1020,91 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             tempReport.From.setMinutes(0);
             tempReport.From.setSeconds(0);
             tempReport.From.setMilliseconds(0);
-            tempReport.From.setDate(tempReport.From.getDate());
+            console.log(tempReport.From.getTime())
             tempReport.FromDate = tempReport.From.getTime();
             tempReport.To = new Date(tempReport.To);
             tempReport.To.setHours(23);
             tempReport.To.setMinutes(59);
             tempReport.To.setSeconds(59);
             tempReport.To.setMilliseconds(999);
-            tempReport.To.setDate(tempReport.To.getDate());
-
-          if ($rootScope.diffDays > 30) {
-                $rootScope.ShowToast('Plse select within 30 days ');
-                return false
-            }
+            console.log(tempReport.To.getTime());
             tempReport.ToDate = tempReport.To.getTime();
+             console.log(tempReport);
+           $rootScope.showDbLoading();
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
-            $rootScope.showDbLoading();
-
             promise.then(function(res) {
-                $rootScope.hideDbLoading();
-                if (res.data.done == true && res.data.data.length > 0) {
-                    console.log(res);
-                    $scope.accountReportList = res.data.data;
-                 } else if(res.data.data.length ==0) {
-
+             $rootScope.hideDbLoading();       
+                if(res.data.done==true&&res.data.data.length>0){
+                $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                  } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
                 }else{
-                     $rootScope.ShowToast('Unable to fetch Records Found');    
-                }
+                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }
             }, function(res) {
-                $rootScope.hideDbLoading();
-                $rootScope.ShowToast('Unable to get Account Report');
+                $rootScope.ShowToast('Unable to get Report');
             });
 
         }
+$scope.topUpReport=function(){
+         console.log('topUpReport Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
+            if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
+          $rootScope.ShowToast('Select From Date');
+         return false;
+}
+if(tempReport==undefined||tempReport.To==undefined||tempReport.To==""){
+         $rootScope.ShowToast('Select To Date');
+         return false;
+
+}
+if(tempReport.From>tempReport.To){
+        $rootScope.ShowToast('From Date should be less then or equal to Date');
+        return false;
+}
+var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+            console.log(diffDays);
+            if (diffDays > 30) {
+                $rootScope.ShowToast('Plse select within 30 days ');
+                return false
+            }
+            tempReport["Id"] = id;
+            tempReport.From = new Date(tempReport.From);
+            tempReport.From.setHours(0);
+            tempReport.From.setMinutes(0);
+            tempReport.From.setSeconds(0);
+            tempReport.From.setMilliseconds(0);
+            console.log(tempReport.From.getTime())
+            tempReport.FromDate = tempReport.From.getTime();
+            tempReport.To = new Date(tempReport.To);
+            tempReport.To.setHours(23);
+            tempReport.To.setMinutes(59);
+            tempReport.To.setSeconds(59);
+            tempReport.To.setMilliseconds(999);
+            console.log(tempReport.To.getTime());
+            tempReport.ToDate = tempReport.To.getTime();
+             console.log(tempReport);
+           $rootScope.showDbLoading();
+            var promise = serviceDB.toServer(tempReport, '/getRetailersRecharge');
+            promise.then(function(res) {
+             $rootScope.hideDbLoading();       
+                if(res.data.done==true&&res.data.data.length>0){
+                $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                  } else if(res.data.done==true&&res.data.data.length ==0) {
+                    $rootScope.ShowToast('No Records Found');
+                }else{
+                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }
+            }, function(res) {
+                $rootScope.ShowToast('Unable to get Report');
+            });
+}
 
         $scope.changePassword = function() {
             console.log('Hai');
@@ -1080,7 +1162,7 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             window.history.back();
         }
     })
-    .controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication) {
+    .controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication,$location, $anchorScroll) {
         var id = '';
         var tName = '';
         $scope.searchRecharge = {};
@@ -1089,6 +1171,11 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
         tName = "Retailer";
         $scope.CurrenBalance = '';
         $scope.complain = {};
+        var accRepCount = 0;
+      var tempReport={};
+       $scope.accouReport={};
+      $scope.accountReportList=[];
+      $scope.complaiList=[];
         var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
         var oneDay = 24 * 60 * 60 * 1000;
        $scope.getBalance=function(){
@@ -1138,9 +1225,6 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             name: "DTH Recharge",
             clas: 'icon ionIcon ion-easel'
         }, {
-            name: "Postpaid Recharge",
-            clas: 'icon ionIcon ion-android-phone-portrait'
-        }, {
             name: "Recharge Transaction",
             clas: 'icon ionIcon ion-document-text'
         }, {
@@ -1167,8 +1251,7 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 $state.go('mobileRecharge')
             } else if (ret.name == 'DTH Recharge') {
                 $state.go('dthRecharge')
-            } else if (ret.name == 'Postpaid Recharge') {
-                $state.go('postPaidRecharge')
+            
             } else if (ret.name == 'Recharge Transaction') {
                 $state.go('rRecrechargeTransaction');
             } else if (ret.name == 'Search Transaction') {
@@ -1199,9 +1282,15 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
         });
         
 
-        $scope.accountReport = function(accouReport) {
-            var tempReport = accouReport;
-            $scope.accountReportList=[];
+$scope.dateChanged=function(){
+        $scope.accountReportList=[];
+        accRepCount=0
+}
+        $scope.accountReport = function() {
+            console.log('account Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
             if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1236,28 +1325,32 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             tempReport.To.setMilliseconds(999);
             console.log(tempReport.To.getTime());
             tempReport.ToDate = tempReport.To.getTime();
-
-
+             console.log(tempReport);
+           $rootScope.showDbLoading();
             var promise = serviceDB.toServer(tempReport, '/getAccountReports');
             promise.then(function(res) {
+             $rootScope.hideDbLoading();       
                 if(res.data.done==true&&res.data.data.length>0){
-                $scope.accountReportList = res.data.data;
-                
-                  } else if(res.data.data.length ==0) {
-
+                $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                  } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
                 }else{
-                     $rootScope.ShowToast('Unable to fetch Records Found');    
-                }
+                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Report');
             });
+
         }
 
         $scope.refundReport = function(accouReport) {
-
-            var tempReport = accouReport;
-            $scope.accountReportList=[];
+            console.log('refund Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
+           
 if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1296,13 +1389,17 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 
            
             tempReport.ToDate = tempReport.To.getTime();
+            console.log(tempReport);
             var promise = serviceDB.toServer(tempReport, '/getRefundReports');
             $rootScope.showDbLoading();
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.accountReportList = res.data.data;
-                } else if(res.data.data.length ==0) {
+                     $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                    
+                } else if(res.data.done == true &&res.data.data.length ==0) {
 
                     $rootScope.ShowToast('No Records Found');
                 }else{
@@ -1314,9 +1411,11 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             });
         }
 
-        $scope.rechargeReport = function(accouReport) {
-$scope.accountReportList=[];
-            var tempReport = accouReport;
+        $scope.rechargeReport = function() {
+console.log('recharge Report')
+             tempReport["Count"] = accRepCount;
+            tempReport.From =$scope.accouReport.From;
+            tempReport.To =$scope.accouReport.To;
             if(tempReport==undefined||tempReport.From==undefined||tempReport.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1362,8 +1461,10 @@ if(tempReport.From>tempReport.To){
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.accountReportList = res.data.data;
-                } else if(res.data.data.length==0) {
+                      $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
+			  console.log($scope.accountReportList);
+			  accRepCount = accRepCount + res.data.data.length;
+                } else if(res.data.done == true &&res.data.data.length==0) {
                     $rootScope.ShowToast('No Records Found');
 
                 }else{
@@ -1427,13 +1528,15 @@ if(tempReport.From>tempReport.To){
         }
         $scope.complainList = function() {
             $scope.complain.Id = id;
+            $scope.complain["Count"]=accRepCount;
             var promise = serviceDB.toServer($scope.complain, '/getComplains');
             $rootScope.showDbLoading();
             promise.then(function(res) {
                 $rootScope.hideDbLoading();
                 if (res.data.done == true && res.data.data.length > 0) {
-                    $scope.complainList = res.data.data;
-                } else if(res.data.data.length==0){
+                    $scope.complaiList = $scope.complaiList.concat(res.data.data);
+        			 accRepCount = accRepCount + res.data.data.length;
+                } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
                 }
                 else {
@@ -1493,10 +1596,17 @@ if(tempReport.From>tempReport.To){
                 $rootScope.ShowToast('Unable to change password')
             });
         }
-        $scope.searchTransaction = function() {
+        $scope.searchdateChanged=function(){
+          $scope.searchRecharge.searchReport=[];  
+          accRepCount=0;    
+        }
 
+        $scope.searchTransaction = function() {
+             console.log('search Report')
+             $scope.searchRecharge["Count"] = accRepCount;
+            console.log(accRepCount);
             $scope.searchRecharge["Id"] = id;
-          $scope.searchRecharge.searchReport=[];
+          
             if($scope.searchRecharge==undefined||$scope.searchRecharge.From==undefined||$scope.searchRecharge.From==""){
           $rootScope.ShowToast('Select From Date');
          return false;
@@ -1552,8 +1662,11 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
                 $rootScope.hideDbLoading()
                 if (res.data.done == true && res.data.data.length > 0) {
                     console.log(res.data.data)
-                    $scope.searchRecharge.searchReport = res.data.data;
-                  } else if(res.data.data.length ==0) {
+                    console.log($scope.searchRecharge.searchReport)
+                    $scope.searchRecharge.searchReport = $scope.searchRecharge.searchReport.concat(res.data.data);
+			       console.log($scope.searchRecharge.searchReport);
+			        accRepCount = accRepCount + res.data.data.length;
+                  } else if(res.data.done == true && res.data.data.length ==0) {
 
                     $rootScope.ShowToast('No Records Found');
                 }else{
@@ -1689,37 +1802,7 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
             name: 'Airtel DTH',
             src: 'img/airtelDTH.png'
         }]
-        $scope.postPaidRecharge = [{
-                id: "PA",
-                name: 'POSTPAID AIRTEL',
-                src: 'img/airtel.jpg'
-            }, {
-                id: "PI",
-                name: 'POSTPAID IDEA',
-                src: 'img/idea.jpg'
-            }, {
-                id: "PV",
-                name: 'POSTPAID VODAFONE',
-                src: 'img/vodafone.jpg'
-            }, {
-                id: "PB",
-                name: 'POSTPAID BSN',
-                src: 'img/bsnl.jpg'
-            }, {
-                id: "PD",
-                name: 'POSTPAID DOCOMO',
-                src: 'img/docomo.jpg'
-            }, {
-                id: "PR",
-                name: "Postpaid Reliance CDMA",
-                src: 'img/relianc.jpg'
-            },
-            {
-                id: "PR",
-                name: "Postpaid Reliance GSM",
-                src: 'img/relianc.jpg'
-            }
-        ]
+        
         $scope.mobilRecg = function(rechargeType, mobilename, id) {
             $rootScope.mobile = {};
             $rootScope.mobile.type = rechargeType;

@@ -1,0 +1,56 @@
+<ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+ <ion-content>
+<div class="list list-inset">
+<h5 style="font-size:15px">From Date:</h5>
+  <label class="item  login item-input">
+  
+    <input type="date" placeholder="Select From Date" ng-model="accouReport.From">
+  </label>
+   <h5 style="font-size:15px">To Date:</h5>
+  <label class="item  login item-input">
+ 
+    <input type="date" placeholder="Select To Date" ng-model="accouReport.To">
+  </label>
+   <button class="button sButton button-block button-stable" ng-click="dateChanged();topUpReport()">
+    Send
+   </button>
+</div>
+<div style="height:50vh;overflow:scroll;" when-scrolled="topUpReport()">
+<ion-list ng-repeat="account in accountReportList" style="margin:5vh;"  >
+<ion-item style="padding:0vh">
+
+<p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
+
+
+<p class="datedisplayfont">Retailer Id:<span class="datedisplayinnerfont">{{account.RetailerId}}</span></p>
+
+
+<p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{account.OrderId}}</span></p>
+
+
+
+<p class="datedisplayfont">Number:<span class="datedisplayinnerfont">{{account.MobileNo}}</span></p>
+<p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{account.Company}}</span></p>
+<p class="datedisplayfont">Recharge Type:<span class="datedisplayinnerfont">{{account.RechargeType}}</span></p>
+<p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{account.RechargeAmount}}</span></p>
+<p class="datedisplayfont">Status:<span class="datedisplayinnerfont">{{account.Status}}</span></p>
+<p class="datedisplayfont">Recharge Date:<span class="datedisplayinnerfont">{{account.RechargeDate| date:'dd-MM-yyyy HH:mm:ss'}}</span></p>
+
+
+
+
+</ion-item>
+
+<ion-list>
+</div>
+ 
+ 
+      
+ </ion-content>
+  </ion-view>
+  
