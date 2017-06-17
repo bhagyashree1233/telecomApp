@@ -18,6 +18,7 @@ angular.module('starter.controllers', [])
                 console.log(res.data);
                 if (res.data.done == true) {
                     if ($scope.login.Uname > 1000 && $scope.login.Uname < 5000000) {
+                         $scope.login.Pwd = document.getElementById("pwd").value = '';
                         $location.path('/mDelear');
                     } else if ($scope.login.Uname > 5000000 && $scope.login.Uname < 10000000) {
                         $scope.login.Pwd = document.getElementById("pwd").value = '';
@@ -25,20 +26,18 @@ angular.module('starter.controllers', [])
                     } else if ($scope.login.Uname > 10000000) {
                         $scope.login.Pwd = document.getElementById("pwd").value = '';
                         $location.path('/retailer');
-
-                    } else {
-                        $rootScope.hideDbLoading()
+                    } else if (res.data.done == false){
                         $rootScope.ShowToast(res.data.message)
-
+                    }else{
+                          $rootScope.ShowToast(res.data.message);   
                     }
+
                 } else {
-                    $rootScope.hideDbLoading()
                     $rootScope.ShowToast(res.data.message)
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();    
                 res.data = "Unable to Login";
-                
                 $rootScope.ShowToast(res.data);
                 return false;
             });
@@ -58,6 +57,7 @@ angular.module('starter.controllers', [])
         $scope.complain = {};
         $scope.complaiList = [];
         var accRepCount = 0;
+        $scope.revertDetails={};
       var tempReport={};
        $scope.accouReport={};
       $scope.accountReportList=[];
@@ -78,9 +78,11 @@ angular.module('starter.controllers', [])
                 if (res.data.data.length > 0 && res.data.done == true) {
                     $scope.CurrenBalance = res.data.data[0].Balance
                 } else {
-                    $rootScope.ShowToast('No Balance Found');
+                        console.log('No balance Found');
+                    //$rootScope.ShowToast('No Balance Found');
                 }
             }, function(res) {
+                    console.log('No balance Found');
                // $rootScope.ShowToast('Failed to get Balance')
 
             });
@@ -107,7 +109,10 @@ angular.module('starter.controllers', [])
             }, {
                 name: "Add Balance",
                 clas: 'icon ionIcon ion-plus-circled'
-            }, 
+            },{
+            name: "Revert Balance",
+            clas:'icon ionIcon  ion-minus-circled'
+        } 
 
         ]
         $scope.master = function(delear) {
@@ -126,6 +131,8 @@ angular.module('starter.controllers', [])
                 $state.go('mReports')
             } else if (delear.name == 'Add Balance') {
                 $state.go('mAddBalance')
+            }else if (delear.name == 'Revert Balance') {
+                $state.go('mRevertBalance')
             }
         }
         var stop;
@@ -179,9 +186,11 @@ angular.module('starter.controllers', [])
                     $scope.complain = {}
                     $rootScope.ShowToast('Complain added success');
 
-                } else {
+                } else if(res.data.done==false) {
                     $rootScope.ShowToast(res.data.message);
-                    return false;
+                    
+                }else{
+                    $rootScope.ShowToast(res.data.message);    
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -203,8 +212,10 @@ angular.module('starter.controllers', [])
                 } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
                 }
-                else {
+                else if(res.data.done==false){
                     $rootScope.ShowToast(res.data.message);
+                }else{
+                    $rootScope.ShowToast(res.data.message);     
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -251,10 +262,12 @@ angular.module('starter.controllers', [])
                     $rootScope.ShowToast('Changed Password Successfully')
 
                     $scope.newpwd = {};
-                } else {
+                } else if(res.data.done==false){
 
                     $rootScope.ShowToast(res.data.message)
 
+                }else{
+                   $rootScope.ShowToast(res.data.message)     
                 }
                 
             }, function(res) {
@@ -327,8 +340,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 			  accRepCount = accRepCount + res.data.data.length;
                   } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
-                }else{
+                }else if(res.data.done==false){
                      $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }else{
+                    $rootScope.ShowToast('Unable to fetch Records Found');   
              }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Report');
@@ -373,9 +388,11 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 			  accRepCount = accRepCount + res.data.data.length;
                 }  else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
-                }else {
+                }else  if(res.data.done==false){
 
                     $rootScope.ShowToast(' Refund Report not found');
+                }else{
+                    $rootScope.ShowToast(' Refund Report not found');     
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();
@@ -487,8 +504,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                         if (res.data.done) {
                             $rootScope.ShowToast('add balace success');
                             $scope.transferDetails = {}
-                        } else {
+                        } else if(res.data.done==false) {
                             $rootScope.ShowToast(res.data.message);
+                        }else{
+                          $rootScope.ShowToast(res.data.message);      
                         }
                     }, function(res) {
 
@@ -510,7 +529,38 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
             });
         }
 
-
+$scope.revertBalence=function(){
+                if($scope.revertDetails==undefined){
+                  $rootScope.ShowToast('Enter User Id');
+                  return false;      
+                }else if($scope.revertDetails.RevertFrom<5000000 ){
+                     $rootScope.ShowToast('invalid User Id');
+                  return false;     
+                }else if(isNaN($scope.revertDetails.RevertFrom)){
+                        $rootScope.ShowToast('invalid User Id');
+                      return false;   
+                }
+        $scope.revertDetails["ReverterId"]=$scope.curid;
+        var promise = serviceDB.toServer($scope.revertDetails, '/revertTransaction');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                $rootScope.hideDbLoading();
+                if (res.data.done == true ) {
+                   $rootScope.ShowToast(res.data.message);
+                     $scope.revertDetails.RevertFrom='';
+                }else if(res.data.done == false ){
+                   $rootScope.ShowToast(res.data.message);   
+                }else{
+                   $rootScope.ShowToast(res.data.message);   
+                }
+                  
+            }, function(error) {
+                $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to Revert Balance')
+                return false;
+            })
+         
+        }
 
         $scope.goBack = function() {
             console.log('Hai');
@@ -525,14 +575,15 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
         }
     })
     .controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter) {
-        var id = '';
-        id = authentication.currentUser().userId;
+        
+        var id = authentication.currentUser().userId;
         var tName = "Dealer";
         $scope.CurrenBalance = '';
         $scope.retailer = {};
         $scope.newpwd = {};
         $scope.transferDetails = {};
         $scope.complain = {};
+        $scope.revertDetails={};
             var accRepCount = 0;
       var tempReport={};
        $scope.accouReport={};
@@ -551,7 +602,7 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 if (res.data.data.length > 0 && res.data.done == true) {
                     $scope.CurrenBalance = res.data.data[0].Balance
                 } else {
-                    $rootScope.ShowToast(res.data.message);
+                   // $rootScope.ShowToast(res.data.message);
                 }
             }, function(res) {
                 //$rootScope.ShowToast('Failed to get Balance')
@@ -571,7 +622,8 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 if (res.data.done==true &&res.data.data.length > 0) {
                     $scope.ParentMasterDealerId = res.data.data[0].ParentMasterDealerId;
                 } else {
-                    $rootScope.ShowToast(res.data.message)
+                        console.log('Unabel to get MasterDealerByDId')
+                    //$rootScope.ShowToast(res.data.message)
 
 
                 }
@@ -590,8 +642,7 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                     $scope.schemeList = res.data.data;
                     console.log($scope.schemeList)
                 } else {
-                    $rootScope.ShowToast(res.data.message)
-
+                console.log('Unabel to get List of Scheme')
                 }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get  Scheme List')
@@ -617,8 +668,7 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 if (res.data.data != undefined && res.data.data.length>0) {
                     $scope.retailerTypeList = res.data.data;
                 } else {
-                    $rootScope.ShowToast(res.data.message)
-
+                console.log('Unabel to get List of Retailer')
                 }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Retailer type')
@@ -693,6 +743,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
         }, {
             name: "Add Balance",
            clas:'icon  ionIcon ion-plus-circled'
+        },
+         {
+            name: "Revert Balance",
+            clas:'icon ionIcon  ion-minus-circled'
         }, {
             name: "Add Retailer",
             clas:'icon ionIcon ion-android-person-add'
@@ -711,7 +765,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 $state.go('dReports')
             } else if (delear.name == 'Add Balance') {
                 $state.go('dAddBalance')
-            } else if (delear.name == 'Add Retailer') {
+            } else if(delear.name == 'Revert Balance'){
+                $state.go('dRevertBalance')    
+            }
+            else if (delear.name == 'Add Retailer') {
                 $state.go('dAddRetailer')
             }
         }
@@ -803,9 +860,6 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 
                 return;
             }
-
-
-
             //  var promise = serviceDB.toServer(retailer, 'http://telecom.azurewebsites.net/addRetailer');       
             var promise = serviceDB.toServer($scope.retailer, '/addRetailer');
             $rootScope.showDbLoading();
@@ -815,17 +869,14 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 if (res.data.done) {
                     $rootScope.ShowToast('Added Successfully');
                     $scope.retailer = {};
-
-                } else {
+                } else if(res.data.done==false) {
                     $rootScope.ShowToast(res.data.message);
-
+                }else{
+                     $rootScope.ShowToast(res.data.message);
                 }
-
-
                 console.log(res);
             }, function(res) {
                 console.log(res);
-
             });
 
         }
@@ -870,9 +921,12 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                     $scope.complain = {}
                     $rootScope.ShowToast('Complain added success');
 
-                } else {
+                } else if (res.data.done==false) {
                     $rootScope.ShowToast(res.data.message);
-                    return false;
+                   
+                }else{
+                     $rootScope.ShowToast(res.data.message);
+                     
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -894,7 +948,9 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
         			 accRepCount = accRepCount + res.data.data.length;
                 } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
-                }else {
+                }else if(res.data.done==false){
+                    $rootScope.ShowToast(res.data.message)
+                }else{
                     $rootScope.ShowToast(res.data.message)
                 }
             }, function(error) {
@@ -956,9 +1012,14 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                         if (res.data.done) {
                             $rootScope.hideDbLoading()
                             console.log(res);
+                              $rootScope.ShowToast(res.data.message);
+
                             $scope.transferDetails = {}
-                        } else {
+                        } else if (res.data.done==false){
                             $rootScope.ShowToast(res.data.message);
+                        }else{
+                             $rootScope.ShowToast(res.data.message);
+   
                         }
 
 
@@ -972,6 +1033,40 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 }
             });
         }
+          $scope.revertBalence=function(){
+                if($scope.revertDetails==undefined){
+                  $rootScope.ShowToast('Enter User Id');
+                  return false;      
+                }else if($scope.revertDetails.RevertFrom<10000000){
+                     $rootScope.ShowToast('invalid User Id');
+                  return false;     
+                }else if(isNaN($scope.revertDetails.RevertFrom)){
+                        $rootScope.ShowToast('invalid User Id');
+                      return false;   
+                }
+        $scope.revertDetails["ReverterId"]=id;
+        var promise = serviceDB.toServer($scope.revertDetails, '/revertTransaction');
+            $rootScope.showDbLoading();
+            promise.then(function(res) {
+                $rootScope.hideDbLoading();
+                if (res.data.done == true ) {
+                   $rootScope.ShowToast(res.data.message);
+                   $scope.revertDetails.RevertFrom='';
+                }else if(res.data.done == false ){
+                   $rootScope.ShowToast(res.data.message);   
+                }else{
+                    $rootScope.ShowToast(res.data.message);   
+      
+                }
+                  
+            }, function(error) {
+                $rootScope.hideDbLoading();
+                $rootScope.ShowToast('Unable to Revert Balance')
+                return false;
+            })
+         
+        }
+        
         $scope.reports = [{
             name: 'Account Report',
             clss: 'icon ionIcon ion-document-text'
@@ -1040,8 +1135,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 			  accRepCount = accRepCount + res.data.data.length;
                   } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
-                }else{
-                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+                }else if(res.data.done==false){
+                     $rootScope.ShowToast(res.data.message); 
+             }else{
+                  $rootScope.ShowToast(res.data.message);     
              }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Report');
@@ -1098,8 +1195,10 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 			  accRepCount = accRepCount + res.data.data.length;
                   } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
-                }else{
-                     $rootScope.ShowToast('Unable to fetch Records Found'); 
+                }else if(res.data.done==false){
+                     $rootScope.ShowToast(res.data.message); 
+             }else{
+                $rootScope.ShowToast(res.data.message); 
              }
             }, function(res) {
                 $rootScope.ShowToast('Unable to get Report');
@@ -1146,10 +1245,12 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                     $scope.newpwd = {};
                     $rootScope.ShowToast('Changed Password Successfully')
 
-                } else {
+                } else if(res.data.done==false) {
                     $rootScope.ShowToast(res.data.message)
 
 
+                }else{
+                    $rootScope.ShowToast(res.data.message)    
                 }
                 console.log(res);
             }, function(res) {
@@ -1336,10 +1437,15 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
 			  accRepCount = accRepCount + res.data.data.length;
                   } else if(res.data.done==true&&res.data.data.length ==0) {
                     $rootScope.ShowToast('No Records Found');
-                }else{
+                }else if(res.data.done==false){
                      $rootScope.ShowToast('Unable to fetch Records Found'); 
+             }else{
+                       $rootScope.ShowToast('Unable to fetch Records Found'); 
+   
              }
             }, function(res) {
+                  $rootScope.hideDbLoading();       
+
                 $rootScope.ShowToast('Unable to get Report');
             });
 
@@ -1402,8 +1508,11 @@ var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.ge
                 } else if(res.data.done == true &&res.data.data.length ==0) {
 
                     $rootScope.ShowToast('No Records Found');
-                }else{
+                }else if(res.data.done == false){
                      $rootScope.ShowToast('Unable to fetch Records Found');    
+                }else{
+                   $rootScope.ShowToast('Unable to fetch Records Found');    
+   
                 }
             }, function(res) {
                 $rootScope.hideDbLoading();
@@ -1467,8 +1576,10 @@ if(tempReport.From>tempReport.To){
                 } else if(res.data.done == true &&res.data.data.length==0) {
                     $rootScope.ShowToast('No Records Found');
 
-                }else{
+                }else if(res.data.done==false){
                      $rootScope.ShowToast('Unable Records Found');   
+                }else{
+                        $rootScope.ShowToast('Unable Records Found');   
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -1516,9 +1627,12 @@ if(tempReport.From>tempReport.To){
                     $scope.complain = {}
                     $rootScope.ShowToast('Complain added success');
 
-                } else {
+                } else if(res.data.done==false) {
                     $rootScope.ShowToast(res.data.message);
                     return false;
+                }else{
+                       $rootScope.ShowToast(res.data.message);
+    
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -1539,8 +1653,11 @@ if(tempReport.From>tempReport.To){
                 } else if(res.data.done == true && res.data.data.length==0){
                     $rootScope.ShowToast('No Complain List Found');     
                 }
-                else {
+                else if(res.data.done ==false){
                     $rootScope.ShowToast(res.data.message);
+                }else{
+                 $rootScope.ShowToast(res.data.message);
+    
                 }
             }, function(error) {
                 $rootScope.hideDbLoading();
@@ -1587,8 +1704,11 @@ if(tempReport.From>tempReport.To){
                     $scope.newpwd = {};
                     $rootScope.ShowToast('Changed Password Successfully')
 
-                } else {
+                } else if(res.data.done==false) {
                     $rootScope.ShowToast(res.data.message);
+                }else{
+                 $rootScope.ShowToast(res.data.message);
+   
                 }
                 console.log(res);
             }, function(res) {
@@ -1669,8 +1789,11 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
                   } else if(res.data.done == true && res.data.data.length ==0) {
 
                     $rootScope.ShowToast('No Records Found');
-                }else{
+                }else if(res.data.done == false){
                      $rootScope.ShowToast('Unable to fetch Records Found');    
+                }else{
+                       $rootScope.ShowToast('Unable to fetch Records Found');    
+    
                 }
                 console.log(res);
             }, function(res) {
@@ -1845,8 +1968,11 @@ if($scope.searchRecharge.From>$scope.searchRecharge.To){
                     $rootScope.ShowToast('Successfully recharged')
                     console.log(res);
                     $scope.recharge = {}
-                } else {
+                } else if(res.data.done==false){
                     $rootScope.ShowToast(res.data.message)
+                }else{
+                     $rootScope.ShowToast(res.data.message)
+    
                 }
                 //	var promise = serviceDB.toServer(details, "/recharge");
             }, function(res) {

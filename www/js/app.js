@@ -99,6 +99,11 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
           controller:'masterDelearCtrl',
         templateUrl: 'templates/complainList.html'
     })
+    .state('mRevertBalance', {
+        url: '/mComplainList',
+          controller:'masterDelearCtrl',
+        templateUrl: 'templates/revertBalance.html'
+    })
  .state('delear', {
         url: '/delear',
         controller:'delearCtrl',
@@ -158,6 +163,11 @@ var myapp=angular.module('starter', ['ionic','starter.controllers','starter.serv
         url: '/dTopUpReport',
           controller:'delearCtrl',
         templateUrl: 'templates/topupReport.html'
+    })
+     .state('dRevertBalance', {
+        url: '/mComplainList',
+          controller:'delearCtrl',
+        templateUrl: 'templates/revertBalance.html'
     })
    
     .state('retailer', {
