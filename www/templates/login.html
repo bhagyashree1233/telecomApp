@@ -1,23 +1,17 @@
 <ion-view title="Uttam Telecom">
-    
-   <ion-content ng-controller="loginCtrl">
-   
-      <div id="loginForm"   >
-      <h5 style="font-size:25px;text-align:center">Login</h5>
-      <div class="list list-inset" style="margin:0vmin">
-       <label class="item login item-input" >
-    <input type="text" placeholder="UserName" ng-model="login.Uname" id="usn">
-      </label>
-     
-       <label class="item login item-input">
-    <input type="password" placeholder="Password" ng-model="login.Pwd" id="pwd">
-  </label>
-  
-  </div>
-  
-<button class="button sButton button-block button-stable" ng-click='loginSub(user)'>
-    Login
-   </button>
-      </div>
-   </ion-content>
+    <div id="login-bg"></div>
+    <ion-content ng-controller="loginCtrl">
+        <div class="loginDiv">
+            <h5 style="font-size:25px;text-align:center">Login</h5>
+            <form id="loginForm">
+                <div>
+                    <input type="text" id="uname" placeholder="UserName" ng-model="login.Uname">
+                </div>
+                <div>
+                    <input type="password" id="pwd" placeholder="Password" ng-model="login.Pwd">
+                </div>
+                <button type="submit" class="button login" ng-click='loginSub(user)'>Login</button>
+            </form>
+        </div>
+    </ion-content>
 </ion-view>
