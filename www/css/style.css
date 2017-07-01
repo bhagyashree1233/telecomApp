@@ -98,3 +98,92 @@
   font-weight:normal;
   font-size: 15px;
 }
+
+
+.inner-mainHomeDiv a.profileDiv {
+  
+  width:100%;
+}
+.inner-mainHomeDiv .balanceDiv {
+   height:20vh;
+  text-align:center;
+  background-image: url(/img/DarkBackground.jpg);
+  padding: 2vh;
+}
+
+.inner-mainHomeDiv .balanceDiv h1, .inner-mainHomeDiv .balanceDiv h2{ 
+  color:white;
+}
+
+
+.homeIconOptionsDiv {
+  padding:0;
+}
+
+.inner-mainHomeDiv .col.col-center {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row; 
+    flex-direction: row;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    
+    border-right:1px solid #e6e0e0;
+    border-bottom:1px solid #e6e0e0;
+    width:1vw;
+    height:24vh;
+    background-color:transparent;
+}
+
+
+.homeIconOptionsDiv:last-child {
+  border-bottom:0;
+}
+
+.inner-mainHomeDiv .icon_text {
+  text-shadow:3px 3px 4px rgba(0, 0, 0, 0.3);color:black;
+  margin:2vmin;
+  font-size: 4vmin;
+  width: 100px;
+  word-wrap: break-word;
+  white-space: initial;
+}
+
+.inner-mainHomeDiv .iconDiv {
+  width:28vmin;
+  margin:auto;
+  overflow:hidden;
+  height:auto;
+  text-align:center;
+}
+
+.inner-mainHomeDiv .iconDiv i.icon{
+   width:auto;
+   height:20vmin;
+   margin:auto;
+   font-size:60px;
+}
+
+.inner-mainHomeDiv .row {
+  padding:0;
+
+}
+
+/*
+ .inner-mainHomeDiv .button-circle {
+  padding:0;
+  margin:0;
+}
+
+.inner-mainHomeDiv .button-circle i{ 
+   padding:0;
+   margin:0;
+
+}
+*/
+
+.element {
+    text-align:center;
+}

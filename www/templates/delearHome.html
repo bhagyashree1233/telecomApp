@@ -1,10 +1,67 @@
 <ion-view>
-<ion-nav-bar id="mainNav" >
-        <ion-nav-back-button class="button-stable ">
-            <i class="icon ion-ios-arrow-back"></i>Back
-        </ion-nav-back-button>
-    </ion-nav-bar>
-   <ion-content >
+    <ion-header-bar class="sub-head bar-assertive">
+      <div class="buttons" style="position:absolute;right:0;">
+        <button style="color: white;" ng-click="logout()" class="button">
+            Logout
+        </button>
+      </div>  
+    </ion-header-bar>
+    <ion-content>
+        <div class="mainHomeDiv">
+            <div class="list inner-mainHomeDiv">
+                <a class="item balanceDiv">
+                    <h2>Available Balance</h2>
+                    <h1>{{CurrenBalance}}</h1>
+                    <h2>User Id : {{curid}}</h2>
+                </a>
+                <div class="item homeIconOptionsDiv">
+                    <div class="repeatDiv" ng-repeat="items in delear">
+                        <div class="row" ng-if="$index%3==0">
+                            <div class="col col-33 col-center">
+                                <a class="element" ng-if="delear[$index]!=undefined" ng-click="delr(delear[$index])">
+                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{delear[$index].clas}}" style="font-size:15vmin"></i>
+                                    </button>
+                                -->
+                                    <div class="iconDiv">
+                                        <!--   <img src="{{delear[$index].icon}}"></img>  -->
+                                        <i class="{{delear[$index].icon}}" style="color:{{delear[$index].color}}"></i>
+                                    </div>
+                                    <div class="icon_text">{{delear[$index].name}} </div>
+                                </a>
+                            </div>
+                            <div class="col col-30 col-center" ng-if="delear[$index+1]!=undefined">
+                                <a class="element" ng-click="delr(delear[$index+1])">
+                                    <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{delear[$index+1].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                               -->
+                                    <div class="iconDiv">
+                                        <!--      <img src="{{delear[$index+1].icon}}"></img>  -->
+                                        <i class="{{delear[$index+1].icon}}" style="color:{{delear[$index+1].color}}"></i>
+                                    </div>
+                                    <div class="icon_text">{{delear[$index+1].name}} </div>
+                                </a>
+                            </div>
+                            <div class="col col-30 col-center" ng-if="delear[$index+2]!=undefined">
+                                <a class="element" ng-click="delr(delear[$index+2])">
+                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{delear[$index+2].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                                -->
+                                    <div class="iconDiv">
+                                        <!--       <img src="{{delear[$index+2].icon}}"></img>  -->
+                                        <i class="{{delear[$index+2].icon}}" style="color:{{delear[$index+2].color}}"></i>
+                                    </div>
+                                    <div class="icon_text">{{delear[$index+2].name}} </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 
    <ul class="list " >
     <li class="item masterDelerList" ng-repeat="del in delear" ng-click="delr(del)">
         <i  class="icon arrow ion-chevron-right"></i>
@@ -13,5 +70,7 @@
     </li>
   
 </ul>
-   </ion-content>
-  </ion-view>
+
+  -->
+    </ion-content>
+</ion-view>

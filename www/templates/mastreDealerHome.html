@@ -1,25 +1,77 @@
-<ion-view >
-    <ion-nav-bar id="mainNav" >
-        <ion-nav-back-button class="button-stable ">
-            <i class="icon ion-ios-arrow-back"></i>Back
-        </ion-nav-back-button>
-    </ion-nav-bar>
-
-   <ion-content ng-controller="masterDelearCtrl">
-   
-   <ul class="list "  >
-    <li class="item masterDelerList" ng-click="master(delear)" ng-repeat="delear in masterDelear">
-        <i  class={{delear.clas}}></i>
-         <i  class="icon arrow ion-chevron-right"></i>
-      <p style="">{{delear.name}} </p>
-     
-    </li>
-
-
-    
-</ul>
-
-<!--<div ng-switch="pages">
+<ion-view>
+    <ion-header-bar class="sub-head bar-assertive">
+      <div class="buttons" style="position:absolute;right:0;">
+        <button style="color: white;" ng-click="logout()" class="button">
+            Logout
+        </button>
+      </div>  
+    </ion-header-bar>
+    <ion-content ng-controller="masterDelearCtrl">
+        <div class="mainHomeDiv">
+            <div class="list inner-mainHomeDiv">
+                <a class="item balanceDiv">
+                    
+                    <h2>Available Balance</h2>
+                    <h1>{{CurrenBalance}}</h1>
+                    <h2>User Id : {{curid}}</h2>
+                </a>
+                <div class="item homeIconOptionsDiv">
+                    <div ng-repeat="items in masterDelear">
+                        <div class="row" ng-if="$index%3==0">
+                            <div style="position:relative;" class="col col-33 col-center">
+                                <a class="element" ng-if="masterDelear[$index]!=undefined" ng-click="master(masterDelear[$index])">
+                                <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{masterDelear[$index].clas}}" style="font-size:15vmin"></i>
+                                    </button>
+                                --> 
+                                   <div class="iconDiv">    
+                                 <!--   <img src="{{masterDelear[$index].icon}}"></img>  -->
+                                  <i class="{{masterDelear[$index].icon}}" style="color:{{masterDelear[$index].color}}"></i>
+                                   </div> 
+                                    <div class="icon_text">{{masterDelear[$index].name}} </div>
+                                </a>
+                            </div>
+                            <div style="position:relative;" class="col col-30 col-center">
+                                <a class="element" ng-if="masterDelear[$index+1]!=undefined" ng-click="master(masterDelear[$index+1])">
+                              <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{masterDelear[$index+1].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                               -->     
+                                    <div class="iconDiv">    
+                              <!--      <img src="{{masterDelear[$index+1].icon}}"></img>  -->
+                                      <i class="{{masterDelear[$index+1].icon}}" style="color:{{masterDelear[$index+1].color}}"></i>
+                                   </div>  
+                                    <div class="icon_text">{{masterDelear[$index+1].name}} </div>
+                                </a>
+                            </div>
+                            <div style="position:relative;" class="col col-30 col-center">
+                                <a class="element" ng-if="masterDelear[$index+2]!=undefined" ng-click="master(masterDelear[$index+2])">
+                                <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{masterDelear[$index+2].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                                -->    
+                                    <div class="iconDiv">    
+                             <!--       <img src="{{masterDelear[$index+2].icon}}"></img>  -->
+                                     <i class="{{masterDelear[$index+2].icon}}" style="color:{{masterDelear[$index+2].color}}"></i>
+                                   </div> 
+                                    <div class="icon_text">{{masterDelear[$index+2].name}} </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!--   
+        <ul class="list ">
+            <li class="item masterDelerList" ng-click="master(delear)" ng-repeat="delear in masterDelear">
+                <i class={{delear.clas}}></i>
+                <i class="icon arrow ion-chevron-right"></i>
+                <p style="">{{delear.name}} </p>
+            </li>
+        </ul>
+     -->   
+        <!--<div ng-switch="pages">
 
 <span ng-if="pages=='changePassword'&&home==false" >
 
@@ -27,5 +79,5 @@
    </div>
   </span>
    </div>-->
-   </ion-content>
-  </ion-view>
+    </ion-content>
+</ion-view>
