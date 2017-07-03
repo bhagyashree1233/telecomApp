@@ -821,7 +821,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         if ($scope.retailer.Mobile == "" || $scope.retailer.Mobile == undefined) {
             $rootScope.ShowToast('Mobile number required');
             return;
-        } else if (Number.isNaN($scope.retailer.Mobile) || $scope.retailer.Mobile.length < 10 || $scope.retailer.Mobile.length > 10) {
+        } else if (Number.isNaN($scope.retailer.Mobile)  || $scope.retailer.Mobile.length > 13) {
             $rootScope.ShowToast('Mobile number');
             return;
         }
@@ -1973,7 +1973,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.rechargeDetails['RechargeAmount'] = $scope.recharge.amount;
         $scope.rechargeDetails['CustomerName'] = $scope.recharge.Cusname;
         $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
-        if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length != 10) {
+        if ($scope.rechargeDetails.MobileNo==undefined||isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length >13) {
             console.log("Enter valid mobile number");
 
             $rootScope.ShowToast('Enter valid mobile number')
