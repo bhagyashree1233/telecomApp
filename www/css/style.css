@@ -55,7 +55,7 @@
   background-color: rgba(0,0,0,.2);
   background-repeat: no-repeat;
   margin: 1vh auto;
-  padding: 8px 24px 8px 10px;
+  padding: spx 24px 8px 10px;
   font: bold .875em/1.25em "Open Sans Condensed", sans-serif;
   letter-spacing: .075em;
   color: #fff;
@@ -67,6 +67,7 @@
  .loginDiv form input#uname {
   background-image: url(../img/user1.png);
   background-position: 200px 10px;
+  
 }
 
 .loginDiv form input#pwd {
@@ -171,7 +172,7 @@
 .inner-mainHomeDiv .balanceDiv {
    height:20vh;
   text-align:center;
-  background-image: url(/img/DarkBackground.jpg);
+  background-image: url(../img/DarkBackground.jpg);
   padding: 2vh;
 }
 

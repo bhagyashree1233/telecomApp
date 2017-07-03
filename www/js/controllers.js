@@ -1973,7 +1973,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.rechargeDetails['RechargeAmount'] = $scope.recharge.amount;
         $scope.rechargeDetails['CustomerName'] = $scope.recharge.Cusname;
         $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
-        if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length != 10) {
+        if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length > 20) {
             console.log("Enter valid mobile number");
 
             $rootScope.ShowToast('Enter valid mobile number')
