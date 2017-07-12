@@ -54,7 +54,7 @@
   background-color: rgba(0,0,0,.2);
   background-repeat: no-repeat;
   margin: 1vh auto;
-  padding: spx 24px 8px 10px;
+  padding: 5px 24px 8px 10px;
   font: bold .875em/1.25em "Open Sans Condensed", sans-serif;
   letter-spacing: .075em;
   color: #fff;
@@ -165,18 +165,19 @@
 
 
 .inner-mainHomeDiv a.profileDiv {
-  
   width:100%;
 }
 .inner-mainHomeDiv .balanceDiv {
-   height:20vh;
+  height:20vh;
   text-align:center;
   background-image: url(../img/DarkBackground.jpg);
-  padding: 2vh;
+  padding: 1vh;
 }
 
 .inner-mainHomeDiv .balanceDiv h1, .inner-mainHomeDiv .balanceDiv h2{ 
   color:white;
+  padding:auto;
+  margin:1vh auto;
 }
 
 
@@ -191,13 +192,13 @@
     flex-direction: row;
     -webkit-align-items: center;
     align-items: center;
-    -webkit-justify-content: center;
+    -webkit-justify-content: center; 
     justify-content: center;
     
     border-right:1px solid #e6e0e0;
     border-bottom:1px solid #e6e0e0;
     width:1vw;
-    height:24vh;
+    height:22vh;
     background-color:transparent;
 }
 
@@ -210,7 +211,7 @@
   text-shadow:3px 3px 4px rgba(0, 0, 0, 0.3);color:black;
   margin:2vmin;
   font-size: 4vmin;
-  width: 100px;
+  width: 100px; 
   word-wrap: break-word;
   white-space: initial;
 }
@@ -227,12 +228,17 @@
    width:auto;
    height:20vmin;
    margin:auto;
-   font-size:60px;
+   font-size:35px;
 }
 
 .inner-mainHomeDiv .row {
   padding:0;
 
+}
+
+.iconDiv img {
+   width:auto;
+   height:10vh;
 }
 
 /*

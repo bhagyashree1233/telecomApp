@@ -1,60 +1,59 @@
 <ion-view ng-controller="retailerCtrl">
-    <ion-header-bar class="sub-head bar-assertive">
-      <div class="buttons" style="position:absolute;right:0;">
-        <button style="color: white;" ng-click="logout()" class="button">
-            Logout
-        </button>
-      </div>  
+  <!--
+    <ion-header-bar class="bar-assertive">
+        <div class="buttons" style="position:absolute;right:0;">
+            <button style="color: white;" ng-click="logout()" class="button">Logout</button>
+        </div>
     </ion-header-bar>
-    <ion-content >
-      
-     <div class="mainHomeDiv">
+   -->
+   
+    <ion-content>
+        <div class="mainHomeDiv">
             <div class="list inner-mainHomeDiv">
                 <a class="item balanceDiv">
-                    
                     <h2>Available Balance</h2>
-                    <h1>{{CurrenBalance}} Rs</h1>
+                    <h1>Rs. {{CurrenBalance}}</h1>
                     <h2>User Id : {{curid}}</h2>
                 </a>
                 <div class="item homeIconOptionsDiv">
                     <div ng-repeat="items in retailer">
                         <div class="row" ng-if="$index%3==0">
                             <div style="position:relative;" class="col col-33 col-center">
-                                <a class="element"ng-click="retlr(retailer[$index])">
-                                <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                <a class="element" ng-click="retlr(retailer[$index])">
+                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
                                         <i class="{{retailer[$index].clas}}" style="font-size:15vmin"></i>
                                     </button>
-                                --> 
-                                   <div class="iconDiv">    
-                                 <!--   <img src="{{retailer[$index].icon}}"></img>  -->
-                                  <i class="{{retailer[$index].icon}}" style="color:{{retailer[$index].color}}"></i>
-                                   </div> 
+                                -->
+                                    <div class="iconDiv">
+                                        <!--   <img src="{{retailer[$index].icon}}"></img>  -->
+                                        <i class="{{retailer[$index].icon}}" style="color:{{retailer[$index].color}}"></i>
+                                    </div>
                                     <div class="icon_text">{{retailer[$index].name}} </div>
                                 </a>
                             </div>
                             <div style="position:relative;" class="col col-30 col-center">
                                 <a class="element" ng-if="retailer[$index+1]!=undefined" ng-click="retlr(retailer[$index+1])">
-                              <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                    <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
                                         <i class="{{retailer[$index+1].clas}}" style="font-size:7vmin"></i>
                                     </button>
-                               -->     
-                                    <div class="iconDiv">    
-                              <!--      <img src="{{retailer[$index+1].icon}}"></img>  -->
-                                      <i class="{{retailer[$index+1].icon}}" style="color:{{retailer[$index+1].color}}"></i>
-                                   </div>  
+                               -->
+                                    <div class="iconDiv">
+                                        <!--      <img src="{{retailer[$index+1].icon}}"></img>  -->
+                                        <i class="{{retailer[$index+1].icon}}" style="color:{{retailer[$index+1].color}}"></i>
+                                    </div>
                                     <div class="icon_text">{{retailer[$index+1].name}} </div>
                                 </a>
                             </div>
                             <div style="position:relative;" class="col col-30 col-center">
                                 <a class="element" ng-if="retailer[$index+2]!=undefined" ng-click="retlr(retailer[$index+2])">
-                                <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
                                         <i class="{{retailer[$index+2].clas}}" style="font-size:7vmin"></i>
                                     </button>
-                                -->    
-                                    <div class="iconDiv">    
-                             <!--       <img src="{{retailer[$index+2].icon}}"></img>  -->
-                                     <i class="{{retailer[$index+2].icon}}" style="color:{{retailer[$index+2].color}}"></i>
-                                   </div> 
+                                -->
+                                    <div class="iconDiv">
+                                        <!--       <img src="{{retailer[$index+2].icon}}"></img>  -->
+                                        <i class="{{retailer[$index+2].icon}}" style="color:{{retailer[$index+2].color}}"></i>
+                                    </div>
                                     <div class="icon_text">{{retailer[$index+2].name}} </div>
                                 </a>
                             </div>
@@ -62,9 +61,8 @@
                     </div>
                 </div>
             </div>
-        </div> 
-
-    <!--
+        </div>
+        <!--
         <ul class="list">
             <li class="item masterDelerList" ng-repeat="ret in retailer" ng-click="retlr(ret)">
                 <i class="icon arrow ion-chevron-right"></i>
@@ -73,6 +71,5 @@
             </li>
         </ul>
    -->
-
     </ion-content>
 </ion-view>

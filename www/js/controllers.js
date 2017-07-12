@@ -45,7 +45,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.goBack = function() {
         $ionicHistory.goBack();
     }
-}).controller('masterDelearCtrl', function($scope, $filter, $state, serviceDB, $rootScope, $interval, authentication) {
+}).controller('masterDelearCtrl', function($scope, $filter, $state, serviceDB, $rootScope, $interval, authentication, $window) {
     $scope.masterDelear = [];
     $scope.CurrenBalance = '';
     $scope.newpwd = {};
@@ -96,37 +96,41 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
          */
     {
         name: "Complain",
-    //    icon: '/img/Complain.png'
+        //    icon: '/img/Complain.png'
         icon: "icon ion-compose",
-        color:"green"
+        color: "green"
 
     }, {
         name: "Complain List",
-    //    icon: '/img/Complain2.png'
+        //    icon: '/img/Complain2.png'
         icon: "icon ion-folder",
-        color:"red"
+        color: "red"
     }, {
         name: "Change Password",
-     //   icon: '/img/Password.png'
+        //   icon: '/img/Password.png'
         icon: "icon ion-locked",
-        color:"blue"
+        color: "blue"
     }, {
         name: "Reports",
         //icon: '/img/Reports.png'
         icon: "icon ion-clipboard",
-        color:"violet"
+        color: "violet"
     }, {
         name: "Add Balance",
         //icon: '/img/AddBalance.png'
         icon: "icon ion-plus-round",
-        color:"purple"
+        color: "purple"
     }, {
         name: "Revert Balance",
         //icon: '/img/RevertBalance.png'
         icon: "icon ion-refresh",
-        color:"lightblue"
-    }
-    ]
+        color: "lightblue"
+    },{
+        name: "Shop",
+        icon: 'icon ion-bag',
+        color: "grey",
+        url: "http://uttamwordpress.azurewebsites.net/"
+    }]
     $scope.master = function(delear) {
         $scope.home = false;
         console.log(delear);
@@ -145,6 +149,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('mAddBalance')
         } else if (delear.name == 'Revert Balance') {
             $state.go('mRevertBalance')
+        } else if (delear.name == 'Shop') {
+            $window.location.href = delear.url;
         }
     }
     var stop;
@@ -579,16 +585,15 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.logout = function() {
         $state.go('login');
     }
-})
-.controller('reportCtrl', function($scope, $state) {
+}).controller('reportCtrl', function($scope, $state) {
 
     $scope.goBack = function() {
         $ionicHistory.goBack();
     }
-}).controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter) {
+}).controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter, $window) {
 
     var id = authentication.currentUser().userId;
-    
+
     var tName = "Dealer";
     $scope.CurrenBalance = '';
     $scope.retailer = {};
@@ -614,7 +619,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             console.log(res.data.data.length);
             if (res.data.data.length > 0 && res.data.done == true) {
                 $scope.CurrenBalance = res.data.data[0].Balance;
-                
+
             } else {// $rootScope.ShowToast(res.data.message);
             }
         }, function(res) {//$rootScope.ShowToast('Failed to get Balance')
@@ -736,45 +741,47 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         }));
     }
 
-    $scope.delear = [
-    /*
+    $scope.delear = [/*
     {
         name: "Current Balance",
         icon: 'icon ionIcon ion-cash'
     },
-    */ 
+    */
     {
         name: "Complain",
         icon: "icon ion-compose",
-        color:"green"
+        color: "green"
     }, {
         name: "Complain List",
         icon: "icon ion-folder",
-        color:"red"
+        color: "red"
     }, {
         name: "Reports",
-         icon: "icon ion-clipboard",
-        color:"violet"
-    }, 
-
+        icon: "icon ion-clipboard",
+        color: "violet"
+    },
     {
         name: "Add Balance",
         icon: 'icon ion-plus-round',
-        color:"purple"
+        color: "purple"
     },
-
-     {
+    {
         name: "Revert Balance",
         icon: "icon ion-refresh",
-        color:"lightblue"
+        color: "lightblue"
     }, {
         name: "Add Retailer",
         icon: 'icon ion-android-person-add',
-        color:"grey"
+        color: "grey"
     }, {
         name: "Change Password",
         icon: "icon ion-locked",
-        color:"blue"
+        color: "blue"
+    },{
+        name: "Shop",
+        icon: 'icon ion-bag',
+        color: "grey",
+        url: "http://uttamwordpress.azurewebsites.net/"
     }]
     $scope.delr = function(delear) {
         console.log(delear);
@@ -794,6 +801,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('dRevertBalance')
         } else if (delear.name == 'Add Retailer') {
             $state.go('dAddRetailer')
+        } else if(delear.name == 'Shop') {
+            $window.location.href = delear.url;
         }
     }
 
@@ -821,7 +830,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         if ($scope.retailer.Mobile == "" || $scope.retailer.Mobile == undefined) {
             $rootScope.ShowToast('Mobile number required');
             return;
-        } else if (Number.isNaN($scope.retailer.Mobile) || $scope.retailer.Mobile.length < 10 || $scope.retailer.Mobile.length > 10) {
+        } else if (Number.isNaN($scope.retailer.Mobile) || $scope.retailer.Mobile.length > 13) {
             $rootScope.ShowToast('Mobile number');
             return;
         }
@@ -1286,7 +1295,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.logout = function() {
         $state.go('login');
     }
-}).controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication, $location, $anchorScroll) {
+}).controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication, $location, $anchorScroll, $window) {
     var id = '';
     var tName = '';
     $scope.searchRecharge = {};
@@ -1298,7 +1307,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     var accRepCount = 0;
     var tempReport = {};
     $scope.accouReport = {};
-    $scope.accountReportList = [];
+    $scope.accountReportList = []; 
     $scope.complaiList = [];
     $scope.curid = id;
     var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
@@ -1329,8 +1338,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     }, {
         name: 'Refund Report',
         clss: 'icon ionIcon ion-document-text'
-    }
-    ]
+    }]
     $scope.repo = function(report) {
         if (report.name == 'Account Report') {
             $state.go('rAccrechargeReport')
@@ -1344,21 +1352,20 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.retailer = [{
         name: "Mobile Recharge",
         icon: 'icon ion-android-phone-portrait',
-        color:"green"
+        color: "green"
     }, {
         name: "DTH Recharge",
         icon: 'icon ion-easel',
-        color:"violet"
+        color: "violet"
     }, {
         name: "Recharge Transaction",
         icon: 'icon ion-document-text',
-        color:"indigo"
+        color: "indigo"
     }, {
         name: "Reports",
         icon: "icon ion-clipboard",
-        color:"#ee6a50s"
-    }, 
-/*
+        color: "#ee6a50s"
+    }, /*
     {
         name: "Current Balance",
         icon: 'icon ion-cash',
@@ -1368,20 +1375,24 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     {
         name: "Complain",
         icon: 'icon ion-compose',
-        color:"#a52a2a"
+        color: "#a52a2a"
     }, {
         name: "Complain List",
         icon: 'icon ion-folder',
-        color:"#5f9ea0"
+        color: "#5f9ea0"
     }, {
         name: "Change Password",
         icon: 'icon ion-locked',
-        color:"#76ee00"
-    }, 
-    {
+        color: "#76ee00"
+    }, {
         name: "Search Transaction",
         icon: 'icon ion-search',
-        color:"orange"
+        color: "orange"
+    },{
+        name: "Shop",
+        icon: 'icon ion-bag',
+        color: "grey",
+        url: "http://uttamwordpress.azurewebsites.net/"
     }]
     $scope.retlr = function(ret) {
         if (ret.name == 'Mobile Recharge') {
@@ -1403,6 +1414,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('rChangePassword')
         } else if (ret.name == 'Reports') {
             $state.go('rReports')
+        } else if(ret.name == 'Shop') {
+            $window.location.href = ret.url; 
         }
     }
     var stop;
@@ -1840,7 +1853,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.logout = function() {
         $state.go('login');
     }
-}).controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB) {
+}).controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB, $ionicHistory) {
     var id = '';
     var tName = ''
     id = authentication.currentUser().userId;
@@ -1868,96 +1881,101 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     });
     $scope.mobileRecharge = [{
         id: "A",
-        name: "Airtel",
-        src: 'img/airtel.jpg'
+        name: "Airtel", 
+        src: '../img/airtel4.jpg'
     }, {
         id: "V",
         name: "Vodafone",
-        src: 'img/vodafone.jpg'
+        src: '../img/vodafone.jpg'
     }, {
         id: "AIR",
         name: "Aircel",
-        src: 'img/aircel.jpg'
+        src: '../img/aircel3.jpg'
     }, {
         id: "BT",
         name: "BSNL-TOPUP",
-        src: 'img/bsnl.jpg'
+        src: '../img/bsnl.jpg'
     }, {
         id: "D",
         name: "DOCOMO",
-        src: 'img/docomo.jpg'
+        src: '../img/docomo1.jpg'
     }, {
         id: "RG",
         name: "RELIANCE-GSM",
-        src: 'img/relianc.jpg'
+        src: '../img/reliance2.jpg'
     }, {
         id: "RC",
         name: "RELIANCE-CDMA",
-        src: 'img/relianc.jpg'
+        src: '../img/reliance_cdma.jpg'
     }, {
         id: "I",
         name: "Idea",
-        src: 'img/idea.jpg'
+        src: '../img/idea1.jpg'
     }, {
         id: "TI",
         name: "TATA INDICOM",
-        src: 'img/tataInd.jpg'
+        src: '../img/Indicom2.gif'
     }, {
         id: "M",
         name: "MTS",
-        src: 'img/mts.jpg'
+        src: '../img/mts2.jpg'
     }, {
-        id: "JO",
+        id: "JO", 
         name: "JIO",
-        src: 'img/jio.jpg'
+        src: '../img/jio.jpg'
     }, {
         id: "U",
-        name: "UNINOR",
-        src: 'img/uninor.jpg'
+        name: "UNINOR", 
+        src: '../img/uninor2.jpg'
     }, {
         id: "US",
         name: "UNINOR-SPL",
-        src: 'img/uninor.jpg'
+        src: '../img/uninor2.jpg'
     }, {
         id: "BS",
         name: "BSNL-STV",
-        src: 'img/bsnl.jpg'
+        src: '../img/bsnl.jpg' 
     }, {
-        id: "DS",
-        name: "DOCOME-SPECIAL",
-        src: 'img/docomo.jpg'
+        id: "DS", 
+        name: "DOCOME-SPECIAL", 
+        src: '../img/docomo1.jpg' 
     }, {
         id: "TB",
         name: "BSNL Recharge",
-        src: 'img/bsnl.jpg'
-    },
-    ]
+        src: '../img/bsnl.jpg'
+    }, ]
+
     $scope.dthRecharge = [{
         id: "DTV",
         name: 'Dish TV DTH',
-        src: 'img/dish.png'
+        src: '../img/dishtv.jpg' 
     }, {
         id: "TTV",
         name: 'Tata Sky DTH',
-        src: 'img/sky.png'
+        src: '../img/tatasky1.jpg'
     }, {
         id: "BTV",
         name: 'Big TV DTH',
-        src: 'img/bigTV.jpg'
+        src: '../img/bigtv1.jpg'
     }, {
         id: "VTV",
         name: 'Videocon DTH',
-        src: 'img/videcon.png'
+        src: '../img/videcon2.png'
     }, {
         id: "STV",
         name: 'Sun DTH',
-        src: 'img/sun.png'
+        src: '../img/sundirect.jpg'
     }, {
         id: "ATV",
         name: 'Airtel DTH',
-        src: 'img/airtelDTH.png'
+        src: '../img/airteldish.jpg'
     }]
 
+    
+        $scope.myGoBack = function() {
+            $ionicHistory.goBack();
+        };
+    
     $scope.mobilRecg = function(rechargeType, mobilename, id) {
         $rootScope.mobile = {};
         $rootScope.mobile.type = rechargeType;
@@ -1973,7 +1991,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.rechargeDetails['RechargeAmount'] = $scope.recharge.amount;
         $scope.rechargeDetails['CustomerName'] = $scope.recharge.Cusname;
         $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
+
         if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length > 20) {
+
             console.log("Enter valid mobile number");
 
             $rootScope.ShowToast('Enter valid mobile number')

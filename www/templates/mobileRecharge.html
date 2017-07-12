@@ -1,22 +1,64 @@
-<ion-view>
-<ion-nav-bar id="mainNav" >
-        <ion-nav-back-button class="button-stable ">
-            <i class="icon ion-ios-arrow-back"></i>Back
-        </ion-nav-back-button>
-    </ion-nav-bar>
-   <ion-content ng-controller="retailerHomeCtrl">
-   <ul class="list " >
-    <li class="item masterDelerList" ng-repeat="mobile in mobileRecharge" ng-click="mobilRecg('mobile',mobile.name,mobile.id)">
-
-    <img src={{mobile.src}} class="rechargeImg"></img>
-    
-    <i  class="icon arrow ion-chevron-right"></i>
-    
-      <p >{{mobile.name}}
-   
-      </p>
-    </li>
-    
-</ul>
-   </ion-content>
-  </ion-view>
+<ion-view ng-controller="retailerHomeCtrl">
+    <ion-header-bar class="sub-head bar-assertive">
+        <div class="buttons">
+            <button ng-click="myGoBack()" style="color: white;" ng-click="logout()" class="button"> <i class="ion-arrow-left-c"></i> Back
+        </button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="mainHomeDiv">
+            <div class="list inner-mainHomeDiv">
+                <div class="item homeIconOptionsDiv">
+                    <div ng-repeat="items in mobileRecharge">
+                        <div class="row" ng-if="$index%3==0">
+                            <div style="position:relative;" class="col col-33 col-center">
+                                <a class="element" ng-click="mobilRecg('mobile', mobileRecharge[$index].name ,mobileRecharge[$index].id)">
+                                    <div class="iconDiv">
+                                        <img src="{{mobileRecharge[$index].src}}"></img>
+                                        <!--  <i class="{{mobileRecharge[$index].icon}}" style="color:{{mobileRecharge[$index].color}}"></i> -->
+                                    </div>
+                                    <div class="icon_text">{{mobileRecharge[$index].name}} </div>
+                                </a>
+                            </div>
+                            <div style="position:relative;" class="col col-30 col-center">
+                                <a class="element" ng-if="mobileRecharge[$index+1]!=undefined" ng-click="mobilRecg('mobile', mobileRecharge[$index+1].name ,mobileRecharge[$index+1].id)">
+                                    <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{mobileRecharge[$index+1].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                               -->
+                                    <div class="iconDiv">
+                                        <img src="{{mobileRecharge[$index+1].src}}"></img>
+                                        <!--   <i class="{{mobileRecharge[$index+1].src}}" style="color:{{mobileRecharge[$index+1].color}}"></i> -->
+                                    </div>
+                                    <div class="icon_text">{{mobileRecharge[$index+1].name}} </div>
+                                </a>
+                            </div>
+                            <div style="position:relative;" class="col col-30 col-center">
+                                <a class="element" ng-if="mobileRecharge[$index+2]!=undefined" ng-click="mobilRecg('mobile', mobileRecharge[$index+2].name ,mobileRecharge[$index+2].id)">
+                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
+                                        <i class="{{mobileRecharge[$index+2].clas}}" style="font-size:7vmin"></i>
+                                    </button>
+                                -->
+                                    <div class="iconDiv">
+                                        <img src="{{mobileRecharge[$index+2].src}}"></img>
+                                        <!--  <i class="{{mobileRecharge[$index+2].src}}" style="color:{{mobileRecharge[$index+2].color}}"></i> -->
+                                    </div>
+                                    <div class="icon_text">{{mobileRecharge[$index+2].name}} </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <ul class="list ">
+            <li class="item masterDelerList" ng-repeat="mobile in mobileRecharge" ng-click="mobilRecg('mobile',mobile.name,mobile.id)">
+                <img src={{mobile.src}} class="rechargeImg"></img>
+                <i class="icon arrow ion-chevron-right"></i>
+                <p>{{mobile.name}}</p>
+            </li>
+        </ul>
+    -->
+    </ion-content>
+</ion-view>
