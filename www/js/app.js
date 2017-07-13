@@ -33,7 +33,12 @@ var myapp = angular.module('starter', ['ionic', 'starter.controllers', 'starter.
         controller: 'loginCtrl',
         templateUrl: 'templates/login.html'
 
-    }).state('mDelear', {
+    }).state('retailerSideMenu', {
+        url: "/retailerSideMenu",
+        abstract: true,
+        templateUrl: "retailerSideMenu.html"
+    })
+    .state('mDelear', {
         url: '/mDelear',
         controller: 'masterDelearCtrl',
         templateUrl: 'templates/mastreDealerHome.html'

@@ -125,7 +125,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         //icon: '/img/RevertBalance.png'
         icon: "icon ion-refresh",
         color: "lightblue"
-    },{
+    }, {
         name: "Shop",
         icon: 'icon ion-bag',
         color: "grey",
@@ -759,13 +759,11 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         name: "Reports",
         icon: "icon ion-clipboard",
         color: "violet"
-    },
-    {
+    }, {
         name: "Add Balance",
         icon: 'icon ion-plus-round',
         color: "purple"
-    },
-    {
+    }, {
         name: "Revert Balance",
         icon: "icon ion-refresh",
         color: "lightblue"
@@ -777,7 +775,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         name: "Change Password",
         icon: "icon ion-locked",
         color: "blue"
-    },{
+    }, {
         name: "Shop",
         icon: 'icon ion-bag',
         color: "grey",
@@ -801,7 +799,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('dRevertBalance')
         } else if (delear.name == 'Add Retailer') {
             $state.go('dAddRetailer')
-        } else if(delear.name == 'Shop') {
+        } else if (delear.name == 'Shop') {
             $window.location.href = delear.url;
         }
     }
@@ -1295,7 +1293,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.logout = function() {
         $state.go('login');
     }
-}).controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication, $location, $anchorScroll, $window) {
+}).controller('retailerCtrl', function($scope, $filter, $interval, $state, serviceDB, $rootScope, $cordovaToast, authentication, $location, $anchorScroll, $window, $ionicPopover) {
     var id = '';
     var tName = '';
     $scope.searchRecharge = {};
@@ -1307,11 +1305,33 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     var accRepCount = 0;
     var tempReport = {};
     $scope.accouReport = {};
-    $scope.accountReportList = []; 
+    $scope.accountReportList = [];
     $scope.complaiList = [];
     $scope.curid = id;
     var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
     var oneDay = 24 * 60 * 60 * 1000;
+
+    console.log('entered retailer ctrl..........................')
+    $ionicPopover.fromTemplateUrl('templates/retailerMenuPopover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
+
+    $scope.openPopover = function($event) {
+        console.log('entered open popover');
+        $scope.popover.show($event);
+    }; 
+
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+
+     $scope.$on('$ionicView.leave', function(){ //This just one when leaving, which happens when I logout
+        console.log("App view (menu) leaved.");
+        $scope.closePopover();
+    });
+
     $scope.getBalance = function() {
         var promise = serviceDB.toServer({
             "Id": id,
@@ -1388,7 +1408,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         name: "Search Transaction",
         icon: 'icon ion-search',
         color: "orange"
-    },{
+    }, {
         name: "Shop",
         icon: 'icon ion-bag',
         color: "grey",
@@ -1414,8 +1434,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('rChangePassword')
         } else if (ret.name == 'Reports') {
             $state.go('rReports')
-        } else if(ret.name == 'Shop') {
-            $window.location.href = ret.url; 
+        } else if (ret.name == 'Shop') {
+            $window.location.href = ret.url;
         }
     }
     var stop;
@@ -1853,7 +1873,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.logout = function() {
         $state.go('login');
     }
-}).controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB, $ionicHistory) {
+}).controller('retailerHomeCtrl', function($scope, $state, $rootScope, authentication, serviceDB, $ionicHistory, $ionicPopover) {
     var id = '';
     var tName = ''
     id = authentication.currentUser().userId;
@@ -1881,101 +1901,101 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     });
     $scope.mobileRecharge = [{
         id: "A",
-        name: "Airtel", 
-        src: '../img/airtel4.jpg'
+        name: "Airtel",
+        src: 'img/airtel4.jpg'
     }, {
         id: "V",
         name: "Vodafone",
-        src: '../img/vodafone.jpg'
+        src: 'img/vodafone.jpg'
     }, {
         id: "AIR",
         name: "Aircel",
-        src: '../img/aircel3.jpg'
+        src: 'img/aircel3.jpg'
     }, {
         id: "BT",
         name: "BSNL-TOPUP",
-        src: '../img/bsnl.jpg'
+        src: 'img/bsnl.jpg'
     }, {
         id: "D",
         name: "DOCOMO",
-        src: '../img/docomo1.jpg'
+        src: 'img/docomo1.jpg'
     }, {
         id: "RG",
         name: "RELIANCE-GSM",
-        src: '../img/reliance2.jpg'
+        src: 'img/reliance2.jpg'
     }, {
         id: "RC",
         name: "RELIANCE-CDMA",
-        src: '../img/reliance_cdma.jpg'
+        src: 'img/reliance_cdma.jpg'
     }, {
         id: "I",
         name: "Idea",
-        src: '../img/idea1.jpg'
+        src: 'img/idea1.jpg'
     }, {
         id: "TI",
         name: "TATA INDICOM",
-        src: '../img/Indicom2.gif'
+        src: 'img/Indicom2.gif'
     }, {
         id: "M",
         name: "MTS",
-        src: '../img/mts2.jpg'
+        src: 'img/mts2.jpg'
     }, {
-        id: "JO", 
+        id: "JO",
         name: "JIO",
-        src: '../img/jio.jpg'
+        src: 'img/jio.jpg'
     }, {
         id: "U",
-        name: "UNINOR", 
-        src: '../img/uninor2.jpg'
+        name: "UNINOR",
+        src: 'img/uninor2.jpg'
     }, {
         id: "US",
         name: "UNINOR-SPL",
-        src: '../img/uninor2.jpg'
+        src: 'img/uninor2.jpg'
     }, {
         id: "BS",
         name: "BSNL-STV",
-        src: '../img/bsnl.jpg' 
+        src: 'img/bsnl.jpg'
     }, {
-        id: "DS", 
-        name: "DOCOME-SPECIAL", 
-        src: '../img/docomo1.jpg' 
+        id: "DS",
+        name: "DOCOME-SPECIAL",
+        src: 'img/docomo1.jpg'
     }, {
         id: "TB",
         name: "BSNL Recharge",
-        src: '../img/bsnl.jpg'
+        src: 'img/bsnl.jpg'
     }, ]
 
     $scope.dthRecharge = [{
         id: "DTV",
         name: 'Dish TV DTH',
-        src: '../img/dishtv.jpg' 
+        src: 'img/dishtv.jpg'
     }, {
         id: "TTV",
         name: 'Tata Sky DTH',
-        src: '../img/tatasky1.jpg'
+        src: 'img/tatasky1.jpg'
     }, {
         id: "BTV",
         name: 'Big TV DTH',
-        src: '../img/bigtv1.jpg'
+        src: 'img/bigtv1.jpg'
     }, {
         id: "VTV",
         name: 'Videocon DTH',
-        src: '../img/videcon2.png'
+        src: 'img/videcon2.png'
     }, {
         id: "STV",
         name: 'Sun DTH',
-        src: '../img/sundirect.jpg'
+        src: 'img/sundirect.jpg'
     }, {
         id: "ATV",
         name: 'Airtel DTH',
-        src: '../img/airteldish.jpg'
+        src: 'img/airteldish.jpg'
     }]
 
-    
-        $scope.myGoBack = function() {
-            $ionicHistory.goBack();
-        };
-    
+    $scope.myGoBack = function() {
+        $ionicHistory.goBack();
+    }
+    ;
+
     $scope.mobilRecg = function(rechargeType, mobilename, id) {
         $rootScope.mobile = {};
         $rootScope.mobile.type = rechargeType;
@@ -1983,6 +2003,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $rootScope.mobile['id'] = id;
         $state.go('recharge')
     }
+
     $scope.rechargeSubmit = function(recharge) {
         $scope.rechargeDetails['RetailerId'] = authentication.currentUser().userId;
         $scope.rechargeDetails['RechargeType'] = $rootScope.mobile.type;

@@ -89,28 +89,11 @@
    height:6vmax !important;
    width:72vw !important;
 }
+
 .Button:hover{
   background:orange !important;  
 }
-.masterDelerList{
-  background: linear-gradient(white, rgba(182, 248, 255, 0.57), #add9e6);
-  height:15vmin;
-  padding-bottom:0 !important;
-  padding-Left:0 !important;
-  padding-right:0 !important;
-  border-color:grey;
-  padding-top:1vmin !important;
-}
-.masterDelerList:hover{
- background-color:rgba(230, 173, 229, 0.62) !important;
-}
-.masterDelerList>p{
-    font-size:5.5vmin;
-    height:100%!important;
-    padding:2vh;
-    margin-left:28%;
 
-}
 .logintextArea{
   width:72vw!important;
   height:20vmax !important;
@@ -163,21 +146,20 @@
   font-size: 15px;
 }
 
-
 .inner-mainHomeDiv a.profileDiv {
   width:100%;
 }
 .inner-mainHomeDiv .balanceDiv {
-  height:20vh;
+  height:34vh;
   text-align:center;
   background-image: url(../img/DarkBackground.jpg);
-  padding: 1vh;
+  padding-top: 5vh;
 }
 
 .inner-mainHomeDiv .balanceDiv h1, .inner-mainHomeDiv .balanceDiv h2{ 
   color:white;
   padding:auto;
-  margin:1vh auto;
+  margin:2vh auto;
 }
 
 
@@ -254,6 +236,43 @@
 }
 */
 
-.element {
+.element { 
     text-align:center;
+}
+
+
+.button-float {
+  background-color: transparent;
+  color:red;
+  z-index: 12 !important;
+  position: absolute !important;
+  right: 20px !important;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transition: 0.2s linear !important;
+  transition: 0.2s linear !important;
+  -webkit-transition-property: -webkit-transform, all !important;
+  transition-property: transform, all !important;
+}
+
+.retailerHomeView .ion-drag {
+  font-size: 30px;
+ 
+}
+
+.retailerMenuPopover {
+  background-color: transparent;
+}
+.retailerMenuPopover ul{
+   width: 100%;
+   height:100%;
+   background-color: grey;
+}
+
+.retailerMenuPopover ul li{ 
+   padding:2vh; 
+   text-align: center;
+   color: white;
+   background-color: transparent;
 }
