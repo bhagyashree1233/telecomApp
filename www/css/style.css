@@ -256,7 +256,7 @@
   transition-property: transform, all !important;
 }
 
-.retailerHomeView .ion-drag {
+.retailerHomeView .ion-drag, .masterDealerHomeView .ion-drag{
   font-size: 30px;
  
 }

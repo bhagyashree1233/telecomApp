@@ -45,12 +45,12 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.goBack = function() {
         $ionicHistory.goBack();
     }
-}).controller('masterDelearCtrl', function($scope, $filter, $state, serviceDB, $rootScope, $interval, authentication, $window) {
+}).controller('masterDelearCtrl', function($scope, $filter, $state, serviceDB, $rootScope, $interval, authentication, $window, $ionicPopover) {
     $scope.masterDelear = [];
     $scope.CurrenBalance = '';
     $scope.newpwd = {};
     $scope.transferDetails = {};
-    $scope.curreBalMode = false;
+    $scope.curreBalMode = false; 
     $scope.reports = [];
     $scope.complain = {};
     $scope.complaiList = [];
@@ -65,6 +65,27 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     var type = '';
     var oneDay = 24 * 60 * 60 * 1000;
     console.log('I am in master delear')
+
+     $ionicPopover.fromTemplateUrl('templates/retailerMenuPopover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
+
+    $scope.openPopover = function($event) {
+        console.log('entered open popover');
+        $scope.popover.show($event);
+    }; 
+
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+
+    $scope.$on('$ionicView.leave', function(){ 
+        console.log("App view (menu) leaved.");
+        $scope.closePopover();
+    });
+ 
     $scope.getBalance = function() {
         var tName = 'MasterDealer';
         var promise = serviceDB.toServer({
@@ -590,10 +611,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.goBack = function() {
         $ionicHistory.goBack();
     }
-}).controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter, $window) {
+}).controller('delearCtrl', function($interval, $scope, $state, $rootScope, serviceDB, $cordovaToast, authentication, $filter, $window, $ionicPopover) {
 
     var id = authentication.currentUser().userId;
-
+ 
     var tName = "Dealer";
     $scope.CurrenBalance = '';
     $scope.retailer = {};
@@ -609,6 +630,27 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.curid = id;
     var pattern = new RegExp('^[0-9]+([,.][0-9]+)?$');
     var oneDay = 24 * 60 * 60 * 1000;
+
+     $ionicPopover.fromTemplateUrl('templates/retailerMenuPopover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
+
+    $scope.openPopover = function($event) {
+        console.log('entered open popover');
+        $scope.popover.show($event);
+    }; 
+
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+
+    $scope.$on('$ionicView.leave', function(){ 
+        console.log("App view (menu) leaved.");
+        $scope.closePopover();
+    }); 
+    
     $scope.getBalance = function() {
         var tName = 'MasterDealer';
         var promise = serviceDB.toServer({
