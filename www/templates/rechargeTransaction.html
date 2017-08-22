@@ -1,0 +1,38 @@
+<ion-view>
+<ion-nav-bar id="mainNav" >
+        <ion-nav-back-button class="button-stable ">
+            <i class="icon ion-ios-arrow-back"></i>Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+ <ion-content ng-init="rechargeReport()">
+
+<div style="height:50vh;overflow:scroll;" when-scrolled="rechargeReport()">
+
+  <ion-list ng-repeat="searcReport in accountReportList" style="margin:5vh">
+<ion-item style="padding:0vh">
+
+<p class="datedisplayfont">SL NO:<span class="datedisplayinnerfont">{{$index+1}}</span></p>
+
+
+<p class="datedisplayfont">Company:<span class="datedisplayinnerfont">{{searcReport.Company}}</span></p>
+
+
+<p class="datedisplayfont">Mobile Number:<span class="datedisplayinnerfont">{{searcReport.MobileNo}}</span></p>
+
+
+
+<p class="datedisplayfont">Recharge Amount:<span class="datedisplayinnerfont">{{searcReport.RechargeAmount}}</span></p>
+
+<p class="datedisplayfont">Status:<span ng-style="searcReport.Status === 'Success' ? { color:'green' } : { color:'red' }" class="datedisplayinnerfont">{{searcReport.Status}}</span></p>
+
+
+<p class="datedisplayfont">OrderId:<span class="datedisplayinnerfont">{{searcReport.OrderId}}</span></p>
+<p class="datedisplayfont">TransactionId:<span class="datedisplayinnerfont" >{{searcReport.TransactionId}}</span></p>
+
+
+
+</ion-item>
+<ion-list>
+</div>
+ </ion-content>
+  </ion-view>

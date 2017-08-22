@@ -93,12 +93,42 @@ angular.module('starter.service', [])
     });
 
     return deferred.promise;
-  } 
+  } function forgotPassword(doc2send, Url) {
+       Url = "http://www.uttamtelecom.com"+Url;
+
+      console.log(Url);
+      console.log(doc2send);
+      var deferred = $q.defer();
+      var req =
+        {
+          method: 'POST', 
+          url: Url,
+          data: jQuery.param(doc2send),
+          headers:
+          {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+
+      
+      $http(req).then(function (res) {
+          console.log(res.data);
+        
+        deferred.resolve(res);
+      }, function (res) {
+        
+        //    console.log('error ');
+        deferred.reject(res);
+      });
+
+      return deferred.promise;
+    }
 
   return {
       toServer : toServer,
       login : login,
-      recharge : recharge
+      recharge : recharge,
+      forgotPassword:forgotPassword
   } 
 })
 
@@ -153,6 +183,7 @@ angular.module('starter.service', [])
       logout : logout,
       isLoggedIn : isLoggedIn,
       currentUser : currentUser
+      
     };
     
   
