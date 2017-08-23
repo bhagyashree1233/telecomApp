@@ -1,5 +1,11 @@
-angular.module('starter.controllers', []).controller('loginCtrl', function($scope, $state, serviceDB,$ionicModal, $rootScope, $location, $ionicHistory) {
+angular.module('starter.controllers', []).controller('loginCtrl', function($scope, $state, serviceDB,userNameStorage,$ionicModal, $rootScope, $location, $ionicHistory) {
     $scope.login = {}
+//userNameStorage.removeLoginDetails();
+var loginDetails=JSON.parse(userNameStorage.getLoginDetails());
+console.log(loginDetails);
+       if(loginDetails!=undefined){
+      $scope.login =loginDetails;
+       }
     $scope.loginSub = function(usn) {
         if ($scope.login.Uname == undefined || $scope.login.Uname == "") {
             $rootScope.ShowToast('Enter Username')
@@ -42,6 +48,11 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         });
 
     }
+    $scope.rememberMe=function(){
+    	if($scope.login!=undefined||$scope.login.Pwd!=undefined||$scope.login.Uname){
+    		userNameStorage.saveLoginDetails($scope.login);
+    	}
+    }
     $scope.forgotPwd = {};
 		$scope.forgotPwdErrMsg = "";
 		$scope.forgotPassword = function() {
@@ -67,6 +78,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
 				 
 				   $rootScope.ShowToast(res.data.message);
 				  $scope.forgotPwd = {};
+				 
 				} else {
 				   $rootScope.ShowToast(res.data.message);
 				   
@@ -74,9 +86,13 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
 				
 			}, function (res) {
 				$scope.forgotPwdErrMsg = "Unable to send password";
+				$rootScope.ShowToast($scope.forgotPwdErrMsg);
 				
 			});
 
+		}
+		$scope.closeModel=function(){
+		$scope.model1.hide();	
 		}
        $scope.model1 = $ionicModal.fromTemplateUrl('templates/forgotPassword.html', {
              scope: $scope,
@@ -2112,7 +2128,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.utility=[{
         id: "BC",
         name: 'Bangalore Electricity Supply (BESCOM)',
-        src: 'img/dishtv.jpg'
+        src: 'img/thumb.jpg'
     }]
 
     $scope.myGoBack = function() {

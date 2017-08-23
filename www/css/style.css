@@ -205,6 +205,14 @@
   height:auto;
   text-align:center;
 }
+.inner-mainHomeDiv .icon_utility{
+    text-shadow:3px 3px 4px rgba(0, 0, 0, 0.3);color:black;
+  margin:2vmin;
+  font-size: 4vmin;
+  width: 200px; 
+  word-wrap: break-word;
+  white-space: initial;
+}
 
 .inner-mainHomeDiv .iconDiv i.icon{
    width:auto;
@@ -275,4 +283,7 @@
    text-align: center;
    color: white;
    background-color: transparent;
+}
+.remeberMe{
+ margin:1vh;
 }

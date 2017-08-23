@@ -10,42 +10,30 @@
             <div class="list inner-mainHomeDiv">
                 <div class="item homeIconOptionsDiv">
                     <div ng-repeat="items in mobileRecharge">
-                        <div class="row" ng-if="$index%3==0">
-                            <div style="position:relative;" class="col col-33 col-center">
+                        <div class="row" >
+                            <div style="position:relative;" ng-if="$index==0"class="col col-60 col-center">
                                 <a class="element" ng-click="mobilRecg('electricity', utility[$index].name ,utility[$index].id)">
                                     <div class="iconDiv">
                                         <img src="{{utility[$index].src}}"></img>
                                         <!--  <i class="{{mobileRecharge[$index].icon}}" style="color:{{mobileRecharge[$index].color}}"></i> -->
                                     </div>
-                                    <div class="icon_text">{{utility[$index].name}} </div>
+                                    <div class="icon_utility">{{utility[$index].name}} </div>
                                 </a>
                             </div>
-                            <div style="position:relative;" class="col col-30 col-center">
+                          <!--  <div style="position:relative;" class="col col-30 col-center">
                                 <a class="element" ng-if="utility[$index+1]!=undefined" ng-click="mobilRecg('electricity', utility[$index+1].name ,utility[$index+1].id)">
                                     <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
                                         <i class="{{mobileRecharge[$index+1].clas}}" style="font-size:7vmin"></i>
                                     </button>
-                               -->
+                              
                                     <div class="iconDiv">
                                         <img src="{{utility[$index+1].src}}"></img>
-                                        <!--   <i class="{{mobileRecharge[$index+1].src}}" style="color:{{mobileRecharge[$index+1].color}}"></i> -->
+                                        <!--   <i class="{{mobileRecharge[$index+1].src}}" style="color:{{mobileRecharge[$index+1].color}}"></i> 
                                     </div>
                                     <div class="icon_text">{{utility[$index+1].name}} </div>
                                 </a>
-                            </div>
-                            <div style="position:relative;" class="col col-30 col-center">
-                                <a class="element" ng-if="utility[$index+2]!=undefined" ng-click="mobilRecg('electricity', utility[$index+2].name ,utility[$index+2].id)">
-                                    <!--    <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
-                                        <i class="{{mobileRecharge[$index+2].clas}}" style="font-size:7vmin"></i>
-                                    </button>
-                                -->
-                                    <div class="iconDiv">
-                                        <img src="{{utility[$index+2].src}}"></img>
-                                        <!--  <i class="{{mobileRecharge[$index+2].src}}" style="color:{{mobileRecharge[$index+2].color}}"></i> -->
-                                    </div>
-                                    <div class="icon_text">{{utility[$index+2].name}} </div>
-                                </a>
-                            </div>
+                            </div>-->
+                            
                         </div>
                     </div>
                 </div>

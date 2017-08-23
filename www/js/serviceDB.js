@@ -48,7 +48,8 @@ angular.module('starter.service', [])
       headers: 
       {
         'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      },
+      timeout : 12000, 
     }   
           
      $http(req).then(function(res) {
@@ -187,4 +188,23 @@ angular.module('starter.service', [])
     };
     
   
+})
+.factory('userNameStorage', function($window) {
+function saveLoginDetails(loginCredetials) {
+      localStorage.setItem("loginCredetials",JSON.stringify(loginCredetials));
+    };
+    function getLoginDetails(){
+      return localStorage.getItem("loginCredetials");
+    }
+     function removeLoginDetails() {
+      $window.localStorage.removeItem('loginCredetials');
+    };
+     return {
+     
+      saveLoginDetails : saveLoginDetails,
+      getLoginDetails : getLoginDetails,
+      removeLoginDetails : removeLoginDetails
+      
+    }
+
 })
