@@ -1,11 +1,21 @@
 angular.module('starter.controllers', []).controller('loginCtrl', function($scope, $state, serviceDB,userNameStorage,$ionicModal, $rootScope, $location, $ionicHistory) {
-    $scope.login = {}
-//userNameStorage.removeLoginDetails();
-var loginDetails=JSON.parse(userNameStorage.getLoginDetails());
-console.log(loginDetails);
-       if(loginDetails!=undefined){
-      $scope.login =loginDetails;
+     $scope.$on( "$ionicView.enter", function( scopes, states ) {
+       var loginDetails = userNameStorage.getLoginDetails();
+       if(loginDetails) {
+       	console.log(loginDetails);
+           $scope.login = JSON.parse(loginDetails);	
+       } else {
+       	   $scope.login = {}
        }
+    });
+
+    
+//userNameStorage.removeLoginDetails();
+//var loginDetails=JSON.parse(userNameStorage.getLoginDetails());
+// console.log(loginDetails);
+  //     if(loginDetails!=undefined){
+  //         $scope.login =loginDetails;
+  //     }
     $scope.loginSub = function(usn) {
         if ($scope.login.Uname == undefined || $scope.login.Uname == "") {
             $rootScope.ShowToast('Enter Username')
@@ -23,20 +33,21 @@ console.log(loginDetails);
             console.log(res.data);
             if (res.data.done == true) {
                 if ($scope.login.Uname > 1000 && $scope.login.Uname < 5000000) {
-                    $scope.login.Pwd = document.getElementById("pwd").value = '';
+                  //  $scope.login.Pwd = document.getElementById("pwd").value = '';
                     $location.path('/mDelear');
                 } else if ($scope.login.Uname > 5000000 && $scope.login.Uname < 10000000) {
-                    $scope.login.Pwd = document.getElementById("pwd").value = '';
+                 //   $scope.login.Pwd = document.getElementById("pwd").value = '';
                     $location.path('/delear');
                 } else if ($scope.login.Uname > 10000000) {
-                    $scope.login.Pwd = document.getElementById("pwd").value = '';
+                 //   $scope.login.Pwd = document.getElementById("pwd").value = '';
                     $location.path('/retailer');
                 } else if (res.data.done == false) {
                     $rootScope.ShowToast(res.data.message)
                 } else {
                     $rootScope.ShowToast(res.data.message);
                 }
-
+               // rememberMe(); 
+               userNameStorage.saveLoginDetails($scope.login);
             } else {
                 $rootScope.ShowToast(res.data.message)
             }
@@ -48,11 +59,15 @@ console.log(loginDetails);
         });
 
     }
-    $scope.rememberMe=function(){
+    
+    /*
+    function rememberMe(){
     	if($scope.login!=undefined||$scope.login.Pwd!=undefined||$scope.login.Uname){
     		userNameStorage.saveLoginDetails($scope.login);
     	}
     }
+    */
+
     $scope.forgotPwd = {};
 		$scope.forgotPwdErrMsg = "";
 		$scope.forgotPassword = function() {

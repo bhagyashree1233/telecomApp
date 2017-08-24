@@ -2,5 +2,8 @@
   "name": "ubamApp",
   "app_id": "",
   "type": "ionic1",
-  "watchPatterns": []
+  "watchPatterns": [],
+  "integrations": {
+    "cordova": {}
+  }
 }

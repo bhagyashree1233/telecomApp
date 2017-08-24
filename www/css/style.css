@@ -27,7 +27,8 @@
   width: 100%;
   height: 100%;
   /* background: url(http://lorempixel.com/800/500/nature) no-repeat center center fixed; */
-  background: url(../img/background6.jpg) no-repeat center center fixed;
+  /* background: url(../img/background6.jpg) no-repeat center center fixed; */
+  background-color: #d3d3d3;
   background-size: cover;
 }
 
@@ -35,13 +36,14 @@
   position: relative;
   width:270px;
   margin: 20vh auto;
-  background: rgba(130,130,130,.3);
+  background: grey;
   padding: 20px 22px;
   border: 1px solid;
   border-top-color: rgba(255,255,255,.4);
   border-left-color: rgba(255,255,255,.4);
   border-bottom-color: rgba(60,60,60,.4);
   border-right-color: rgba(60,60,60,.4);
+  border-radius: 1vh;
 }
 
 .loginDiv form input, .loginDiv form button {
@@ -51,18 +53,19 @@
   border-right-color: rgba(60,60,60,.35);
   border-top-color: rgba(60,60,60,.35);
   border-left-color: rgba(80,80,80,.45);
-  background-color: rgba(0,0,0,.2);
+  background-color: white;
   background-repeat: no-repeat;
   margin: 1vh auto;
-  padding: 5px 24px 8px 10px;
+  padding: 5px 24px 8px 10px; 
   font: bold .875em/1.25em "Open Sans Condensed", sans-serif;
   letter-spacing: .075em;
-  color: #fff;
+  color: #000;
   text-shadow: 0 1px 0 rgba(0,0,0,.1);
+  border-radius: 1vh;
 }
 
-.loginDiv form input:focus { background-color: rgba(0,0,0,.4);border-color:skyblue; }
-
+.loginDiv form input:focus { border-color:skyblue; }
+/*
  .loginDiv form input#uname {
   background-image: url(../img/user1.png);
   background-position: 200px 10px;
@@ -73,7 +76,7 @@
   background-image: url(../img/lock.png);
   background-position: 200px 8px
 }
-
+*/
 
 .loginDiv .login:hover{
    border-color:orange;

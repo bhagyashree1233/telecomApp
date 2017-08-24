@@ -191,6 +191,7 @@ angular.module('starter.service', [])
 })
 .factory('userNameStorage', function($window) {
 function saveLoginDetails(loginCredetials) {
+     console.log(loginCredetials);
       localStorage.setItem("loginCredetials",JSON.stringify(loginCredetials));
     };
     function getLoginDetails(){
