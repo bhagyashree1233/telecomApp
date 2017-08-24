@@ -149,7 +149,13 @@ var myapp = angular.module('starter', ['ionic', 'starter.controllers', 'starter.
         controller: 'retailerHomeCtrl',
         templateUrl: 'templates/mobileRecharge.html'
 
-    }).state('dthRecharge', {
+    }).state('utility', {
+        url: '/utility',
+        controller: 'retailerHomeCtrl',
+        templateUrl: 'templates/utility.html'
+
+    })
+    .state('dthRecharge', {
         url: '/dthRecharge',
         controller: 'retailerHomeCtrl',
         templateUrl: 'templates/dthRecharge.html'
@@ -194,7 +200,7 @@ var myapp = angular.module('starter', ['ionic', 'starter.controllers', 'starter.
     }).state('rRecrechargeTransaction', {
         url: '/rRecrechargeTransaction',
         controller: 'retailerCtrl',
-        templateUrl: 'templates/rechargeReport.html'
+        templateUrl: 'templates/rechargeTransaction.html'
     }).state('rSearchTransaction', {
         url: '/rSearchTransaction',
         controller: 'retailerCtrl',

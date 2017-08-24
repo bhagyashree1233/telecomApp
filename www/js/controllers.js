@@ -1,5 +1,11 @@
-angular.module('starter.controllers', []).controller('loginCtrl', function($scope, $state, serviceDB, $rootScope, $location, $ionicHistory) {
+angular.module('starter.controllers', []).controller('loginCtrl', function($scope, $state, serviceDB,userNameStorage,$ionicModal, $rootScope, $location, $ionicHistory) {
     $scope.login = {}
+//userNameStorage.removeLoginDetails();
+var loginDetails=JSON.parse(userNameStorage.getLoginDetails());
+console.log(loginDetails);
+       if(loginDetails!=undefined){
+      $scope.login =loginDetails;
+       }
     $scope.loginSub = function(usn) {
         if ($scope.login.Uname == undefined || $scope.login.Uname == "") {
             $rootScope.ShowToast('Enter Username')
@@ -42,6 +48,58 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         });
 
     }
+    $scope.rememberMe=function(){
+    	if($scope.login!=undefined||$scope.login.Pwd!=undefined||$scope.login.Uname){
+    		userNameStorage.saveLoginDetails($scope.login);
+    	}
+    }
+    $scope.forgotPwd = {};
+		$scope.forgotPwdErrMsg = "";
+		$scope.forgotPassword = function() {
+			
+			$scope.forgotPwdErrMsg = "";
+			console.log($scope.forgotPwd);
+			if(!$scope.forgotPwd.userId) {
+			    $scope.forgotPwdErrMsg = "User Id is required"
+			    $rootScope.ShowToast($scope.forgotPwdErrMsg);
+            return false;
+				
+			}
+			if(!$scope.forgotPwd.mobileNumber || $scope.forgotPwd.mobileNumber.length != 10) {
+				$scope.forgotPwdErrMsg = "10 digit mobile number is required";
+			 $rootScope.ShowToast($scope.forgotPwdErrMsg);
+            return false;
+			}
+			console.log($scope.forgotPwd);
+            var promise = serviceDB.forgotPassword($scope.forgotPwd, '/forgotPassword');
+			promise.then(function (res) {
+				if (res.data.done) {
+					//$location.path(res.data.locUrl);
+				 
+				   $rootScope.ShowToast(res.data.message);
+				  $scope.forgotPwd = {};
+				 
+				} else {
+				   $rootScope.ShowToast(res.data.message);
+				   
+				}
+				
+			}, function (res) {
+				$scope.forgotPwdErrMsg = "Unable to send password";
+				$rootScope.ShowToast($scope.forgotPwdErrMsg);
+				
+			});
+
+		}
+		$scope.closeModel=function(){
+		$scope.model1.hide();	
+		}
+       $scope.model1 = $ionicModal.fromTemplateUrl('templates/forgotPassword.html', {
+             scope: $scope,
+             animation: 'slide-in-up'
+         }).then(function(modal) {
+             $scope.model1 = modal;
+         });
     $scope.goBack = function() {
         $ionicHistory.goBack();
     }
@@ -1419,6 +1477,11 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         name: "DTH Recharge",
         icon: 'icon ion-easel',
         color: "violet"
+    },
+     {
+        name: "Utility",
+        icon: 'icon ion-card',
+        color: "#5f9ea0"
     }, {
         name: "Recharge Transaction",
         icon: 'icon ion-document-text',
@@ -1462,7 +1525,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         } else if (ret.name == 'DTH Recharge') {
             $state.go('dthRecharge')
 
-        } else if (ret.name == 'Recharge Transaction') {
+        }else if(ret.name =='Utility'){
+           $state.go('utility') 
+        }
+         else if (ret.name == 'Recharge Transaction') {
             $state.go('rRecrechargeTransaction');
         } else if (ret.name == 'Search Transaction') {
             $state.go('rSearchTransaction');
@@ -1634,7 +1700,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         tempReport["Count"] = accRepCount;
         tempReport.From = $scope.accouReport.From;
         tempReport.To = $scope.accouReport.To;
-        if (tempReport == undefined || tempReport.From == undefined || tempReport.From == "") {
+      
+      
+     /*if (tempReport == undefined || tempReport.From == undefined || tempReport.From == "") {
             $rootScope.ShowToast('Select From Date');
             return false;
         }
@@ -1642,18 +1710,29 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $rootScope.ShowToast('Select To Date');
             return false;
 
-        }
-        if (tempReport.From > tempReport.To) {
-            $rootScope.ShowToast('From Date should be less then or equal to Date');
-            return false;
-        }
-        var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
-        console.log(diffDays);
-        if (diffDays > 30) {
-            $rootScope.ShowToast('Plse select within 30 days ');
-            return false
-        }
+        }*/
+       
         tempReport["Id"] = id;
+        if(tempReport.From==undefined||tempReport.To==undefined){
+            tempReport.From = new Date();
+           
+        tempReport.From.setHours(0);
+        tempReport.From.setMinutes(0);
+        tempReport.From.setSeconds(0);
+        tempReport.From.setMilliseconds(0);
+
+        tempReport.From.setDate(tempReport.From.getDate());
+        tempReport.FromDate = tempReport.From.getTime();
+         console.log(tempReport.FromDate);
+        tempReport.To = new Date();
+        tempReport.To.setHours(23);
+        tempReport.To.setMinutes(59);
+        tempReport.To.setSeconds(59);
+        tempReport.To.setMilliseconds(999);
+        tempReport.To.setDate(tempReport.To.getDate());
+        tempReport.ToDate = tempReport.To.getTime();
+        console.log(tempReport.ToDate);
+        }else{
         tempReport.From = new Date(tempReport.From);
         tempReport.From.setHours(0);
         tempReport.From.setMinutes(0);
@@ -1667,11 +1746,25 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         tempReport.To.setSeconds(59);
         tempReport.To.setMilliseconds(999);
         tempReport.To.setDate(tempReport.To.getDate());
-
-        tempReport.ToDate = tempReport.To.getTime();
+         tempReport.ToDate = tempReport.To.getTime();
+}
+       
+         /*if (tempReport.From > tempReport.To) {
+            $rootScope.ShowToast('From Date should be less then or equal to Date');
+            return false;
+        }
+        var diffDays = Math.round(Math.abs((tempReport.To.getTime() - tempReport.From.getTime()) / (oneDay)));
+        console.log(diffDays);
+        if (diffDays > 30) {
+            $rootScope.ShowToast('Plse select within 30 days ');
+            return false
+        }*/
         tempReport.CompanyCode = "all";
         tempReport.Status = "all";
         tempReport.Number = 0;
+        console.log('tempReport');
+        console.log(tempReport);
+
         var promise = serviceDB.toServer(tempReport, '/getAllReports');
         $rootScope.showDbLoading();
         promise.then(function(res) {
@@ -2032,6 +2125,11 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         name: 'Airtel DTH',
         src: 'img/airteldish.jpg'
     }]
+    $scope.utility=[{
+        id: "BC",
+        name: 'Bangalore Electricity Supply (BESCOM)',
+        src: 'img/thumb.jpg'
+    }]
 
     $scope.myGoBack = function() {
         $ionicHistory.goBack();
@@ -2043,6 +2141,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $rootScope.mobile.type = rechargeType;
         $rootScope.mobile['name'] = mobilename;
         $rootScope.mobile['id'] = id;
+        console.log($rootScope.mobile)
         $state.go('recharge')
     }
 
