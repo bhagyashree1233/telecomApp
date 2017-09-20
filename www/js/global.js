@@ -14,6 +14,7 @@ angular.module('starter.globalcontroller', [])
         console.log("ShowDBloading");
         $ionicLoading.show({
             template: '<ion-spinner icon="bubbles"></ion-spinner><p>LOADING...</p>',
+            duration: 12000,
             showDelay: 0
         }).then(function() {
             console.log("The loading indicator is now displayed");

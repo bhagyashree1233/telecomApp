@@ -220,10 +220,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         icon: "icon ion-refresh",
         color: "lightblue"
     }, {
-        name: "Shop",
+        name: "Accessories",
         icon: 'icon ion-bag',
         color: "grey",
-        url: "http://uttamwordpress.azurewebsites.net/"
+        url: "http://uttameshop.com/"
     }]
     $scope.master = function(delear) {
         $scope.home = false;
@@ -243,7 +243,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('mAddBalance')
         } else if (delear.name == 'Revert Balance') {
             $state.go('mRevertBalance')
-        } else if (delear.name == 'Shop') {
+        } else if (delear.name == 'Accessories') {
             $window.location.href = delear.url;
         }
     }
@@ -543,7 +543,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $rootScope.showDbLoading();
         promise.then(function(res) {
             $rootScope.hideDbLoading();
-            if (res.data.done == true && re.data.data.length > 0) {
+            if (res.data.done == true && res.data.data.length > 0) {
 
                 $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
                 console.log($scope.accountReportList);
@@ -891,10 +891,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         icon: "icon ion-locked",
         color: "blue"
     }, {
-        name: "Shop",
+        name: "Accessories",
         icon: 'icon ion-bag',
         color: "grey",
-        url: "http://uttamwordpress.azurewebsites.net/"
+        url: "http://uttameshop.com/"
     }]
     $scope.delr = function(delear) {
         console.log(delear);
@@ -914,7 +914,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('dRevertBalance')
         } else if (delear.name == 'Add Retailer') {
             $state.go('dAddRetailer')
-        } else if (delear.name == 'Shop') {
+        } else if (delear.name == 'Accessories') {
             $window.location.href = delear.url;
         }
     }
@@ -922,11 +922,11 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
     $scope.addNewRetailer = function() {
         console.log($scope.retailer)
         console.log($scope.getMasterIdByDId());
-        $scope.retailer["LoginStatus"] = "success";
+        $scope.retailer["LoginStatus"] = "Offline";
         $scope.retailer["ParentDealerId"] = id;
         $scope.retailer["ParentMasterDealerId"] = $scope.ParentMasterDealerId;
         $scope.retailer["SenderId"] = id;
-        $scope.retailer["CurSenderBalance"] = $scope.CurrenBalance;
+       // $scope.retailer["CurSenderBalance"] = $scope.CurrenBalance;
         if ($scope.retailer.Name == "" || $scope.retailer.Name == undefined) {
             $rootScope.ShowToast('name required');
             return;
@@ -1007,10 +1007,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         }
         //  var promise = serviceDB.toServer(retailer, 'http://telecom.azurewebsites.net/addRetailer');       
         var promise = serviceDB.toServer($scope.retailer, '/addRetailer');
-        $rootScope.showDbLoading();
+        
 
         promise.then(function(res) {
-            $rootScope.hideDbLoading()
+            
             if (res.data.done) {
                 $rootScope.ShowToast('Added Successfully');
                 $scope.retailer = {};
@@ -1151,10 +1151,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
                 console.log($scope.transferDetails.RecieverBalance + 'Delear Balance');
 
                 var promise = serviceDB.toServer($scope.transferDetails, '/addMoneyTransferDetails');
-                $rootScope.showDbLoading();
+                
                 promise.then(function(res) {
                     if (res.data.done) {
-                        $rootScope.hideDbLoading()
+                       
                         console.log(res);
                         $rootScope.ShowToast(res.data.message);
 
@@ -1167,9 +1167,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
                     }
 
                 }, function(res) {
-                    $rootScope.hideDbLoading()
-                    console.log(res);
-                    -$rootScope.ShowToast('Unable to add balace');
+                  console.log(res);
+                    $rootScope.ShowToast('Unable to add balace');
                 });
             } else {
                 $rootScope.ShowToast(res.data.message);
@@ -1189,9 +1188,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         }
         $scope.revertDetails["ReverterId"] = id;
         var promise = serviceDB.toServer($scope.revertDetails, '/revertTransaction');
-        $rootScope.showDbLoading();
+       
         promise.then(function(res) {
-            $rootScope.hideDbLoading();
+           
             if (res.data.done == true) {
                 $rootScope.ShowToast(res.data.message);
                 $scope.revertDetails.RevertFrom = '';
@@ -1203,7 +1202,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             }
 
         }, function(error) {
-            $rootScope.hideDbLoading();
+           
             $rootScope.ShowToast('Unable to Revert Balance')
             return false;
         })
@@ -1529,10 +1528,10 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         icon: 'icon ion-search',
         color: "orange"
     }, {
-        name: "Shop",
+        name: "Accessories",
         icon: 'icon ion-bag',
         color: "grey",
-        url: "http://uttamwordpress.azurewebsites.net/"
+        url: "http://uttameshop.com"
     }]
     $scope.retlr = function(ret) {
         if (ret.name == 'Mobile Recharge') {
@@ -1557,7 +1556,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             $state.go('rChangePassword')
         } else if (ret.name == 'Reports') {
             $state.go('rReports')
-        } else if (ret.name == 'Shop') {
+        } else if (ret.name == 'Accessories') {
             $window.location.href = ret.url;
         }
     }
@@ -1568,7 +1567,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         }, 3000);
 
     }
-
+$scope.start();
     $scope.$on('$destroy', function() {
         console.log('Hai')
         $interval.cancel(stop);
@@ -1781,15 +1780,20 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         console.log(tempReport);
 
         var promise = serviceDB.toServer(tempReport, '/getAllReports');
-        $rootScope.showDbLoading();
+      
         promise.then(function(res) {
-            $rootScope.hideDbLoading();
+           
             if (res.data.done == true && res.data.data.length > 0) {
                 $scope.accountReportList = $scope.accountReportList.concat(res.data.data);
                 console.log($scope.accountReportList);
                 accRepCount = accRepCount + res.data.data.length;
             } else if (res.data.done == true && res.data.data.length == 0) {
-                $rootScope.ShowToast('No Records Found');
+            	if(tempReport.Count>0){
+            		$rootScope.ShowToast('End of Record');
+            		}else{
+            		$rootScope.ShowToast('No Records Found');
+            	}
+               
 
             } else if (res.data.done == false) {
                 $rootScope.ShowToast('Unable Records Found');
@@ -1797,7 +1801,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
                 $rootScope.ShowToast('Unable Records Found');
             }
         }, function(error) {
-            $rootScope.hideDbLoading();
+            
             $rootScope.ShowToast('Unable to get Refund Report');
         });
     }
@@ -1835,9 +1839,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         }
 
         var promise = serviceDB.toServer($scope.complain, '/sendComplain');
-        $rootScope.showDbLoading();
+        
         promise.then(function(res) {
-            $rootScope.hideDbLoading();
+            
             if (res.data.done) {
                 $scope.complain = {}
                 $rootScope.ShowToast('Complain added success');
@@ -1850,7 +1854,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
 
             }
         }, function(error) {
-            $rootScope.hideDbLoading();
+           
             $rootScope.ShowToast('Failed to add complain');
             return false;
         })
@@ -1859,9 +1863,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.complain.Id = id;
         $scope.complain["Count"] = accRepCount;
         var promise = serviceDB.toServer($scope.complain, '/getComplains');
-        $rootScope.showDbLoading();
+        
         promise.then(function(res) {
-            $rootScope.hideDbLoading();
+            
             if (res.data.done == true && res.data.data.length > 0) {
                 $scope.complaiList = $scope.complaiList.concat(res.data.data);
                 accRepCount = accRepCount + res.data.data.length;
@@ -1874,7 +1878,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
 
             }
         }, function(error) {
-            $rootScope.hideDbLoading();
+            
             $rootScope.ShowToast('Unable to get complain List')
             return false;
         })
@@ -1911,9 +1915,8 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.newpwd["Id"] = id;
         $scope.newpwd["tName"] = "Retailer";
         var promise = serviceDB.toServer($scope.newpwd, '/changePassword');
-        $rootScope.showDbLoading();
         promise.then(function(res) {
-            $rootScope.hideDbLoading()
+          
             if (res.data.done) {
                 $scope.newpwd = {};
                 $rootScope.ShowToast('Changed Password Successfully')
@@ -1926,7 +1929,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             }
             console.log(res);
         }, function(res) {
-            $rootScope.hideDbLoading()
+            
             $rootScope.ShowToast('Unable to change password')
         });
     }
@@ -1991,9 +1994,9 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.searchRecharge.CompanyCode = "all";
         $scope.searchRecharge.Status = "all";
         var promise = serviceDB.toServer($scope.searchRecharge, '/getAllReports');
-        $rootScope.showDbLoading();
+        
         promise.then(function(res) {
-            $rootScope.hideDbLoading()
+           
             if (res.data.done == true && res.data.data.length > 0) {
                 console.log(res.data.data)
                 console.log($scope.searchRecharge.searchReport)
@@ -2011,7 +2014,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             }
             console.log(res);
         }, function(res) {
-            $rootScope.hideDbLoading()
+           
             $rootScope.ShowToast('Unable to change password')
         });
 
@@ -2166,7 +2169,6 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
         $scope.rechargeDetails['Company'] = $rootScope.mobile.name;
         $scope.rechargeDetails['OperatorCode'] = $rootScope.mobile.id;
         $scope.rechargeDetails['RechargeAmount'] = $scope.recharge.amount;
-        $scope.rechargeDetails['CustomerName'] = $scope.recharge.Cusname;
         $scope.rechargeDetails['MobileNo'] = $scope.recharge.number;
 
         if (isNaN($scope.rechargeDetails.MobileNo) || $scope.rechargeDetails.MobileNo.length > 20) {
@@ -2186,10 +2188,20 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
 
             return;
         }
+      /*  if($scope.rechargeDetails.OperatorCode=='BC'){
+      if($scope.rechargeDetails.RechargeAmount<1000&&$scope.rechargeDetails.RechargeAmount>0){
+      	$scope.rechargeDetails.RechargeAmount=Number($scope.rechargeDetails.RechargeAmount)+5;
+      }else if($scope.rechargeDetails.RechargeAmount>=1000){
+      $scope.rechargeDetails.RechargeAmount=Number($scope.rechargeDetails.RechargeAmount)+10;
+      }else{
+      	$scope.rechargeDetails.RechargeAmount=$scope.rechargeDetails.RechargeAmount;
+      }
+        }*/
+
         var promise = serviceDB.toServer($scope.rechargeDetails, "/recharge");
-        $rootScope.showDbLoading();
+       
         promise.then(function(res) {
-            $rootScope.hideDbLoading();
+           
             if (res.data.done) {
 
                 $rootScope.ShowToast('Successfully recharged')
@@ -2204,7 +2216,7 @@ angular.module('starter.controllers', []).controller('loginCtrl', function($scop
             //	var promise = serviceDB.toServer(details, "/recharge");
         }, function(res) {
 
-            $rootScope.hideDbLoading();
+            
             $rootScope.ShowToast('Unable to recharge')
             $scope.rechargeDetails = {}
         })

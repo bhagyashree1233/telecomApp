@@ -11,7 +11,7 @@
         </div>
     </ion-header-bar>
     <ion-content>
-        <div class="mainHomeDiv">
+      <!--  <div class="mainHomeDiv">
             <div class="list inner-mainHomeDiv">
                 <div class="item homeIconOptionsDiv">
                     <div ng-repeat="items in dthRecharge">
@@ -44,15 +44,15 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!--
+        </div>-->
+        
         <ul class="list ">
             <li class="item masterDelerList" ng-repeat="dth in dthRecharge" ng-click="mobilRecg('DTH',dth.name,dth.id)">
                 <img src={{dth.src}} class="rechargeImg"></img>
                 <i class="icon arrow ion-chevron-right"></i>
-                <p style="">{{dth.name}} </p>
+                <p style="text-align:center;margin-top:4vw">{{dth.name}} </p>
             </li>
         </ul>
-     -->
+     
     </ion-content>
 </ion-view>

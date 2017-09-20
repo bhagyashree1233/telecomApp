@@ -121,13 +121,7 @@
   padding-top:2vmax;
   padding-bottom:2vmax;
 }
-.rechargeImg{
-  width:12vmin;
-  float:left;
-  padding:1vmin;
-  text-align:center;
 
-}
 .sel{
   
     width:72vw;
@@ -289,4 +283,16 @@
 }
 .remeberMe{
  margin:1vh;
+}
+.rechargeImg{
+  width:40px;
+  float:left;
+  padding:1vmin;
+  text-align:center;
+
+}
+.arrow{
+  float:right;
+  font-size: 3vmax;
+  padding:2vmax;
 }

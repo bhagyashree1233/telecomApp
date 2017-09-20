@@ -5,8 +5,8 @@
         </button>
         </div>
     </ion-header-bar>
-    <ion-content>
-        <div class="mainHomeDiv">
+  <ion-content>
+       <!--   <div class="mainHomeDiv">
             <div class="list inner-mainHomeDiv">
                 <div class="item homeIconOptionsDiv">
                     <div ng-repeat="items in mobileRecharge">
@@ -16,10 +16,10 @@
                                     <div class="iconDiv">
                                         <img src="{{utility[$index].src}}"></img>
                                         <!--  <i class="{{mobileRecharge[$index].icon}}" style="color:{{mobileRecharge[$index].color}}"></i> -->
-                                    </div>
+                                    <!--</div>
                                     <div class="icon_utility">{{utility[$index].name}} </div>
                                 </a>
-                            </div>
+                            </div>-->
                           <!--  <div style="position:relative;" class="col col-30 col-center">
                                 <a class="element" ng-if="utility[$index+1]!=undefined" ng-click="mobilRecg('electricity', utility[$index+1].name ,utility[$index+1].id)">
                                     <!--      <button style="box-shadow:2px 2px 4px rgba(0, 0, 0, 0.4);" class="button-circle" animate-ratio="fadeIn">
@@ -34,19 +34,19 @@
                                 </a>
                             </div>-->
                             
-                        </div>
+                     <!--   </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--
+        </div>-->
+        
         <ul class="list ">
-            <li class="item masterDelerList" ng-repeat="mobile in mobileRecharge" ng-click="mobilRecg('mobile',mobile.name,mobile.id)">
+            <li class="item item-text-wrap masterDelerList " ng-repeat="mobile in utility" ng-click="mobilRecg('mobile',mobile.name,mobile.id)">
                 <img src={{mobile.src}} class="rechargeImg"></img>
                 <i class="icon arrow ion-chevron-right"></i>
-                <p>{{mobile.name}}</p>
+                <p style="text-align:center;margin-top:4vw">{{mobile.name}}</p>
             </li>
         </ul>
-    -->
+   
     </ion-content>
 </ion-view>

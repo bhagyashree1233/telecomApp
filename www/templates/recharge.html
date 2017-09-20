@@ -7,15 +7,14 @@
  <ion-content>
 <div class="list list-inset">
 <h5 style="font-size:25px;text-align:center">Enter Number & Amount </h5>
-<label class="item login item-input">
-    <input type="text" placeholder="Enter Customer Name" ng-model="recharge.Cusname">
-  </label>
+
   <label class="item login item-input">
-    <input type="text" placeholder="Enter Number" ng-model="recharge.number">
+    <input type="tel" placeholder="Enter Number" ng-model="recharge.number">
   </label>
   <label class="item  login item-input">
-    <input type="text" placeholder="Enter Amount" ng-model="recharge.amount">
+    <input type="number" placeholder="Enter Amount" ng-model="recharge.amount">
   </label>
+ 
    <button class="button sButton button-block button-stable" ng-click="rechargeSubmit(recharge)">
     Recharge
    </button>
